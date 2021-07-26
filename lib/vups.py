@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import plotly.express as px
 
+
 def get_data(filename='MICRODADOS.csv', warn_bad_lines=True, test=False):
     if not test:
         BASEDIR = os.path.abspath('')
@@ -12,21 +13,21 @@ def get_data(filename='MICRODADOS.csv', warn_bad_lines=True, test=False):
 
         PATH = os.path.join(DATADIR + DATASET)
 
-        df = pd.read_csv(
+        dataset = pd.read_csv(
             PATH, 
             sep=SEP, 
             error_bad_lines=False, 
             encoding='latin1',
             warn_bad_lines=warn_bad_lines)
     else:
-        df = pd.DataFrame({
-            "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-            "Amount": [4, 1, 2, 2, 4, 5],
-            "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-        }
-    )
+        # dataset = pd.DataFrame({
+        #     "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+        #     "Amount": [4, 1, 2, 2, 4, 5],
+        #     "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
+        # })
+        dataset = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv')
 
-    return df
+    return dataset
 
 def plot_qtd_pessoas_x_sintomas(df):
     # Tratamento de dados
@@ -82,5 +83,35 @@ def plot_bar(df):
     df = ''
     return
 
-def plot_test(df):
+def plot_bar(df):
     return px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+
+def plot_scatter(df, selected_year):
+    
+    filtered_df = df[df.year == selected_year]
+
+    fig = px.scatter(filtered_df, x="gdpPercap", y="lifeExp",
+                     size="pop", color="continent", hover_name="country",
+                     log_x=True, size_max=55)
+
+    fig.update_layout(transition_duration=500)
+
+    return fig
+
+def generate_table(df, max_rows=10):
+    import dash_html_components as html
+
+    return html.Table([
+        html.Thead(
+            html.Tr([html.Th(col) for col in df.columns])
+        ),
+        html.Tbody([
+            html.Tr([
+                html.Td(df.iloc[i][col]) for col in df.columns
+            ]) for i in range(min(len(df), max_rows))
+        ])
+    ]
+)
+
+def plot_uallas(df):
+    return
