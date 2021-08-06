@@ -92,7 +92,17 @@ iris = pd.DataFrame(iris_raw["data"], columns=iris_raw["feature_names"])
 # ============================================================================ 
 mapa = vups.plot_map_folium(),
 
+
+##### Home Page #####
+
+# Conteúdo
+# ============================================================================
+
 ##### Barra Lateral #####
+
+header = dbc.Row(
+    html.H1('Dashboard Esboço')
+)
 
 # Componente sidebar
 sidebar1 = html.Div(
@@ -188,10 +198,6 @@ sidebar2 = html.Div(
     style=SIDEBAR_STYLE,
 )
 
-##### Home Page #####
-
-# Conteúdo
-# ============================================================================
 content = html.Div(
     id="page-content", 
     className="content",
@@ -302,6 +308,8 @@ kpis = html.Div([
 
 summary = dbc.Container(
     [
+        header,
+        html.Hr(),
         kpis,
         html.Br(),
         dt.DataTable(
@@ -415,7 +423,6 @@ selfservice_components = dbc.Container(
         dcc.Graph(figure=mapa),        
     ]
 )
-
 
 setup_page = dbc.Container([
     dbc.Card(
