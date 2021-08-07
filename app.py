@@ -8,6 +8,7 @@ visit http://127.0.0.1:8050/ in your web browser.
 # ============================================================================
 import locale
 import time
+from branca.element import IFrame
 
 import dash
 from dash_bootstrap_components._components import CardHeader
@@ -80,7 +81,7 @@ server = app.server
 
 # Dados
 # ============================================================================
-df = vups.get_data()[:100]
+df = vups.get_data(nrows=1000)
 iris_raw = datasets.load_iris()
 iris = pd.DataFrame(iris_raw["data"], columns=iris_raw["feature_names"])
 
@@ -90,7 +91,7 @@ iris = pd.DataFrame(iris_raw["data"], columns=iris_raw["feature_names"])
 
 # Mapas
 # ============================================================================ 
-mapa = vups.plot_map_folium(),
+#vups.plot_map_folium(),
 
 
 ##### Home Page #####
@@ -420,7 +421,7 @@ selfservice_components = dbc.Container(
         ]),
 
         html.Hr(),
-        dcc.Graph(figure=mapa),        
+        html.Iframe(id="Mapa", srcDoc=open('map.html', 'r').read(), width='100%', height='600')
     ]
 )
 
