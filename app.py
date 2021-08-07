@@ -91,7 +91,7 @@ iris = pd.DataFrame(iris_raw["data"], columns=iris_raw["feature_names"])
 
 # Mapas
 # ============================================================================ 
-#vups.plot_map_folium(),
+vups.plot_map_folium(),
 
 
 ##### Home Page #####
