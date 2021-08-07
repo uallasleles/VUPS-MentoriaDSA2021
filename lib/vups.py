@@ -13,13 +13,18 @@ import branca
 #LIB_PATH = os.path.join('')
 #sys.path.append(LIB_PATH)
 
-def get_data(warn_bad_lines=True):
-    PATH = os.path.join(const.DATADIR + const.DATAFILE)
-    return pd.read_csv( PATH, 
-                        sep=const.SEP, 
+def get_data(warn_bad_lines=True, nrows=None):
+    PATH = os.path.join(const.DATADIR + const.DATAFILE['FILENAME'])
+    # pd.read_csv('data/dataframe_saved_v2.csv', parse_dates = ['Data'], usecols = list(range(0,6)))
+    # ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
+    dataset = pd.read_csv( PATH, 
+                        sep=const.DATAFILE['SEP'], 
                         error_bad_lines=False, 
-                        encoding='latin1',
+                        encoding=const.DATAFILE['ENCODING'],
+                        nrows=nrows,
                         warn_bad_lines=warn_bad_lines)
+    dataset = dtype_transform(dataset)
+    return dataset
 
 def plot_qtd_pessoas_x_sintomas(df):
     # Tratamento de dados
@@ -128,34 +133,73 @@ def plot_scatter(df, selected_year):
 
 
 def plot_map_folium():
-    url = (
-        "https://raw.githubusercontent.com/python-visualization/folium/master/examples/data"
-    )
-    county_data = f"{url}/us_county_data.csv"
-    county_geo = f"{url}/us_counties_20m_topo.json"
+    map = folium.Map(location=[-16.3722412, -39.5757040], zoom_start=10)
+    map.save('map.html')
 
-
-    df = pd.read_csv(county_data, na_values=[" "])
-
-    colorscale = branca.colormap.linear.YlOrRd_09.scale(0, 50e3)
-    employed_series = df.set_index("FIPS_Code")["Employed_2011"]
-
-
-    def style_function(feature):
-        employed = employed_series.get(int(feature["id"][-5:]), None)
-        return {
-            "fillOpacity": 0.5,
-            "weight": 0,
-            "fillColor": "#black" if employed is None else colorscale(employed),
-        }
-
-
-    m = folium.Map(location=[48, -102], tiles="cartodbpositron", zoom_start=3)
-
-    folium.TopoJson(
-        json.loads(requests.get(county_geo).text),
-        "objects.us_counties_20m",
-        style_function=style_function,
-    ).add_to(m)
+def fn_date_cols(df):
+    import re
+    date_patern1 = re.compile(r'(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])')
+    date_patern2 = re.compile(r'(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d')
     
-    return m
+    lst_cols = []
+
+    for n in list(df.columns):
+        i = df.columns.get_loc(n) # ÍNDICE DA COLUNA
+        v = df.iloc[0, i]         # VALOR NA LINHA ZERO
+        try:
+            if (re.search(date_patern1, v) is not None) or (re.search(date_patern2, v) is not None):
+                lst_cols.append(n)
+        except:
+            pass
+            
+    return lst_cols
+
+def fn_number_cols(df):
+    lst_cols = []
+    
+    for n in list(df.columns):
+        i = df.columns.get_loc(n)   # ÍNDICE DA COLUNA
+        v = df.iloc[1, i]           # VALOR NA LINHA ZERO
+        try:
+            if float(n):            # SE PASSAR, É UM NÚMERO (Tenta converter para float)
+                lst_cols.append(n)
+        except:
+            pass
+            
+    return lst_cols
+
+def dtype_transform(df):
+
+    date_cols = fn_date_cols(df)
+    for c in date_cols:
+        try:
+            df[c] = df[c].astype('datetime64[ns]')
+        except:
+            pass
+
+    cat_cols = list(df.select_dtypes(include='object').columns)
+    for c in cat_cols:
+        try:
+            df[c] = df[c].astype('category')
+        except:
+            pass
+
+    numeric_cols = fn_number_cols(df)
+    for c in numeric_cols:
+        i = df.columns.get_loc(c) # ÍNDICE DA COLUNA
+        v = df.iloc[0, i]         # VALOR NA LINHA ZERO
+        try:
+            if float(v) and not v.isdecimal():
+                try:
+                    df[c] = df[c].astype('float')
+                except:
+                    pass
+            else: # isdecimal() - SE NÃO PASSAR, É UM NÚMERO INTEIRO (Verifica se todos os caracteres no Unicode são decimais)
+                try: 
+                    df[c] = df[c].astype('int64')
+                except:
+                    pass
+        except:
+            pass
+
+    return df

@@ -11,8 +11,21 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 BASEDIR = os.path.abspath('')
 DATADIR = os.path.join(BASEDIR + '\\data\\')
 DATAFILE = "MICRODADOS.csv"
+
+DATAFILE = {
+    'FILENAME': 'MICRODADOS.csv',
+    'SEP': ';',
+    'ENCODING': 'latin1'}
+
+# DATAFILE = {
+#     'FILENAME': 'Arrecadacao_01-01-1998_a_31-12-2001.csv',
+#     'SEP': ',',
+#     'ENCODING': 'utf-8'}
+
 DATADIC = 'dictionary.md'
-SEP = ";"
+
+
+# ENCODING = 'utf-8'
 
 # Formatação dos argumentos da barra lateral
 SIDEBAR_STYLE = {"position": "fixed", 
