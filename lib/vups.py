@@ -9,20 +9,17 @@ import requests
 import folium
 import branca
 
-from dask.distributed import Client, progress
-client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
-import dask
-import dask.dataframe as dd
+# from dask.distributed import Client, progress
+# client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
+# import dask
+# import dask.dataframe as dd
 
-# Path: onde estão armazenadas as classes e funções que serão utilizadas neste módulo:
-#LIB_PATH = os.path.join('')
-#sys.path.append(LIB_PATH)
 
 def get_data(warn_bad_lines=True, nrows=None):
     PATH = os.path.join(const.DATADIR + const.DATAFILE['FILENAME'])
     # pd.read_csv('data/dataframe_saved_v2.csv', parse_dates = ['Data'], usecols = list(range(0,6)))
-    # ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
-    dataset = dd.read_csv( PATH, 
+    #TODO ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
+    dataset = pd.read_csv( PATH, 
                         sep=const.DATAFILE['SEP'], 
                         error_bad_lines=False, 
                         encoding=const.DATAFILE['ENCODING'],
@@ -81,11 +78,14 @@ def plot_qtd_pessoas_x_sintomas(df):
     plt.xlabel('# de pessoas com o sintoma', fontsize=12)
     return 
 
-def plot_bar(df):
-    df = ''
-    return
-
-def plot_bar(df):
+def plot_bar():
+    df = pd.DataFrame(
+        {
+            "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+            "Amount": [4, 1, 2, 2, 4, 5],
+            "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
+        }
+    )
     return px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 
 def generate_table(df, max_rows=10):
@@ -108,7 +108,6 @@ def plot_sexo_idade(df):
 
 def plot_sexo_idade2(df):
     return plt.bar(df['Sexo'], df['IdadeNaDataNotificacao'])
-
 
 def plot_scatter(df, selected_year):
     """
@@ -135,7 +134,6 @@ def plot_scatter(df, selected_year):
     fig.update_layout(transition_duration=500)
 
     return fig
-
 
 def plot_map_folium():
     map = folium.Map(location=[-16.3722412, -39.5757040], zoom_start=10)
@@ -190,6 +188,7 @@ def dtype_transform(df):
             pass
 
     numeric_cols = fn_number_cols(df)
+
     for c in numeric_cols:
         i = df.columns.get_loc(c) # ÍNDICE DA COLUNA
         v = df.iloc[0, i]         # VALOR NA LINHA ZERO
