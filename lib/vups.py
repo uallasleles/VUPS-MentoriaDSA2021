@@ -9,6 +9,11 @@ import requests
 import folium
 import branca
 
+from dask.distributed import Client, progress
+client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
+import dask
+import dask.dataframe as dd
+
 # Path: onde estão armazenadas as classes e funções que serão utilizadas neste módulo:
 #LIB_PATH = os.path.join('')
 #sys.path.append(LIB_PATH)
@@ -17,7 +22,7 @@ def get_data(warn_bad_lines=True, nrows=None):
     PATH = os.path.join(const.DATADIR + const.DATAFILE['FILENAME'])
     # pd.read_csv('data/dataframe_saved_v2.csv', parse_dates = ['Data'], usecols = list(range(0,6)))
     # ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
-    dataset = pd.read_csv( PATH, 
+    dataset = dd.read_csv( PATH, 
                         sep=const.DATAFILE['SEP'], 
                         error_bad_lines=False, 
                         encoding=const.DATAFILE['ENCODING'],
