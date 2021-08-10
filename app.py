@@ -36,6 +36,20 @@ from sklearn.cluster import KMeans
 import warnings
 warnings.filterwarnings("ignore")
 
+
+# ============================================================================
+# Endereço HOSTNAME (IP local)
+# ============================================================================
+import socket
+HOST = socket.gethostbyname(socket.gethostname())
+
+
+# ============================================================================
+# Dados
+# ============================================================================
+df = vups.get_data(nrows=1000)
+
+# ============================================================================
 # Styles
 # ============================================================================
 # Folha de Estilo CSS externa personalizada
@@ -71,6 +85,7 @@ tab_selected_style = {'border': '1px solid white', 'background-color': '#3298CC'
 # Formatar os números decimais
 locale.setlocale(locale.LC_ALL, '')
 
+# ============================================================================
 # Objeto Dash
 # ============================================================================
 app = dash.Dash(
@@ -82,36 +97,31 @@ app = dash.Dash(
 server = app.server
 
 
-# Dados
 # ============================================================================
-df = vups.get_data(nrows=100)
-
 # Figuras
 # ============================================================================
 fig1 = vups.plot_bar()
-fig2 = vups.plot_sexo_idade(df)
-fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
+#fig2 = vups.plot_sexo_idade(df)
+#fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
 
 
+# ============================================================================
 # Mapas
 # ============================================================================ 
 #vups.plot_map_folium(),
+fig4 = vups.plot_scatter()
 
-
-##### Home Page #####
-
-# Conteúdo
+# ============================================================================
+# Home Page
 # ============================================================================
 
+##### Título #####
+header = dbc.Row(html.H1('Boletim de Arrecadação dos Tributos Estaduais'))
+
 ##### Barra Lateral #####
-
-header = dbc.Row(
-    html.H1('Dashboard Esboço')
-)
-
 sidebar = html.Div(
     [
-        html.Div(
+        html.Div( # LOGO -----------------------------------------------------
             [
                 html.Img(src=PLOTLY_LOGO, style={"width": "3rem"}),
                 html.H2("VUPS"),
@@ -121,9 +131,9 @@ sidebar = html.Div(
 
         html.Hr(),
         
-        dbc.Nav(
+        dbc.Nav( # MENUS -----------------------------------------------------
             [
-                dbc.NavLink(
+                dbc.NavLink( # HOME ------------------------------------------
                     [
                         html.I(className="fas fa-home mr-2"), 
                         html.Span("Home")
@@ -132,7 +142,7 @@ sidebar = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-chart-area mr-2"),
                         html.Span("Análises"),
@@ -141,7 +151,7 @@ sidebar = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-hand-holding-usd mr-2"),
                         html.Span("Informações"),
@@ -150,7 +160,7 @@ sidebar = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-toolbox mr-2"),
                         html.Span("Utils"),
@@ -159,7 +169,7 @@ sidebar = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-cog mr-2"),
                         html.Span("Setup"),
@@ -177,10 +187,10 @@ sidebar = html.Div(
     style=SIDEBAR_STYLE,
 )
 
+
 content = html.Div(
     id="page-content", 
-    className="content",
-    )
+    className="content")
 
 tab_control = dbc.Container(
     [
@@ -292,43 +302,13 @@ summary = dbc.Container(
         kpis_widget,
         html.Br(),
         dbc.Row([
-            dbc.Col(html.Div(dcc.Graph(id='', figure=fig1))),
-            dbc.Col(html.Div(dcc.Graph(id='', figure=fig2))),
+            dbc.Col(html.Div(dcc.Graph(id='g-a', figure=fig1))),
+            #dbc.Col(html.Div(dcc.Graph(id='g-b', figure=fig2))),
         ]),
         dbc.Row([
-            dbc.Col(html.Div(dcc.Graph(id='', figure=fig3))),
-            dbc.Col(html.Div(dcc.Graph(id='', figure=fig1))),
+            #dbc.Col(html.Div(dcc.Graph(id='g-c', figure=fig2))),
+            dbc.Col(html.Div(dcc.Graph(id='g-d', figure=fig1))),
         ]),
-
-        # html.Br(),
-        # dt.DataTable(
-        #     id='table',
-        #     columns=[{'name': i, 'id': i} for i in df.columns],
-        #     data= df.to_dict('records'),
-        #     style_table={'overflowX': 'auto'},
-        #     style_cell={
-        #         'height': 'auto',
-        #         'textOverflow': 'ellipsis',
-        #         # all three widths are needed
-        #         'minWidth': '180px', 'width': '180px', 'maxWidth': '180px',
-        #         'whiteSpace': 'normal'
-        #     },
-        #     fixed_rows={ 'headers': True, 'data': 0 },
-        #     style_data_conditional=[
-        #         {'if': {'column_id': 'index'},
-        #         'width': '50px'},
-        #         {'if': {'column_id': 'Year'},
-        #         'width': '50px'},
-        #         {'if': {'column_id': 'Country'},
-        #         'width': '100px'},
-        #         {'if': {'column_id': 'Continent'},
-        #         'width': '70px'},
-        #         {'if': {'column_id': 'Emission'},
-        #         'width': '75px'},
-        #     ],
-        #     virtualization=True,
-        #     page_action='none',
-        # )
     ]
 )
 
@@ -338,6 +318,7 @@ container_template = dbc.Container([
         dbc.CardBody(''),
     ])
 ])
+
 
 # selfservice_components = dbc.Container(
 #     [
@@ -406,6 +387,7 @@ container_template = dbc.Container([
 #     ]
 # )
 
+
 setup_page = dbc.Container([
     dbc.Card(
         dbc.CardFooter(
@@ -434,7 +416,6 @@ app.layout = html.Div(
 # Funções
 # ============================================================================
 
-# ----------------------------------------------------------------------------
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
@@ -443,8 +424,6 @@ def render_page_content(pathname):
         return tab_control
     elif pathname == "/page-2":
         return container1
-    elif pathname == "/page-3":
-        return
     elif pathname == "/page-4":
         return setup_page
     # If the user tries to reach a different page, return a 404 message
@@ -456,13 +435,14 @@ def render_page_content(pathname):
         ]
     )
 
+
 # ============================================================================
 if __name__ == '__main__':
     # ## Acesso em local network
     # app.run_server(debug=False, port=8080, host="0.0.0.0")
     
     # ## Debug
-    app.run_server(debug=True, port=8080, host="0.0.0.0")
+    app.run_server(debug=True, port=8080, host=HOST)
 
     # ## Para não fazer o refresh automático, use:
     # app.run_server(dev_tools_hot_reload=False)
