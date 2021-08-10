@@ -9,20 +9,33 @@ import requests
 import folium
 import branca
 
-# Path: onde estão armazenadas as classes e funções que serão utilizadas neste módulo:
-#LIB_PATH = os.path.join('')
-#sys.path.append(LIB_PATH)
+# from dask.distributed import Client, progress
+# client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
+# import dask
+# import dask.dataframe as dd
 
-def get_data(warn_bad_lines=True, nrows=None):
-    PATH = os.path.join(const.DATADIR + const.DATAFILE['FILENAME'])
+# CONFIG #####################################################################
+pd.options.display.float_format = '{:.2f}'.format
+
+
+def get_data(
+    warn_bad_lines=True, 
+    nrows=None, 
+    file=const.DATAFILE['FILENAME'], 
+    sep=const.DATAFILE['SEP'],
+    encoding=const.DATAFILE['ENCODING'],
+    dtype=None):
+
+    PATH = os.path.join(const.DATADIR + file)
     # pd.read_csv('data/dataframe_saved_v2.csv', parse_dates = ['Data'], usecols = list(range(0,6)))
-    # ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
-    dataset = pd.read_csv( PATH, 
-                        sep=const.DATAFILE['SEP'], 
-                        error_bad_lines=False, 
-                        encoding=const.DATAFILE['ENCODING'],
-                        nrows=nrows,
-                        warn_bad_lines=warn_bad_lines)
+    #TODO ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
+    dataset = pd.read_csv(  PATH, 
+                            sep=sep, 
+                            error_bad_lines=False, 
+                            encoding=encoding,
+                            nrows=nrows,
+                            warn_bad_lines=warn_bad_lines,
+                            dtype=dtype)
     dataset = dtype_transform(dataset)
     return dataset
 
@@ -73,14 +86,17 @@ def plot_qtd_pessoas_x_sintomas(df):
     sintomas_prop.sort_values()
     
     pd.DataFrame({'Qntd': sintomas}).sort_values('Qntd').plot.barh(legend=False, figsize=(12,10))
-    plt.xlabel('# de pessoas com o sintoma', fontsize=12)
-    return 
 
-def plot_bar(df):
-    df = ''
-    return
+    return plt.xlabel('# de pessoas com o sintoma', fontsize=12) 
 
-def plot_bar(df):
+def plot_bar():
+    df = pd.DataFrame(
+        {
+            "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+            "Amount": [4, 1, 2, 2, 4, 5],
+            "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
+        }
+    )
     return px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 
 def generate_table(df, max_rows=10):
@@ -99,11 +115,8 @@ def generate_table(df, max_rows=10):
 )
 
 def plot_sexo_idade(df):
-    return px.bar(df, x='Sexo', y='IdadeNaDataNotificacao')
-
-def plot_sexo_idade2(df):
-    return plt.bar(df['Sexo'], df['IdadeNaDataNotificacao'])
-
+    fig = px.bar(df, x='Sexo', y='IdadeNaDataNotificacao')
+    return fig
 
 def plot_scatter(df, selected_year):
     """
@@ -130,7 +143,6 @@ def plot_scatter(df, selected_year):
     fig.update_layout(transition_duration=500)
 
     return fig
-
 
 def plot_map_folium():
     map = folium.Map(location=[-16.3722412, -39.5757040], zoom_start=10)
@@ -185,13 +197,14 @@ def dtype_transform(df):
             pass
 
     numeric_cols = fn_number_cols(df)
+
     for c in numeric_cols:
         i = df.columns.get_loc(c) # ÍNDICE DA COLUNA
         v = df.iloc[0, i]         # VALOR NA LINHA ZERO
         try:
             if float(v) and not v.isdecimal():
                 try:
-                    df[c] = df[c].astype('float')
+                    df[c] = df[c].astype('float64')
                 except:
                     pass
             else: # isdecimal() - SE NÃO PASSAR, É UM NÚMERO INTEIRO (Verifica se todos os caracteres no Unicode são decimais)
@@ -203,3 +216,32 @@ def dtype_transform(df):
             pass
 
     return df
+
+
+class datasets:
+    def microdados(nrows=None, dtype=None):
+        return get_data(file='MICRODADOS.csv', nrows=nrows, sep=';', encoding='latin1', dtype=dtype)
+    
+    def microdados_bairros(nrows=None, dtype=None):
+        return get_data(file='MICRODADOS_BAIRROS.csv', nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
+
+    def arrecadacao_1998_a_2001(nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-1998_a_31-12-2001.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    
+    def arrecadacao_2002_a_2005(nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2002_a_31-12-2005.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    
+    def arrecadacao_2006_a_2009(nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2006_a_31-12-2009.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    
+    def arrecadacao_2010_a_2013(nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2010_a_31-12-2013.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    
+    def arrecadacao_2014_a_2017(nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2014_a_31-12-2017.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    
+    def arrecadacao_2018_a_2020(nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2018_a_09-12-2020.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+         
+    def tipo_arrecadacao(nrows=None, dtype=None):
+        return get_data(file='TipoArrecadacao.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)

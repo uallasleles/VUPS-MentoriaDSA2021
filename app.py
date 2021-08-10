@@ -8,6 +8,7 @@ visit http://127.0.0.1:8050/ in your web browser.
 # ============================================================================
 import locale
 import time
+from typing import Container
 from branca.element import IFrame
 
 import dash
@@ -23,6 +24,7 @@ from dash_html_components.Label import Label
 from dash.dependencies import Input, Output
 import plotly.graph_objs as go
 import dash_table as dt
+import plotly.express as px
 
 import pandas as pd
 import numpy as np
@@ -34,6 +36,20 @@ from sklearn.cluster import KMeans
 import warnings
 warnings.filterwarnings("ignore")
 
+
+# ============================================================================
+# Endereço HOSTNAME (IP local)
+# ============================================================================
+import socket
+HOST = socket.gethostbyname(socket.gethostname())
+
+
+# ============================================================================
+# Dados
+# ============================================================================
+df = vups.get_data(nrows=1000)
+
+# ============================================================================
 # Styles
 # ============================================================================
 # Folha de Estilo CSS externa personalizada
@@ -69,6 +85,7 @@ tab_selected_style = {'border': '1px solid white', 'background-color': '#3298CC'
 # Formatar os números decimais
 locale.setlocale(locale.LC_ALL, '')
 
+# ============================================================================
 # Objeto Dash
 # ============================================================================
 app = dash.Dash(
@@ -79,82 +96,53 @@ app = dash.Dash(
 
 server = app.server
 
-# Dados
-# ============================================================================
-df = vups.get_data(nrows=1000)
-iris_raw = datasets.load_iris()
-iris = pd.DataFrame(iris_raw["data"], columns=iris_raw["feature_names"])
 
+# ============================================================================
 # Figuras
 # ============================================================================
-#fig1 = vups.Plots.plot_scatter(df)
+fig1 = vups.plot_bar()
+#fig2 = vups.plot_sexo_idade(df)
+#fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
 
+
+# ============================================================================
 # Mapas
 # ============================================================================ 
-vups.plot_map_folium(),
+#vups.plot_map_folium(),
+fig4 = vups.plot_scatter()
 
-
-##### Home Page #####
-
-# Conteúdo
+# ============================================================================
+# Home Page
 # ============================================================================
 
+##### Título #####
+header = dbc.Row(html.H1('Boletim de Arrecadação dos Tributos Estaduais'))
+
 ##### Barra Lateral #####
-
-header = dbc.Row(
-    html.H1('Dashboard Esboço')
-)
-
-# Componente sidebar
-sidebar1 = html.Div(
-    [      
-        html.H4("Dashboard Analítico", className = "text-white p-1", style = {'marginTop':'1rem'}),
-        html.Hr(style = {"borderTop": "1px dotted white"}),
-        dbc.Nav(
-            [
-                dbc.NavLink("Visão Geral", href="/", active="exact"),
-                dbc.NavLink("Análise Financeira", href="/pagina-1", active="exact"),
-                dbc.NavLink("Conclusão", href="/pagina-2", active="exact"),
-            ],
-            vertical = True,
-            pills = True,
-            style = {'fontSize':16}
-        ),
-        html.P(u"Versão 1.0", className = 'fixed-bottom text-white p-2'),
-
-    ],
-    className = 'bg-dark',
-
-    style = {"position": "fixed",
-             "top": 0,
-             "left": 0,
-             "bottom": 0,
-             "width": "14rem",
-             "padding": "1rem",},
-)
-
-sidebar2 = html.Div(
+sidebar = html.Div(
     [
-        html.Div(
+        html.Div( # LOGO -----------------------------------------------------
             [
                 html.Img(src=PLOTLY_LOGO, style={"width": "3rem"}),
                 html.H2("VUPS"),
             ],
             className="sidebar-header",
         ),
+
         html.Hr(),
-        dbc.Nav(
+        
+        dbc.Nav( # MENUS -----------------------------------------------------
             [
-                dbc.NavLink(
+                dbc.NavLink( # HOME ------------------------------------------
                     [
                         html.I(className="fas fa-home mr-2"), 
                         html.Span("Home")
                     ], 
                     href="/", 
-                    active="exact"
+                    active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-chart-area mr-2"),
                         html.Span("Análises"),
@@ -163,7 +151,7 @@ sidebar2 = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-hand-holding-usd mr-2"),
                         html.Span("Informações"),
@@ -172,7 +160,7 @@ sidebar2 = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-toolbox mr-2"),
                         html.Span("Utils"),
@@ -181,7 +169,7 @@ sidebar2 = html.Div(
                     active="exact",
                 ),
 
-                dbc.NavLink(
+                dbc.NavLink( # ANÁLISES --------------------------------------
                     [
                         html.I(className="fas fa-cog mr-2"),
                         html.Span("Setup"),
@@ -199,10 +187,10 @@ sidebar2 = html.Div(
     style=SIDEBAR_STYLE,
 )
 
+
 content = html.Div(
     id="page-content", 
-    className="content",
-    )
+    className="content")
 
 tab_control = dbc.Container(
     [
@@ -239,9 +227,9 @@ controls = dbc.Card(
                 dcc.Dropdown(
                     id="x-variable",
                     options=[
-                        {"label": col, "value": col} for col in iris.columns
+                        {"label": col, "value": col} for col in df.columns
                     ],
-                    value="sepal length (cm)",
+                    value="",
                 ),
             ]
         ),
@@ -251,9 +239,9 @@ controls = dbc.Card(
                 dcc.Dropdown(
                     id="y-variable",
                     options=[
-                        {"label": col, "value": col} for col in iris.columns
+                        {"label": col, "value": col} for col in df.columns
                     ],
-                    value="sepal width (cm)",
+                    value="",
                 ),
             ]
         ),
@@ -267,9 +255,9 @@ controls = dbc.Card(
     body=True,
 )
 
-iris_container = dbc.Container(
+container1 = dbc.Container(
     [
-        html.H1("Iris k-means clustering"),
+        html.H1("Tributos"),
         html.Hr(),
         dbc.Row(
             [
@@ -296,7 +284,7 @@ card_content = [
 ]
 
 # KPIs
-kpis = html.Div([
+kpis_widget = html.Div([
         dbc.Row(
             [
                 dbc.Col(dbc.Card(card_content, color="light"), width=6, lg=3),
@@ -311,43 +299,16 @@ summary = dbc.Container(
     [
         header,
         html.Hr(),
-        kpis,
+        kpis_widget,
         html.Br(),
-        dt.DataTable(
-            id='table',
-            columns=[{'name': i, 'id': i} for i in df.columns],
-            data= df.to_dict('records'),
-            style_table={'overflowX': 'auto'},
-            style_cell={
-                'height': 'auto',
-                'textOverflow': 'ellipsis',
-                # all three widths are needed
-                'minWidth': '180px', 'width': '180px', 'maxWidth': '180px',
-                'whiteSpace': 'normal'
-            },
-            fixed_rows={ 'headers': True, 'data': 0 },
-            style_data_conditional=[
-                {'if': {'column_id': 'index'},
-                'width': '50px'},
-                {'if': {'column_id': 'Year'},
-                'width': '50px'},
-                {'if': {'column_id': 'Country'},
-                'width': '100px'},
-                {'if': {'column_id': 'Continent'},
-                'width': '70px'},
-                {'if': {'column_id': 'Emission'},
-                'width': '75px'},
-            ],
-            virtualization=True,
-            page_action='none',
-            # tooltip_data=[
-            #     {
-            #         column: {'value': str(value), 'type': 'markdown'}
-            #         for column, value in row.items()
-            #     } for row in df.to_dict('records')
-            # ],
-            # tooltip_duration=None,
-        )
+        dbc.Row([
+            dbc.Col(html.Div(dcc.Graph(id='g-a', figure=fig1))),
+            #dbc.Col(html.Div(dcc.Graph(id='g-b', figure=fig2))),
+        ]),
+        dbc.Row([
+            #dbc.Col(html.Div(dcc.Graph(id='g-c', figure=fig2))),
+            dbc.Col(html.Div(dcc.Graph(id='g-d', figure=fig1))),
+        ]),
     ]
 )
 
@@ -358,72 +319,74 @@ container_template = dbc.Container([
     ])
 ])
 
-selfservice_components = dbc.Container(
-    [
-        html.H2('Self-service para componentes bootstrap.'),
 
-        # KPIs
-        html.Div([
-                dbc.Row(
-                    [
-                        dbc.Col(dbc.Card(card_content, color="light"), width=6, lg=3),
-                        dbc.Col(dbc.Card(card_content, color="dark", inverse=True), width=6, lg=3),
-                        dbc.Col(dbc.Card(card_content, color="info", inverse=True), width=6, lg=3),
-                        dbc.Col(dbc.Card(card_content, color="success", inverse=True), width=6, lg=3),
-                    ]
-                )
-        ]),
+# selfservice_components = dbc.Container(
+#     [
+#         html.H2('Self-service para componentes bootstrap.'),
 
-        # Alerts
-        dbc.Card([
-            dbc.CardBody([
-                html.H1('Alert'),
-                html.Div(
-                    [
-                        dbc.Alert("This is a primary alert", color="primary"),
-                        dbc.Alert("This is a secondary alert", color="secondary"),
-                        dbc.Alert("This is a success alert! Well done!", color="success"),
-                        dbc.Alert("This is a warning alert... be careful...", color="warning"),
-                        dbc.Alert("This is a danger alert. Scary!", color="danger"),
-                        dbc.Alert("This is an info alert. Good to know!", color="info"),
-                        dbc.Alert("This is a light alert", color="light"),
-                        dbc.Alert("This is a dark alert", color="dark"),
-                    ]
-                )
-            ])
-        ]),
+#         # KPIs
+#         html.Div([
+#                 dbc.Row(
+#                     [
+#                         dbc.Col(dbc.Card(card_content, color="light"), width=6, lg=3),
+#                         dbc.Col(dbc.Card(card_content, color="dark", inverse=True), width=6, lg=3),
+#                         dbc.Col(dbc.Card(card_content, color="info", inverse=True), width=6, lg=3),
+#                         dbc.Col(dbc.Card(card_content, color="success", inverse=True), width=6, lg=3),
+#                     ]
+#                 )
+#         ]),
 
-        html.Br(),
+#         # Alerts
+#         dbc.Card([
+#             dbc.CardBody([
+#                 html.H1('Alert'),
+#                 html.Div(
+#                     [
+#                         dbc.Alert("This is a primary alert", color="primary"),
+#                         dbc.Alert("This is a secondary alert", color="secondary"),
+#                         dbc.Alert("This is a success alert! Well done!", color="success"),
+#                         dbc.Alert("This is a warning alert... be careful...", color="warning"),
+#                         dbc.Alert("This is a danger alert. Scary!", color="danger"),
+#                         dbc.Alert("This is an info alert. Good to know!", color="info"),
+#                         dbc.Alert("This is a light alert", color="light"),
+#                         dbc.Alert("This is a dark alert", color="dark"),
+#                     ]
+#                 )
+#             ])
+#         ]),
 
-        # Alert Link
-        dbc.Card([
-            dbc.CardBody([
-                html.H1('Alert Link'),
-                html.Div(
-                    [
-                        dbc.Alert(
-                            [
-                                "This is a primary alert with an ",
-                                html.A("example link", href="#", className="alert-link"),
-                            ],
-                            color="primary",
-                        ),
-                        dbc.Alert(
-                            [
-                                "This is a danger alert with an ",
-                                html.A("example link", href="#", className="alert-link"),
-                            ],
-                            color="danger",
-                        )
-                    ]
-                )
-            ])
-        ]),
+#         html.Br(),
 
-        html.Hr(),
-        html.Iframe(id="Mapa", srcDoc=open('map.html', 'r').read(), width='100%', height='600')
-    ]
-)
+#         # Alert Link
+#         dbc.Card([
+#             dbc.CardBody([
+#                 html.H1('Alert Link'),
+#                 html.Div(
+#                     [
+#                         dbc.Alert(
+#                             [
+#                                 "This is a primary alert with an ",
+#                                 html.A("example link", href="#", className="alert-link"),
+#                             ],
+#                             color="primary",
+#                         ),
+#                         dbc.Alert(
+#                             [
+#                                 "This is a danger alert with an ",
+#                                 html.A("example link", href="#", className="alert-link"),
+#                             ],
+#                             color="danger",
+#                         )
+#                     ]
+#                 )
+#             ])
+#         ]),
+
+#         html.Hr(),
+#         html.Iframe(id="Mapa", srcDoc=open('map.html', 'r').read(), width='100%', height='600')
+#     ]
+# )
+
 
 setup_page = dbc.Container([
     dbc.Card(
@@ -438,17 +401,21 @@ setup_page = dbc.Container([
     ),
 ])
 
+
 ##### Layout Geral #####
 # ============================================================================
-app.layout = html.Div([
-    dcc.Location(id="url"), 
-    sidebar2, 
-    content])
+app.layout = html.Div(
+    [
+        dcc.Location(id="url"), 
+        sidebar,
+        content,
+    ]
+)
+
 
 # Funções
 # ============================================================================
 
-# ----------------------------------------------------------------------------
 @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
 def render_page_content(pathname):
     if pathname == "/":
@@ -456,9 +423,7 @@ def render_page_content(pathname):
     elif pathname == "/page-1":
         return tab_control
     elif pathname == "/page-2":
-        return iris_container
-    elif pathname == "/page-3":
-        return selfservice_components
+        return container1
     elif pathname == "/page-4":
         return setup_page
     # If the user tries to reach a different page, return a 404 message
@@ -470,142 +435,6 @@ def render_page_content(pathname):
         ]
     )
 
-# ----------------------------------------------------------------------------
-@app.callback(
-    Output("cluster-graph", "figure"),
-    [
-        Input("x-variable", "value"),
-        Input("y-variable", "value"),
-        Input("cluster-count", "value"),
-    ],
-)
-def make_graph(x, y, n_clusters):
-    # minimal input validation, make sure there's at least one cluster
-    km = KMeans(n_clusters=max(n_clusters, 1))
-    df = iris.loc[:, [x, y]]
-    km.fit(df.values)
-    df["cluster"] = km.labels_
-
-    centers = km.cluster_centers_
-
-    data = [
-        go.Scatter(
-            x=df.loc[df.cluster == c, x],
-            y=df.loc[df.cluster == c, y],
-            mode="markers",
-            marker={"size": 8},
-            name="Cluster {}".format(c),
-        )
-        for c in range(n_clusters)
-    ]
-
-    data.append(
-        go.Scatter(
-            x=centers[:, 0],
-            y=centers[:, 1],
-            mode="markers",
-            marker={"color": "#000", "size": 12, "symbol": "diamond"},
-            name="Cluster centers",
-        )
-    )
-
-    layout = {"xaxis": {"title": x}, "yaxis": {"title": y}}
-    
-    return go.Figure(data=data, layout=layout)
-
-# ----------------------------------------------------------------------------
-# make sure that x and y values can't be the same variable
-def filter_options(v):
-    """Disable option v"""
-    return [
-        {"label": col, "value": col, "disabled": col == v}
-        for col in iris.columns
-    ]
-
-# functionality is the same for both dropdowns, so we reuse filter_options
-app.callback(Output("x-variable", "options"), [Input("y-variable", "value")])(
-    filter_options
-)
-app.callback(Output("y-variable", "options"), [Input("x-variable", "value")])(
-    filter_options
-)
-
-# ----------------------------------------------------------------------------
-@app.callback(
-    Output("tab-content", "children"),
-    [Input("tabs", "active_tab"), Input("store", "data")],
-)
-def render_tab_content(active_tab, data):
-    """
-    This callback takes the 'active_tab' property as input, as well as the
-    stored graphs, and renders the tab content depending on what the value of
-    'active_tab' is.
-    """
-    if active_tab and data is not None:
-        if active_tab == "scatter":
-            return dcc.Graph(figure=data["scatter"])
-        elif active_tab == "histogram":
-            return dbc.Container([
-                dbc.Row([
-                    dbc.Col(
-                        dbc.Card([
-                            dbc.CardHeader('Histograma 1'),
-                            dbc.CardBody([
-                                dcc.Graph(figure=data["hist_1"]),
-                            ]),
-                        ]),
-                        width=6
-                    ),
-                    dbc.Col(
-                        dbc.Card([
-                            dbc.CardHeader('Histograma 2'),
-                            dbc.CardBody([
-                                dcc.Graph(figure=data["hist_2"]),
-                            ]),
-                        ]),
-                        width=6
-                    ),
-                ]),
-            ])
-    return "No tab selected"
-
-# ----------------------------------------------------------------------------
-@app.callback(Output("store", "data"), [Input("button", "n_clicks")])
-def generate_graphs(n):
-    """
-    This callback generates three simple graphs from random data.
-    """
-    if not n:
-        # generate empty graphs when app loads
-        return {k: go.Figure(data=[]) for k in ["scatter", "hist_1", "hist_2"]}
-
-    # simulate expensive graph generation process
-    time.sleep(2)
-
-    # generate 100 multivariate normal samples
-    data = np.random.multivariate_normal([0, 0], [[1, 0.5], [0.5, 1]], 100)
-
-    scatter = go.Figure(
-        data=[go.Scatter(x=data[:, 0], y=data[:, 1], mode="markers")]
-    )
-    hist_1 = go.Figure(data=[go.Histogram(x=data[:, 0])])
-    hist_2 = go.Figure(data=[go.Histogram(x=data[:, 1])])
-
-    # save figures in a dictionary for sending to the dcc.Store
-    return {"scatter": scatter, "hist_1": hist_1, "hist_2": hist_2}
-
-# ----------------------------------------------------------------------------
-@app.callback(
-    [Output("progress", "value"), Output("progress", "children")],
-    [Input("progress-interval", "n_intervals")],
-)
-def update_progress(n):
-    # check progress of some background process, in this example we'll just
-    # use n_intervals constrained to be in 0-100
-    progress = min(n % 110, 100)
-    # only add text after 5% progress to ensure text isn't squashed too much
-    return progress, f"{progress} %" if progress >= 5 else ""
-
 
 # ============================================================================
 if __name__ == '__main__':
@@ -613,7 +442,7 @@ if __name__ == '__main__':
     # app.run_server(debug=False, port=8080, host="0.0.0.0")
     
     # ## Debug
-    app.run_server(debug=True, port=8080, host="0.0.0.0")
+    app.run_server(debug=True, port=8080, host=HOST)
 
     # ## Para não fazer o refresh automático, use:
     # app.run_server(dev_tools_hot_reload=False)

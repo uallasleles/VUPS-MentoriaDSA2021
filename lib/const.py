@@ -10,22 +10,25 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 
 BASEDIR = os.path.abspath('')
 DATADIR = os.path.join(BASEDIR + '\\data\\')
-DATAFILE = "MICRODADOS.csv"
+
+# DATAFILE = {
+#     'FILENAME': 'MICRODADOS.csv',
+#     'SEP': ';',
+#     'ENCODING': 'latin1',
+#     'DATADIC': 'dictionary.md'}
 
 DATAFILE = {
-    'FILENAME': 'MICRODADOS.csv',
+    'FILENAME': 'MICRODADOS_BAIRROS.csv',
     'SEP': ';',
-    'ENCODING': 'latin1'}
+    'ENCODING': 'latin1',
+    'DATADIC': 'dictionary.md'}
 
 # DATAFILE = {
 #     'FILENAME': 'Arrecadacao_01-01-1998_a_31-12-2001.csv',
 #     'SEP': ',',
-#     'ENCODING': 'utf-8'}
+#     'ENCODING': 'utf-8',
+#     'DATADIC': 'dictionary.md'}
 
-DATADIC = 'dictionary.md'
-
-
-# ENCODING = 'utf-8'
 
 # Formatação dos argumentos da barra lateral
 SIDEBAR_STYLE = {"position": "fixed", 
@@ -147,3 +150,4 @@ def read_config():
     CSV_DATA_CRIACAO    = key_list[val_list.index(DATA_CRIACAO)]
     CSV_DATA_FECHAMENTO = key_list[val_list.index(DATA_FECHAMENTO)]
     CSV_TIPO_CHAMADO    = key_list[val_list.index(TIPO_CHAMADO)]
+
