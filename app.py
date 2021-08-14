@@ -386,7 +386,6 @@ container_template = dbc.Container([
 #     ]
 # )
 
-
 setup_page = dbc.Container([
     dbc.Card(
         dbc.CardFooter(
