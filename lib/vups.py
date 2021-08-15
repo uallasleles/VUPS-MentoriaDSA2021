@@ -182,12 +182,12 @@ def fn_number_cols(df):
 
 def dtype_transform(df):
 
-    date_cols = fn_date_cols(df)
-    for c in date_cols:
-        try:
-            df[c] = df[c].astype('datetime64[ns]')
-        except:
-            pass
+    # date_cols = fn_date_cols(df)
+    # for c in date_cols:
+    #     try:
+    #         df[c] = df[c].astype('datetime64[ns]')
+    #     except:
+    #         pass
 
     cat_cols = list(df.select_dtypes(include='object').columns)
     for c in cat_cols:
