@@ -101,6 +101,7 @@ server = app.server
 # Figuras
 # ============================================================================
 fig1 = vups.plot_bar()
+fig2 = vups.plot_year_taxs()
 #fig2 = vups.plot_sexo_idade(df)
 #fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
 
@@ -301,16 +302,12 @@ summary = dbc.Container(
         kpis_widget,
         html.Br(),
         dbc.Row([
-            dbc.Col(html.Div(dcc.Graph(id='g-a', figure=fig1))),
-            #dbc.Col(html.Div(dcc.Graph(id='g-b', figure=fig2))),
-        ]),
-        dbc.Row([
-            #dbc.Col(html.Div(dcc.Graph(id='g-c', figure=fig2))),
-            dbc.Col(html.Div(dcc.Graph(id='g-d', figure=fig1))),
-        ]),
+            #dbc.Col(dcc.Graph(id='g-a', figure=fig1)),
+            dbc.Col(dcc.Graph(id='g-b', figure=fig2)),
+        ])
     ]
 )
-
+# alalsalls
 container_template = dbc.Container([
     dbc.Card([
         dbc.CardHeader(''),
@@ -433,17 +430,17 @@ def render_page_content(pathname):
         ]
     )
 
-
 # ============================================================================
+
 if __name__ == '__main__':
-    # ## Acesso em local network
+    ## Debug
+    app.run_server(debug=True, port=8080, host=HOST)
+
+    ## Acesso em local network
     # app.run_server(debug=False, port=8080, host="0.0.0.0")
 
-    # ## AWS
-    app.run_server(debug=True, host=HOST)
+    ## AWS
+    # app.run_server(debug=True, host=HOST)
 
-    # ## Debug
-    # app.run_server(debug=True, port=8080, host=HOST)
-
-    # ## Para não fazer o refresh automático, use:
+    ## Para não fazer o refresh automático, use:
     # app.run_server(dev_tools_hot_reload=False)

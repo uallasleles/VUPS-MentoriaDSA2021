@@ -281,12 +281,12 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
     df = df[df['sg_uf'] == UF]
 
     # CRIA O GRÁFICO
-    fig = px.bar(df, 
+    fig = px.bar(df,
                  x='ano_arrecadacao', 
                  y='va_arrecadacao',
-                 hover_data=['NM_TIP_ARRECAD'], 
+                 hover_data=['NM_TIP_ARRECAD'],
                  color='NM_TIP_ARRECAD',
-                 labels={'pop':'population of Canada'}, 
+                 labels={'pop':'population of Canada'},
                  height=600)
 
-    return fig.show()
+    return fig
