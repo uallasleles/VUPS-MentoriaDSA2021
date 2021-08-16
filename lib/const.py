@@ -8,8 +8,15 @@ import json
 APP_LOGO = "imagens/logo.png"
 MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 
-BASEDIR = os.path.abspath('')
-DATADIR = os.path.join(BASEDIR + '\\data\\')
+# ABSPATH = os.path.abspath('.')
+# BASENAME = os.path.basename('.')
+# #COMMONPATH = os.path.commonpath('.')
+# COMMONPREFIX = os.path.commonprefix('.')
+# DIRNAME = os.path.dirname(__file__)
+# REALPATH = os.path.realpath('.')
+
+BASEDIR = os.path.dirname(os.path.dirname(__file__))
+DATADIR = os.path.join(BASEDIR + '/data/')
 
 # DATAFILE = {
 #     'FILENAME': 'MICRODADOS.csv',

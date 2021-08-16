@@ -438,9 +438,12 @@ def render_page_content(pathname):
 if __name__ == '__main__':
     # ## Acesso em local network
     # app.run_server(debug=False, port=8080, host="0.0.0.0")
-    
+
+    # ## AWS
+    app.run_server(debug=True, host=HOST)
+
     # ## Debug
-    app.run_server(debug=True, port=8080, host=HOST)
+    # app.run_server(debug=True, port=8080, host=HOST)
 
     # ## Para não fazer o refresh automático, use:
     # app.run_server(dev_tools_hot_reload=False)
