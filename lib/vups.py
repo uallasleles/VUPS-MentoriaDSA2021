@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
 import sys
 from matplotlib import pyplot as plt
@@ -217,6 +218,11 @@ def dtype_transform(df):
 
     return df
 
+tax_cat_col = {
+    # 'ano_arrecadacao': 'category', 
+    # 'mes_arrecadacao': 'category', 
+    # 'co_tipo_arrecadacao': 'category'
+}
 
 class datasets:
     def microdados(nrows=None, dtype=None):
@@ -226,7 +232,7 @@ class datasets:
         return get_data(file='MICRODADOS_BAIRROS.csv', nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
 
     def arrecadacao_1998_a_2001(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-1998_a_31-12-2001.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+        return get_data(file='Arrecadacao_01-01-1998_a_31-12-2001.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=tax_cat_col)
     
     def arrecadacao_2002_a_2005(nrows=None, dtype=None):
         return get_data(file='Arrecadacao_01-01-2002_a_31-12-2005.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
@@ -245,3 +251,42 @@ class datasets:
          
     def tipo_arrecadacao(nrows=None, dtype=None):
         return get_data(file='TipoArrecadacao.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+
+# Função para agrupamento
+def group_by(df, col):
+
+    # Agregação
+    grouped = df.groupby(by = col, as_index = False).agg({'va_arrecadacao': 'sum'})
+
+    # Calculando a margem de lucro
+    #grouped['Margem_Lucro'] = np.multiply(np.divide(grouped['Lucro'], grouped['Venda']), 100).round(2)
+    
+    return grouped
+
+
+def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
+    
+    # INNER JOIN COM OS TIPOS DE ARRECADAÇÃO
+    df = pd.merge(df, datasets.tipo_arrecadacao(), 
+                  how='left', 
+                  left_on='co_tipo_arrecadacao', 
+                  right_on='CD_TIP_ARRECAD')
+
+    # AGRUPANDO POR: UF, ANO, TRIBUTO
+    df = group_by(df, ['sg_uf', 
+                       'ano_arrecadacao', 
+                       'NM_TIP_ARRECAD']).sort_values(["ano_arrecadacao", "va_arrecadacao"], ascending=False)
+
+    # FILTRANDO O ESTADO
+    df = df[df['sg_uf'] == UF]
+
+    # CRIA O GRÁFICO
+    fig = px.bar(df, 
+                 x='ano_arrecadacao', 
+                 y='va_arrecadacao',
+                 hover_data=['NM_TIP_ARRECAD'], 
+                 color='NM_TIP_ARRECAD',
+                 labels={'pop':'population of Canada'}, 
+                 height=600)
+
+    return fig.show()
