@@ -16,7 +16,7 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 # REALPATH = os.path.realpath('.')
 
 BASEDIR = os.path.dirname(os.path.dirname(__file__))
-DATADIR = os.path.join(BASEDIR + '\\data\\')
+DATADIR = os.path.join(BASEDIR + '/data/')
 
 # DATAFILE = {
 #     'FILENAME': 'MICRODADOS.csv',
