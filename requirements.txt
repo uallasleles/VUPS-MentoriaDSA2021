@@ -1,1 +1,5 @@
 s3fs==2021.07.0
+branca==0.4.2
+dash==1.19.0
+dash_bootstrap_components==0.11.3
+folium==0.12.1
