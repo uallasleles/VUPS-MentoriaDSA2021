@@ -289,4 +289,4 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
                  labels={'pop':'population of Canada'}, 
                  height=600)
 
-    return fig.show()
+    return fig
