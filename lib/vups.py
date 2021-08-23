@@ -289,6 +289,7 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
                  labels={'pop':'population of Canada'},
                  height=600)
 
+<<<<<<< HEAD
     return fig.show()
 
 
@@ -587,3 +588,6 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
 
 calendar = plt_calendar_heatmap()
 calendar.show()
+=======
+    return fig
+>>>>>>> a8f89ac1689d5015b18812f681d96d5e15da2464
