@@ -4,7 +4,7 @@ from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
 import sys
 from matplotlib import pyplot as plt
-import const
+from . import const
 import json
 import requests
 #import folium
@@ -289,8 +289,7 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
                  labels={'pop':'population of Canada'},
                  height=600)
 
-<<<<<<< HEAD
-    return fig.show()
+    return fig
 
 
 def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_analise= 1, ano_analise= 2021):
@@ -361,7 +360,7 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
     #--- ATENCAO!!! --- DataEncerramento NAO esta sendo transformada automaticamente, por isso vamos forçar essa transformação aqui
     #após corrigido, retirar esse pedaço de código
     #transformando DataEncerramento em datatype
-    df_calendar_closed['DataEncerramento'] = pd.to_datetime(df_calendar_closed['DataEncerramento'], format='%Y-%m-%d')
+    #df_calendar_closed['DataEncerramento'] = pd.to_datetime(df_calendar_closed['DataEncerramento'], format='%Y-%m-%d')
 
     #transformando valores de casos fechados em negativo
     df_calendar_closed['count_closed'] = df_calendar_closed['count_closed']*-1
@@ -585,9 +584,3 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
                            str(ano_analise), title_x=0.5)
 
     return fig1
-
-calendar = plt_calendar_heatmap()
-calendar.show()
-=======
-    return fig
->>>>>>> a8f89ac1689d5015b18812f681d96d5e15da2464
