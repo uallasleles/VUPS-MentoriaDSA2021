@@ -102,6 +102,7 @@ server = app.server
 # ============================================================================
 fig1 = vups.plot_bar()
 fig2 = vups.plot_year_taxs()
+fig3 = vups.plot_tributos_ipca()
 #fig2 = vups.plot_sexo_idade(df)
 #fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
 
@@ -303,6 +304,9 @@ summary = dbc.Container(
         html.Br(),
         dbc.Row([
             dbc.Col(dcc.Graph(id='g-a', figure=fig2)),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id='g-b', figure=fig3)),
         ]),
     ]
 )

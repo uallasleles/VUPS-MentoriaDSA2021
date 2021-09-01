@@ -9,6 +9,7 @@ import json
 import requests
 import folium
 import branca
+import datetime
 
 # from dask.distributed import Client, progress
 # client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
@@ -288,5 +289,89 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
                  color='NM_TIP_ARRECAD',
                  labels={'pop':'population of Canada'}, 
                  height=600)
+
+    return fig
+
+
+def plot_tributos_ipca(cidade='AFONSO CLAUDIO'):
+
+    # Obtendo os dados
+    # ==========================================
+    # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
+    transf_2018 = pd.read_csv('data/transfestadomunicipios-2018.csv', sep=';')
+    transf_2019 = pd.read_csv('data/transfestadomunicipios-2019.csv', sep=';')
+    transf_2020 = pd.read_csv('data/transfestadomunicipios-2020.csv', sep=';')
+    transf_2021 = pd.read_csv('data/transfestadomunicipios-2021.csv', sep=';')
+
+    # juntando informacoes em 1 dataset
+    # ==========================================
+    transferencias = pd.concat([transf_2018, transf_2019, transf_2020, transf_2021], ignore_index=True)
+
+    # Mudando os codigos municipais errados das tres cidades com homonimos
+    # ====================================================================
+    # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
+    # * Presidente Keneddy (TO - 1718402) -> (ES - 3204302)
+    # * Viana (MA - 2112803) -> (ES - 3205101)
+
+    for i in range(len(transferencias)):
+        #Boa Esperança
+        if transferencias.loc[i, 'CodMunicipio'] == 3107109:
+            transferencias.loc[i, 'CodMunicipio'] = 3201001
+        elif transferencias.loc[i, 'CodMunicipio'] == 1718402:
+            transferencias.loc[i, 'CodMunicipio'] = 3204302
+        elif transferencias.loc[i, 'CodMunicipio'] == 2112803:
+            transferencias.loc[i, 'CodMunicipio'] = 3205101
+
+    # Transformando colunas pertinentes em numbers
+    # ====================================================================
+    calumns_to_num = ['IcmsTotal', 'Ipi', 'Ipva', 'FundoReducaoDesigualdades']
+    for x in calumns_to_num:
+        transferencias[x] = [round(float(transferencias[x].iloc[i].replace(',', '.')), 2) for i in range(len(transferencias))]
+
+    # Criando coluna de totais
+    # ====================================================================
+    transferencias['TotalRepassado'] = transferencias[calumns_to_num[0]] + transferencias[calumns_to_num[1]] + transferencias[calumns_to_num[2]] + transferencias[calumns_to_num[3]]
+    
+    # Criando coluna com datatype
+    # ====================================================================
+    transferencias['Data'] = [datetime.datetime(transferencias['Ano'].iloc[i], transferencias['Mes'].iloc[i], 28) for i in range(len(transferencias))]
+
+    # Criando filtros
+    # ====================================================================
+    df = transferencias[transferencias['NomeMunicipio']==cidade][['TotalRepassado', 'Data']]
+
+    # Refazer de forma mais automatica -> aqui foi so para teste
+    # ====================================================================
+    list_date = list(df['Data'])
+    ipca = [0.29, 0.32, 0.09, 0.22, 0.4, 1.26, 0.33, -0.09, 0.48, 0.45, -0.21, 0.15, 0.32, 0.43, 0.75, 0.57, 0.13, 0.01, 0.19, 0.11, -0.04, 0.1, 0.51, 1.15, 0.21, 0.25, 0.07, -0.31, -0.38, 0.26, 0.36, 0.24, 0.64, 0.86, 0.89, 1.35, 0.25, 0.86, 0.93, 0.31]
+    dict_ipca={}
+    for idx, i in enumerate(list_date):
+        dict_ipca[i]=ipca[idx]
+
+    df['IPCA'] = ipca
+    
+    # Valores de comparacao - ipca
+    # ====================================================================
+    list_valor_comparacao = []
+    for i in range(len(df)):
+        if i == 0:
+            list_valor_comparacao.append(df['TotalRepassado'].iloc[i])
+        else:
+            list_valor_comparacao.append(round(list_valor_comparacao[i-1]*(1+df['IPCA'].iloc[i-1]/100), 2))
+            
+    df['ValorComparacao'] = list_valor_comparacao
+    
+    # Plot
+    # ====================================================================
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(y=df['TotalRepassado'], x=df['Data'],
+                        mode='lines',
+                        name='Repasse Estadual'))
+    fig.add_trace(go.Scatter(y=df['ValorComparacao'], x=df['Data'],
+                       mode='lines',
+                       name='Valor Ajustado por IPCA'))
+
 
     return fig
