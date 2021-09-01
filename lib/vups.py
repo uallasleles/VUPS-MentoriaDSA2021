@@ -9,6 +9,7 @@ import json
 import requests
 import folium
 import branca
+import datetime
 
 # from dask.distributed import Client, progress
 # client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
@@ -368,6 +369,9 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
     #renomendo coluna DataEncerramento
     df_calendar_closed.rename(columns={'DataEncerramento': 'date'}, inplace=True)
 
+    #transformando o dtype na coluna 'date' para datetime
+    df_calendar_closed['date'] = df_calendar_closed['date'].astype('datetime64[ns]')
+
     # --------- MERGE ENTRE OS DOIS DFs CRIADOS ---------
     df_calendar = pd.merge(df_calendar_new, df_calendar_closed, how='outer', left_on=['Municipio', 'date'], right_on=['Municipio', 'date'])
 
@@ -429,16 +433,19 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
     #criando listagem com a contagem de casos para cada dia do mes e as informações da semana do ano e dia da semana
     #preenchendo com zero os dias em que nao tiveram registros
     info_dia = []
+    contador = 0
     for i in range(1, n_dias + 1):
-        if i == df_calendar_display['day'].iloc[i-1]:
+        if i == df_calendar_display['day'].iloc[contador]:
             dia = i
-            numero_casos = int(df_calendar_display.iloc[i-1,-1])
-            semana_do_ano = df_calendar_display['week'].iloc[i-1]
-            dia_da_semana = df_calendar_display['weekday'].iloc[i-1]
+            numero_casos = int(df_calendar_display.iloc[contador,-1])
+            semana_do_ano = df_calendar_display['week'].iloc[contador]
+            dia_da_semana = df_calendar_display['weekday'].iloc[contador]
+            if contador < len(df_calendar_display)-1:
+                contador = contador + 1
         else:
             dia = i
             numero_casos = 0
-            semana_do_ano = int(datetime(ano_analise, mes_analise, i).strftime('%W')) + 1 #essa função fas uma conta diferente da que usamos para calcular a semana no dataframe (por isso o + 1)
+            semana_do_ano = int(datetime(ano_analise, mes_analise, i).strftime('%W')) #essa função faz uma conta diferente da que usamos para calcular a semana no dataframe (por isso o + 1)
             dia_da_semana = datetime(ano_analise, mes_analise, i).weekday()
 
         info_dia.append([dia, numero_casos, semana_do_ano, dia_da_semana])
