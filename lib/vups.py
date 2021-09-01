@@ -355,7 +355,7 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
     #renomendo coluna DataDiagnostico
     df_calendar_new.rename(columns={'DataDiagnostico': 'date'}, inplace=True)
 
-    #df_calendar_closed -> filtrar passientes com covid confirmados; groupby(Municipio, DataEncerramento); contar ocorrencias
+    #df_calendar_closed -> filtrar pacientes com covid confirmados; groupby(Municipio, DataEncerramento); contar ocorrencias
     df_calendar_closed = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataEncerramento'])['DataCadastro'].size().reset_index(name='count_closed')
 
     #--- ATENCAO!!! --- DataEncerramento NAO esta sendo transformada automaticamente, por isso vamos forçar essa transformação aqui
@@ -445,7 +445,7 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
         else:
             dia = i
             numero_casos = 0
-            semana_do_ano = int(datetime(ano_analise, mes_analise, i).strftime('%W')) #essa função faz uma conta diferente da que usamos para calcular a semana no dataframe (por isso o + 1)
+            semana_do_ano = int(datetime(ano_analise, mes_analise, i).strftime('%W'))
             dia_da_semana = datetime(ano_analise, mes_analise, i).weekday()
 
         info_dia.append([dia, numero_casos, semana_do_ano, dia_da_semana])
@@ -484,6 +484,12 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
 
     while len(final_casos[-1]) < 7:
         final_casos[-1].append(0.001*max_value)
+
+    #transformando valores a serem pintados em cinza, em negativo
+    for i in range(len(final_casos)):
+        for j in range(len(final_casos[i])):
+            if final_casos[i][j]>0 and final_casos[i][j]<1:
+                final_casos[i][j] = final_casos[i][j]*-1
 
     #tranformando dias de int para str
     dias = list(map(str, dias))
@@ -566,9 +572,9 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
                                       x=x,
                                       y=y,
                                       annotation_text=z_text,
-                                      colorscale=[[0.0, 'rgb(235, 236, 240)'], #255,245,240
-                                                  [0.01, 'rgb(255,255,255)'],
-                                                  [0.11, 'rgb(255,245,240)'],
+                                      colorscale=[[0.0, 'rgb(235, 236, 240)'], #valores negativos
+                                                  [0.00001, 'rgb(255,255,255)'],
+                                                  [0.1, 'rgb(255,245,240)'],
                                                   [0.2, 'rgb(252,201,180)'],
                                                   [0.4, 'rgb(251,136,104)'],
                                                   [0.6, 'rgb(242,67,49)'],
