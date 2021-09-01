@@ -4,7 +4,7 @@ from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
 import sys
 from matplotlib import pyplot as plt
-from . import const
+from lib import const
 import json
 import requests
 import folium
