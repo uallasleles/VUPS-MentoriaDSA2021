@@ -102,8 +102,9 @@ server = app.server
 # ============================================================================
 fig1 = vups.plot_bar()
 fig2 = vups.plot_year_taxs()
-#fig2 = vups.plot_sexo_idade(df)
-#fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
+#fig3 = vups.plot_sexo_idade(df)
+#fig4 = vups.plot_qtd_pessoas_x_sintomas(df)
+fig5 = vups.plt_calendar_heatmap()
 
 
 # ============================================================================
@@ -302,7 +303,7 @@ summary = dbc.Container(
         kpis_widget,
         html.Br(),
         dbc.Row([
-            dbc.Col(dcc.Graph(id='g-a', figure=fig2)),
+            dbc.Col(dcc.Graph(id='g-a', figure=fig5)),
         ]),
     ]
 )
