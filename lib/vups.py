@@ -14,7 +14,7 @@ import datetime
 # from dask.distributed import Client, progress
 # client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
 # import dask
-# import dask.dataframe as dd
+import dask.dataframe as dd
 
 # CONFIG #####################################################################
 pd.options.display.float_format = '{:.2f}'.format
@@ -26,22 +26,29 @@ def get_data(
     file=const.DATAFILE['FILENAME'],
     sep=const.DATAFILE['SEP'],
     encoding=const.DATAFILE['ENCODING'],
-    dtype=None):
+    dtype=None,
+    df_type='pd'):
 
     PATH = os.path.join(const.DATADIR + file)
-    # pd.read_csv('data/dataframe_saved_v2.csv', parse_dates = ['Data'], usecols = list(range(0,6)))
-    #TODO ANALISAR A IMPLEMENTAÇÃO DO PARSE DATE
-    dataset = pd.read_csv(  PATH,
-                            sep=sep,
-                            error_bad_lines=False,
-                            encoding=encoding,
-                            nrows=nrows,
-                            warn_bad_lines=warn_bad_lines,
-                            dtype=dtype)
-    dataset = dtype_transform(dataset)
+    if df_type=='dd':
+        dataset = dd.read_csv(  PATH,
+                                sep=sep,
+                                error_bad_lines=False,
+                                encoding=encoding,
+                                warn_bad_lines=warn_bad_lines,
+                                dtype=dtype)
+    else:
+        dataset = pd.read_csv(  PATH,
+                                sep=sep,
+                                error_bad_lines=False,
+                                nrows=nrows,
+                                encoding=encoding,
+                                warn_bad_lines=warn_bad_lines,
+                                dtype=dtype)
+        dataset = dtype_transform(dataset)
     return dataset
 
-def plot_qtd_pessoas_x_sintomas(df):
+# def plot_qtd_pessoas_x_sintomas(df):
     # Tratamento de dados
     from itertools import compress
     import matplotlib.pyplot as plt
@@ -159,7 +166,7 @@ def fn_date_cols(df):
 
     for n in list(df.columns):
         i = df.columns.get_loc(n) # ÍNDICE DA COLUNA
-        v = df.iloc[0, i]         # VALOR NA LINHA ZERO
+        v = df.iloc[:, i]         # VALOR NA LINHA ZERO
         try:
             if (re.search(date_patern1, v) is not None) or (re.search(date_patern2, v) is not None):
                 lst_cols.append(n)
@@ -173,7 +180,7 @@ def fn_number_cols(df):
 
     for n in list(df.columns):
         i = df.columns.get_loc(n)   # ÍNDICE DA COLUNA
-        v = df.iloc[1, i]           # VALOR NA LINHA ZERO
+        v = df.iloc[:, i]           # VALOR NA LINHA ZERO
         try:
             if float(n):            # SE PASSAR, É UM NÚMERO (Tenta converter para float)
                 lst_cols.append(n)
@@ -202,7 +209,7 @@ def dtype_transform(df):
 
     for c in numeric_cols:
         i = df.columns.get_loc(c) # ÍNDICE DA COLUNA
-        v = df.iloc[0, i]         # VALOR NA LINHA ZERO
+        v = df.iloc[:0, i]         # VALOR NA LINHA ZERO
         try:
             if float(v) and not v.isdecimal():
                 try:
@@ -226,8 +233,8 @@ tax_cat_col = {
 }
 
 class datasets:
-    def microdados(nrows=None, dtype=None):
-        return get_data(file='MICRODADOS.csv', nrows=nrows, sep=';', encoding='latin1', dtype=dtype)
+    def microdados(nrows=None, dtype={'DataObito': 'object'}):
+        return get_data(file='MICRODADOS.csv', nrows=nrows, sep=';', encoding='latin1', dtype=dtype, df_type='dd')
 
     def microdados_bairros(nrows=None, dtype=None):
         return get_data(file='MICRODADOS_BAIRROS.csv', nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
@@ -350,10 +357,14 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
 
     # --------- CRIANDO DF_CALENDAR_NEW(CASOS NOVOS) E DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
     #df_calendar_new -> filtrar pacientes com covid confirmados; groupby(Municipio, DataDiagnostico); contar ocorrencias
-    df_calendar_new = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataDiagnostico'])['DataCadastro'].size().reset_index(name='count_new')
+    df_calendar_new = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataDiagnostico'])['DataCadastro'].size().reset_index('count_new')
 
+    df_calendar_new.dtype()
     #renomendo coluna DataDiagnostico
     df_calendar_new.rename(columns={'DataDiagnostico': 'date'}, inplace=True)
+
+    #transformando o dtype na coluna 'date' para datetime
+    df_calendar_new['date'] = df_calendar_new['date'].astype('datetime64[ns]')
 
     #df_calendar_closed -> filtrar pacientes com covid confirmados; groupby(Municipio, DataEncerramento); contar ocorrencias
     df_calendar_closed = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataEncerramento'])['DataCadastro'].size().reset_index(name='count_closed')
