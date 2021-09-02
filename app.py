@@ -101,9 +101,10 @@ server = app.server
 # Figuras
 # ============================================================================
 fig1 = vups.plot_year_taxs()
-fig2 = vups.plot_tributos_ipca()
-fig3 = vups.plot_comp_tributos_cidades()
-fig4 = vups.plot_comp_tributos_cidades_norm()
+fig2 = vups.plot_calendar_heatmap()
+fig3 = vups.plot_tributos_ipca()
+fig4 = vups.plot_comp_tributos_cidades()
+fig5 = vups.plot_comp_tributos_cidades_norm()
 #fig2 = vups.plot_sexo_idade(df)
 #fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
 
@@ -307,13 +308,16 @@ summary = dbc.Container(
             dbc.Col(dcc.Graph(id='fig1', figure=fig1)),
         ]),
         dbc.Row([
-            dbc.Col(dcc.Graph(id='fig2', figure=fig2)),
+            dbc.Col(dcc.Graph(id='fig1', figure=fig2)),
         ]),
         dbc.Row([
-            dbc.Col(dcc.Graph(id='fig3', figure=fig3)),
+            dbc.Col(dcc.Graph(id='fig2', figure=fig3)),
         ]),
         dbc.Row([
-            dbc.Col(dcc.Graph(id='fig4', figure=fig4)),
+            dbc.Col(dcc.Graph(id='fig3', figure=fig4)),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id='fig4', figure=fig5)),
         ]),
         dbc.Row([
             dbc.Col(dcc.Markdown('''
