@@ -19,7 +19,6 @@ import datetime
 # CONFIG #####################################################################
 pd.options.display.float_format = '{:.2f}'.format
 
-
 def get_data(
     warn_bad_lines=True,
     nrows=None,
@@ -113,8 +112,7 @@ def generate_table(df, max_rows=10):
                 html.Td(df.iloc[i][col]) for col in df.columns
             ]) for i in range(min(len(df), max_rows))
         ])
-    ]
-)
+    ])
 
 def plot_sexo_idade(df):
     fig = px.bar(df, x='Sexo', y='IdadeNaDataNotificacao')
@@ -223,7 +221,7 @@ tax_cat_col = {
     # 'ano_arrecadacao': 'category',
     # 'mes_arrecadacao': 'category',
     # 'co_tipo_arrecadacao': 'category'
-}
+    }
 
 class datasets:
     def microdados(nrows=None, dtype=None):
@@ -253,9 +251,10 @@ class datasets:
     def tipo_arrecadacao(nrows=None, dtype=None):
         return get_data(file='TipoArrecadacao.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-# Função para agrupamento
 def group_by(df, col):
-
+    """
+    Função para agrupamento
+    """
     # Agregação
     grouped = df.groupby(by = col, as_index = False).agg({'va_arrecadacao': 'sum'})
 
@@ -263,7 +262,6 @@ def group_by(df, col):
     #grouped['Margem_Lucro'] = np.multiply(np.divide(grouped['Lucro'], grouped['Venda']), 100).round(2)
 
     return grouped
-
 
 def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
 
@@ -291,7 +289,6 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
                  height=600)
 
     return fig
-
 
 def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_analise= 1, ano_analise= 2021):
     """
@@ -597,6 +594,7 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
                            str(ano_analise), title_x=0.5)
 
     return fig1
+
 def plot_tributos_ipca(cidade='AFONSO CLAUDIO'):
 
     # Obtendo os dados
@@ -780,7 +778,6 @@ def plot_comp_tributos_cidades(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARIACICA
                                  mode='lines',
                                  name=list_cidades[i]))
     return fig
-
 
 def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARIACICA', 'GUARAPARI', 'LINHARES', 'PIUMA']):
     #import pandas as pd
