@@ -597,3 +597,289 @@ def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anali
                            str(ano_analise), title_x=0.5)
 
     return fig1
+def plot_tributos_ipca(cidade='AFONSO CLAUDIO'):
+
+    # Obtendo os dados
+    # ==========================================
+    # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
+    transf_2018 = pd.read_csv('data/transfestadomunicipios-2018.csv', sep=';')
+    transf_2019 = pd.read_csv('data/transfestadomunicipios-2019.csv', sep=';')
+    transf_2020 = pd.read_csv('data/transfestadomunicipios-2020.csv', sep=';')
+    transf_2021 = pd.read_csv('data/transfestadomunicipios-2021.csv', sep=';')
+
+    # juntando informacoes em 1 dataset
+    # ==========================================
+    transferencias = pd.concat([transf_2018, transf_2019, transf_2020, transf_2021], ignore_index=True)
+
+    # Mudando os codigos municipais errados das tres cidades com homonimos
+    # ====================================================================
+    # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
+    # * Presidente Keneddy (TO - 1718402) -> (ES - 3204302)
+    # * Viana (MA - 2112803) -> (ES - 3205101)
+
+    for i in range(len(transferencias)):
+        #Boa Esperança
+        if transferencias.loc[i, 'CodMunicipio'] == 3107109:
+            transferencias.loc[i, 'CodMunicipio'] = 3201001
+        elif transferencias.loc[i, 'CodMunicipio'] == 1718402:
+            transferencias.loc[i, 'CodMunicipio'] = 3204302
+        elif transferencias.loc[i, 'CodMunicipio'] == 2112803:
+            transferencias.loc[i, 'CodMunicipio'] = 3205101
+
+    # Transformando colunas pertinentes em numbers
+    # ====================================================================
+    calumns_to_num = ['IcmsTotal', 'Ipi', 'Ipva', 'FundoReducaoDesigualdades']
+    for x in calumns_to_num:
+        transferencias[x] = [round(float(transferencias[x].iloc[i].replace(',', '.')), 2) for i in range(len(transferencias))]
+
+    # Criando coluna de totais
+    # ====================================================================
+    transferencias['TotalRepassado'] = transferencias[calumns_to_num[0]] + transferencias[calumns_to_num[1]] + transferencias[calumns_to_num[2]] + transferencias[calumns_to_num[3]]
+    
+    # Criando coluna com datatype
+    # ====================================================================
+    transferencias['Data'] = [datetime.datetime(transferencias['Ano'].iloc[i], transferencias['Mes'].iloc[i], 28) for i in range(len(transferencias))]
+
+    # Criando filtros
+    # ====================================================================
+    df = transferencias[transferencias['NomeMunicipio']==cidade][['TotalRepassado', 'Data']]
+
+    # Refazer de forma mais automatica -> aqui foi so para teste
+    # ====================================================================
+    list_date = list(df['Data'])
+    ipca = [0.29, 0.32, 0.09, 0.22, 0.4, 1.26, 0.33, -0.09, 0.48, 0.45, -0.21, 0.15, 0.32, 0.43, 0.75, 0.57, 0.13, 0.01, 0.19, 0.11, -0.04, 0.1, 0.51, 1.15, 0.21, 0.25, 0.07, -0.31, -0.38, 0.26, 0.36, 0.24, 0.64, 0.86, 0.89, 1.35, 0.25, 0.86, 0.93, 0.31]
+    dict_ipca={}
+    for idx, i in enumerate(list_date):
+        dict_ipca[i]=ipca[idx]
+
+    df['IPCA'] = ipca
+    
+    # Valores de comparacao - ipca
+    # ====================================================================
+    list_valor_comparacao = []
+    for i in range(len(df)):
+        if i == 0:
+            list_valor_comparacao.append(df['TotalRepassado'].iloc[i])
+        else:
+            list_valor_comparacao.append(round(list_valor_comparacao[i-1]*(1+df['IPCA'].iloc[i-1]/100), 2))
+            
+    df['ValorComparacao'] = list_valor_comparacao
+    
+    # Plot
+    # ====================================================================
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(y=df['TotalRepassado'], x=df['Data'],
+                        mode='lines',
+                        name='Repasse Estadual'))
+    fig.add_trace(go.Scatter(y=df['ValorComparacao'], x=df['Data'],
+                       mode='lines',
+                       name='Valor Ajustado por IPCA'))
+
+
+    return fig
+
+def plot_comp_tributos_cidades(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARIACICA', 'GUARAPARI', 'LINHARES', 'PIUMA']):
+    #import pandas as pd
+    #import datetime
+
+    # Obtendo os dados
+    # ==========================================
+    # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
+    transf_2018 = pd.read_csv('data/transfestadomunicipios-2018.csv', sep=';')
+    transf_2019 = pd.read_csv('data/transfestadomunicipios-2019.csv', sep=';')
+    transf_2020 = pd.read_csv('data/transfestadomunicipios-2020.csv', sep=';')
+    transf_2021 = pd.read_csv('data/transfestadomunicipios-2021.csv', sep=';')
+
+    # juntando informacoes em 1 dataset
+    # ==========================================
+    transferencias = pd.concat([transf_2018, transf_2019, transf_2020, transf_2021], ignore_index=True)
+
+    # Mudando os codigos municipais errados das tres cidades com homonimos
+    # ====================================================================
+    # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
+    # * Presidente Keneddy (TO - 1718402) -> (ES - 3204302)
+    # * Viana (MA - 2112803) -> (ES - 3205101)
+
+    for i in range(len(transferencias)):
+        #Boa Esperança
+        if transferencias.loc[i, 'CodMunicipio'] == 3107109:
+            transferencias.loc[i, 'CodMunicipio'] = 3201001
+        elif transferencias.loc[i, 'CodMunicipio'] == 1718402:
+            transferencias.loc[i, 'CodMunicipio'] = 3204302
+        elif transferencias.loc[i, 'CodMunicipio'] == 2112803:
+            transferencias.loc[i, 'CodMunicipio'] = 3205101
+
+    # Transformando colunas pertinentes em numbers
+    # ====================================================================
+    calumns_to_num = ['IcmsTotal', 'Ipi', 'Ipva', 'FundoReducaoDesigualdades']
+    for x in calumns_to_num:
+        transferencias[x] = [round(float(transferencias[x].iloc[i].replace(',', '.')), 2) for i in range(len(transferencias))]
+
+    # Criando coluna de totais
+    # ====================================================================
+    transferencias['TotalRepassado'] = transferencias[calumns_to_num[0]] + transferencias[calumns_to_num[1]] + transferencias[calumns_to_num[2]] + transferencias[calumns_to_num[3]]
+    
+    # Criando coluna com datatype
+    # ====================================================================
+    transferencias['Data'] = [datetime.datetime(transferencias['Ano'].iloc[i], transferencias['Mes'].iloc[i], 28) for i in range(len(transferencias))]
+
+    # ##############################################################################################################################################################################
+
+    populacao_2018 = pd.read_csv('data/populacao_2018.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+    populacao_2019 = pd.read_csv('data/populacao_2019.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+    populacao_2020 = pd.read_csv('data/populacao_2020.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+    populacao_2021 = pd.read_csv('data/populacao_2021.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+
+    populacao_es_2018 = populacao_2018[populacao_2018['UF']=='ES']
+    populacao_es_2019 = populacao_2019[populacao_2019['UF']=='ES']
+    populacao_es_2020 = populacao_2020[populacao_2020['UF']=='ES']
+    populacao_es_2021 = populacao_2021[populacao_2021['UF']=='ES']
+
+    # ATENCAO ARRUMAR CODIGO PARA AS 3 CIDADES CITADAS
+    # Criando coluna código
+    ano = 2018
+    for x in [populacao_es_2018, populacao_es_2019, populacao_es_2020, populacao_es_2021]:
+        x['COD.GERAL'] = [int(str(int(x['COD. UF'].iloc[i])) + '00' +
+                                    str(int(x['COD. MUNIC'].iloc[i])))
+                                    if len(str(int(x['COD. MUNIC'].iloc[i]))) < 4
+                                    else int(str(int(x['COD. UF'].iloc[i])) + '0' +
+                                    str(int(x['COD. MUNIC'].iloc[i]))) for i in range(len(x))]
+        x['ANO'] = ano
+        ano += 1
+    
+    populacao_es = pd.concat([populacao_es_2018, populacao_es_2019, populacao_es_2020, populacao_es_2021], ignore_index=True)
+    populacao_es['POPULAÇÃO ESTIMADA'] = [int(i.replace(',', '')) for i in populacao_es['POPULAÇÃO ESTIMADA']]
+
+    boolean_series = transferencias['NomeMunicipio'].isin(list_cidades)
+    df_repasse = transferencias[boolean_series][['NomeMunicipio', 'CodMunicipio', 'TotalRepassado', 'Data', 'Ano']]
+    
+    codigos = []
+    for i in list_cidades:
+        cod = transferencias[transferencias['NomeMunicipio'] == i]['CodMunicipio'].iloc[0]
+        codigos.append(cod)
+    
+    boolean_series = populacao_es['COD.GERAL'].isin(codigos)
+    df_pop = populacao_es[boolean_series][['COD.GERAL', 'POPULAÇÃO ESTIMADA', 'ANO']]
+    
+    #merge
+    df = df_repasse.merge(df_pop, how= 'inner', left_on=['CodMunicipio', 'Ano'], right_on=['COD.GERAL', 'ANO'])
+    df = df.drop(columns=['COD.GERAL'])
+    
+    #column arrec_percapita
+    df['RepassPercapita'] = [round(df['TotalRepassado'].iloc[i]/df['POPULAÇÃO ESTIMADA'].iloc[0], 2) for i in range(len(df))]
+    
+    #plot percapita
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    for i in range(len(list_cidades)):
+        fig.add_trace(go.Scatter(y=df[df['NomeMunicipio']==list_cidades[i]]['RepassPercapita'], 
+                                 x=df[df['NomeMunicipio']==list_cidades[i]]['Data'],
+                                 mode='lines',
+                                 name=list_cidades[i]))
+    return fig
+
+
+def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARIACICA', 'GUARAPARI', 'LINHARES', 'PIUMA']):
+    #import pandas as pd
+    #import datetime
+
+    # Obtendo os dados
+    # ==========================================
+    # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
+    transf_2018 = pd.read_csv('data/transfestadomunicipios-2018.csv', sep=';')
+    transf_2019 = pd.read_csv('data/transfestadomunicipios-2019.csv', sep=';')
+    transf_2020 = pd.read_csv('data/transfestadomunicipios-2020.csv', sep=';')
+    transf_2021 = pd.read_csv('data/transfestadomunicipios-2021.csv', sep=';')
+
+    # juntando informacoes em 1 dataset
+    # ==========================================
+    transferencias = pd.concat([transf_2018, transf_2019, transf_2020, transf_2021], ignore_index=True)
+
+    # Mudando os codigos municipais errados das tres cidades com homonimos
+    # ====================================================================
+    # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
+    # * Presidente Keneddy (TO - 1718402) -> (ES - 3204302)
+    # * Viana (MA - 2112803) -> (ES - 3205101)
+
+    for i in range(len(transferencias)):
+        #Boa Esperança
+        if transferencias.loc[i, 'CodMunicipio'] == 3107109:
+            transferencias.loc[i, 'CodMunicipio'] = 3201001
+        elif transferencias.loc[i, 'CodMunicipio'] == 1718402:
+            transferencias.loc[i, 'CodMunicipio'] = 3204302
+        elif transferencias.loc[i, 'CodMunicipio'] == 2112803:
+            transferencias.loc[i, 'CodMunicipio'] = 3205101
+
+    # Transformando colunas pertinentes em numbers
+    # ====================================================================
+    calumns_to_num = ['IcmsTotal', 'Ipi', 'Ipva', 'FundoReducaoDesigualdades']
+    for x in calumns_to_num:
+        transferencias[x] = [round(float(transferencias[x].iloc[i].replace(',', '.')), 2) for i in range(len(transferencias))]
+
+    # Criando coluna de totais
+    # ====================================================================
+    transferencias['TotalRepassado'] = transferencias[calumns_to_num[0]] + transferencias[calumns_to_num[1]] + transferencias[calumns_to_num[2]] + transferencias[calumns_to_num[3]]
+    
+    # Criando coluna com datatype
+    # ====================================================================
+    transferencias['Data'] = [datetime.datetime(transferencias['Ano'].iloc[i], transferencias['Mes'].iloc[i], 28) for i in range(len(transferencias))]
+
+    # ##############################################################################################################################################################################
+
+    populacao_2018 = pd.read_csv('data/populacao_2018.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+    populacao_2019 = pd.read_csv('data/populacao_2019.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+    populacao_2020 = pd.read_csv('data/populacao_2020.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+    populacao_2021 = pd.read_csv('data/populacao_2021.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+
+    populacao_es_2018 = populacao_2018[populacao_2018['UF']=='ES']
+    populacao_es_2019 = populacao_2019[populacao_2019['UF']=='ES']
+    populacao_es_2020 = populacao_2020[populacao_2020['UF']=='ES']
+    populacao_es_2021 = populacao_2021[populacao_2021['UF']=='ES']
+
+    # ATENCAO ARRUMAR CODIGO PARA AS 3 CIDADES CITADAS
+    # Criando coluna código
+    ano = 2018
+    for x in [populacao_es_2018, populacao_es_2019, populacao_es_2020, populacao_es_2021]:
+        x['COD.GERAL'] = [int(str(int(x['COD. UF'].iloc[i])) + '00' +
+                                    str(int(x['COD. MUNIC'].iloc[i])))
+                                    if len(str(int(x['COD. MUNIC'].iloc[i]))) < 4
+                                    else int(str(int(x['COD. UF'].iloc[i])) + '0' +
+                                    str(int(x['COD. MUNIC'].iloc[i]))) for i in range(len(x))]
+        x['ANO'] = ano
+        ano += 1
+    
+    populacao_es = pd.concat([populacao_es_2018, populacao_es_2019, populacao_es_2020, populacao_es_2021], ignore_index=True)
+    populacao_es['POPULAÇÃO ESTIMADA'] = [int(i.replace(',', '')) for i in populacao_es['POPULAÇÃO ESTIMADA']]
+
+    boolean_series = transferencias['NomeMunicipio'].isin(list_cidades)
+    df_repasse = transferencias[boolean_series][['NomeMunicipio', 'CodMunicipio', 'TotalRepassado', 'Data', 'Ano']]
+    
+    codigos = []
+    for i in list_cidades:
+        cod = transferencias[transferencias['NomeMunicipio'] == i]['CodMunicipio'].iloc[0]
+        codigos.append(cod)
+    
+    boolean_series = populacao_es['COD.GERAL'].isin(codigos)
+    df_pop = populacao_es[boolean_series][['COD.GERAL', 'POPULAÇÃO ESTIMADA', 'ANO']]
+    
+    #merge
+    df = df_repasse.merge(df_pop, how= 'inner', left_on=['CodMunicipio', 'Ano'], right_on=['COD.GERAL', 'ANO'])
+    df = df.drop(columns=['COD.GERAL'])
+    
+    #column arrec_percapita
+    df['RepassPercapita'] = [round(df['TotalRepassado'].iloc[i]/df['POPULAÇÃO ESTIMADA'].iloc[i], 2) for i in range(len(df))]
+    
+    #plot percapita normalizado
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    for i in range(len(list_cidades)):
+        fig.add_trace(go.Scatter(y=df[df['NomeMunicipio']==list_cidades[i]]['RepassPercapita']/df[df['NomeMunicipio']==list_cidades[i]]['RepassPercapita'].iloc[0]*100, 
+                                 x=df[df['NomeMunicipio']==list_cidades[i]]['Data'],
+                                 mode='lines',
+                                 name=list_cidades[i]))
+        
+    return fig

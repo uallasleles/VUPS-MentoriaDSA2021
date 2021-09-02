@@ -100,17 +100,18 @@ server = app.server
 # ============================================================================
 # Figuras
 # ============================================================================
-fig1 = vups.plot_bar()
-fig2 = vups.plot_year_taxs()
-#fig3 = vups.plot_sexo_idade(df)
-#fig4 = vups.plot_qtd_pessoas_x_sintomas(df)
-fig5 = vups.plt_calendar_heatmap()
+fig1 = vups.plot_year_taxs()
+fig2 = vups.plot_tributos_ipca()
+fig3 = vups.plot_comp_tributos_cidades()
+fig4 = vups.plot_comp_tributos_cidades_norm()
+#fig2 = vups.plot_sexo_idade(df)
+#fig3 = vups.plot_qtd_pessoas_x_sintomas(df)
 
 
 # ============================================================================
 # Mapas
 # ============================================================================ 
-#vups.plot_map_folium(),
+# vups.plot_map_folium(),
 
 # ============================================================================
 # Home Page
@@ -303,7 +304,24 @@ summary = dbc.Container(
         kpis_widget,
         html.Br(),
         dbc.Row([
-            dbc.Col(dcc.Graph(id='g-a', figure=fig5)),
+            dbc.Col(dcc.Graph(id='fig1', figure=fig1)),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id='fig2', figure=fig2)),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id='fig3', figure=fig3)),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Graph(id='fig4', figure=fig4)),
+        ]),
+        dbc.Row([
+            dbc.Col(dcc.Markdown('''
+            ### INSIGHTS
+            Em Janeiro de 2020, Piuma entra no Fundo de Redução de Desigualdades, o que deveria fazer com que seus recursos aumentassem, entretanto, o repasse do ICMS cai mais da metade, fazendo com que seus recursos diminuam consideravelmente.
+            
+            Também em Janeiro de 2020, Itapemirim passa a receber recursos do Fundo de Redução de Desigualdades, entretanto, deferentemente de Piuma, o valor de repasse de ICMS aumenta em 40% na mesma data, fazendo com que um salto em seus recursos aconteçam a partir de 2020.
+            ''')),
         ]),
     ]
 )
