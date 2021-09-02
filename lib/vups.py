@@ -1,4 +1,6 @@
 import os
+from numpy import empty
+from numpy.ma import isin
 import pandas as pd
 from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
@@ -14,7 +16,7 @@ import datetime
 # from dask.distributed import Client, progress
 # client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
 # import dask
-import dask.dataframe as dd
+# import dask.dataframe as dd
 
 # CONFIG #####################################################################
 pd.options.display.float_format = '{:.2f}'.format
@@ -22,30 +24,28 @@ pd.options.display.float_format = '{:.2f}'.format
 
 def get_data(
     warn_bad_lines=True,
+    usecols=None,
     nrows=None,
     file=const.DATAFILE['FILENAME'],
     sep=const.DATAFILE['SEP'],
     encoding=const.DATAFILE['ENCODING'],
     dtype=None,
-    df_type='pd'):
+    FIELD = None,
+    VALUE = None):
 
     PATH = os.path.join(const.DATADIR + file)
-    if df_type=='dd':
-        dataset = dd.read_csv(  PATH,
-                                sep=sep,
-                                error_bad_lines=False,
-                                encoding=encoding,
-                                warn_bad_lines=warn_bad_lines,
-                                dtype=dtype)
-    else:
-        dataset = pd.read_csv(  PATH,
-                                sep=sep,
-                                error_bad_lines=False,
-                                nrows=nrows,
-                                encoding=encoding,
-                                warn_bad_lines=warn_bad_lines,
-                                dtype=dtype)
-        dataset = dtype_transform(dataset)
+
+    dataset = pd.read_csv(  filepath_or_buffer  = PATH,
+                            usecols             = usecols,
+                            sep                 = sep,
+                            error_bad_lines     = False,
+                            nrows               = nrows,
+                            encoding            = encoding,
+                            warn_bad_lines      = warn_bad_lines,
+                            dtype               = dtype
+                            )
+    dataset = dtype_transform(dataset)
+
     return dataset
 
 # def plot_qtd_pessoas_x_sintomas(df):
@@ -233,32 +233,32 @@ tax_cat_col = {
 }
 
 class datasets:
-    def microdados(nrows=None, dtype={'DataObito': 'object'}):
-        return get_data(file='MICRODADOS.csv', nrows=nrows, sep=';', encoding='latin1', dtype=dtype, df_type='dd')
+    def microdados(columns=None, nrows=None, dtype={'DataObito': 'object'}, field=None, value=None):
+        return get_data(file='MICRODADOS.csv', usecols=columns, nrows=nrows, sep=';', encoding='latin1', dtype=dtype, FIELD=field, VALUE=value)
 
-    def microdados_bairros(nrows=None, dtype=None):
-        return get_data(file='MICRODADOS_BAIRROS.csv', nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
+    def microdados_bairros(columns=None, nrows=None, dtype=None):
+        return get_data(file='MICRODADOS_BAIRROS.csv', usecols=columns, nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
 
-    def arrecadacao_1998_a_2001(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-1998_a_31-12-2001.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=tax_cat_col)
+    def arrecadacao_1998_a_2001(columns=None, nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-1998_a_31-12-2001.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=tax_cat_col)
 
-    def arrecadacao_2002_a_2005(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-2002_a_31-12-2005.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    def arrecadacao_2002_a_2005(columns=None, nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2002_a_31-12-2005.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-    def arrecadacao_2006_a_2009(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-2006_a_31-12-2009.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    def arrecadacao_2006_a_2009(columns=None, nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2006_a_31-12-2009.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-    def arrecadacao_2010_a_2013(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-2010_a_31-12-2013.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    def arrecadacao_2010_a_2013(columns=None, nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2010_a_31-12-2013.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-    def arrecadacao_2014_a_2017(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-2014_a_31-12-2017.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    def arrecadacao_2014_a_2017(columns=None, nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2014_a_31-12-2017.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-    def arrecadacao_2018_a_2020(nrows=None, dtype=None):
-        return get_data(file='Arrecadacao_01-01-2018_a_09-12-2020.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    def arrecadacao_2018_a_2020(columns=None, nrows=None, dtype=None):
+        return get_data(file='Arrecadacao_01-01-2018_a_09-12-2020.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-    def tipo_arrecadacao(nrows=None, dtype=None):
-        return get_data(file='TipoArrecadacao.csv', nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
+    def tipo_arrecadacao(columns=None, nrows=None, dtype=None):
+        return get_data(file='TipoArrecadacao.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
 # Função para agrupamento
 def group_by(df, col):
@@ -328,9 +328,8 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
     Guilherme
     """
 
-    # --------- BUSCANDO DF ---------
-    df = datasets.microdados()
-
+    COLUMNS = ['Municipio', 'Classificacao', 'DataDiagnostico', 'DataCadastro', 'DataEncerramento']
+    
     # --------- FILTRANDO DF PARA CIDADES DO ES ---------
     filtro_es = ['AGUIA BRANCA', 'ALTO RIO NOVO', 'ARACRUZ', 'BAIXO GUANDU',
        'COLATINA', 'GOVERNADOR LINDENBERG', 'IBIRACU', 'JOAO NEIVA',
@@ -353,13 +352,14 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
        'JERONIMO MONTEIRO', 'MARATAIZES', 'MIMOSO DO SUL', 'MUNIZ FREIRE',
        'MUQUI', 'PIUMA', 'PRESIDENTE KENNEDY', 'RIO NOVO DO SUL',
        'SAO JOSE DO CALCADO', 'VARGEM ALTA']
-    df = df[df.Municipio.isin(filtro_es)]
+
+    # --------- BUSCANDO DF ---------
+    df = datasets.microdados(columns=COLUMNS, field='Municipio', value=filtro_es)
 
     # --------- CRIANDO DF_CALENDAR_NEW(CASOS NOVOS) E DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
     #df_calendar_new -> filtrar pacientes com covid confirmados; groupby(Municipio, DataDiagnostico); contar ocorrencias
-    df_calendar_new = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataDiagnostico'])['DataCadastro'].size().reset_index('count_new')
+    df_calendar_new = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataDiagnostico'])['DataCadastro'].size().reset_index(name='count_new')
 
-    df_calendar_new.dtype()
     #renomendo coluna DataDiagnostico
     df_calendar_new.rename(columns={'DataDiagnostico': 'date'}, inplace=True)
 
@@ -608,6 +608,7 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
                            str(ano_analise), title_x=0.5)
 
     return fig1
+
 def plot_tributos_ipca(cidade='AFONSO CLAUDIO'):
 
     # Obtendo os dados
