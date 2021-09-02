@@ -293,7 +293,7 @@ def plot_year_taxs(UF='ES', df=datasets.arrecadacao_1998_a_2001()):
     return fig
 
 
-def plt_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_analise= 1, ano_analise= 2021):
+def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_analise= 1, ano_analise= 2021):
     """
     OBJETIVO:
     plt_calendar_heatmap plota um heatmap em forma de calendário, filtrado por cidade, mes, ano,
