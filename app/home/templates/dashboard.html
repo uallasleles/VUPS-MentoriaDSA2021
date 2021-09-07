@@ -307,6 +307,42 @@
         </div>
     </div>
 
+    <!-- LINHA #5 PARA GRÁFICO -->
+    <div class="row">
+
+        <!-- GRÁFICO 4 -->
+        <div class="col-12 mb-4">
+
+            <!-- BACKGROUND AREA -->
+            <div class="card bg-yellow-200 shadow-sm">
+
+                <!-- CABEÇALHO -->
+                <div class="card-header d-flex flex-row align-items-center flex-0">
+                    <div class="d-block">
+                        <div class="h5 font-weight-normal mb-2">Sales Value</div>
+                        <h2 class="h3">$10,567</h2>
+                        <div class="small mt-2"> 
+                            <span class="font-weight-bold mr-2">Yesterday</span>                              
+                            <span class="fas fa-angle-up text-success"></span>                                   
+                            <span class="text-success font-weight-bold">10.57%</span>
+                        </div>
+                    </div>
+                    <div class="d-flex ms-auto">
+                        <a href="#" class="btn btn-secondary text-dark btn-sm mr-2">Month</a>
+                        <a href="#" class="btn btn-primary btn-sm mr-3">Week</a>
+                    </div>
+                </div>
+
+                <!-- CONTEÚDO DO GRÁFICO -->
+                <div class="card-body p-2">
+                    <div id="chart6" class="chart"></div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+
 {% endblock content %}
 
 {% include "includes/scripts.html" %}
@@ -315,16 +351,16 @@
     <script type="text/javascript">
         //$(document).ready( function(){
             var d0 = {{graphJSON0 | safe}};
-            Plotly.newPlot('chart1', d0, {});
+            Plotly.newPlot('chart1', d0, {displayModeBar: false});
 
             var d1 = {{graphJSON1 | safe}};
-            Plotly.newPlot('chart2', d1, {});
+            Plotly.newPlot('chart2', d1, {displayModeBar: false});
 
             var d2 = {{graphJSON2 | safe}};
-            Plotly.newPlot('chart3', d2, {});
+            Plotly.newPlot('chart3', d2, {displayModeBar: false});
 
             var d3 = {{graphJSON3 | safe}};
-            Plotly.newPlot('chart4', d3, {});
+            Plotly.newPlot('chart4', d3, {displayModeBar: false});
 
             var d4 = {{graphJSON4 | safe}};
             Plotly.newPlot('kpi1', d4, {});
@@ -337,6 +373,9 @@
 
             var d7 = {{graphJSON7 | safe}};
             Plotly.newPlot('chart5', d7, {});
+
+            var d8 = {{graphJSON8 | safe}};
+            Plotly.newPlot('chart6', d8, {});
         //});
     </script>
 {% endblock javascripts_botton %}
