@@ -142,5 +142,5 @@ def get_plot_line_progress_actual_planned():
 def get_plot_widget_cost_variance():
     return graphs.plot_widget_cost_variance()
 
-def get_plot_widget_schedule_variance()():
+def get_plot_widget_schedule_variance():
     return graphs.plot_widget_schedule_variance()
