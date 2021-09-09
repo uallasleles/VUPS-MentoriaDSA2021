@@ -33,9 +33,6 @@
 
 {% block content %}
 
-    <div class="container">
-        
-    </div>
     <!-- CONTROLES -->
     <div class="row">
         <!-- GRÁFICO 1 -->
@@ -49,7 +46,7 @@
                     <!-- SELECT ESTADO -->
                     <div class="col-sm-3 mb-2">
                         <label class="my-1 me-2" for="state">Estado (UF)</label>
-                        <select class="w-100 mb-0" id="state" name="state" aria-label="State select example" onchange="">
+                        <select class="w-100 mb-0" id="state" name="state" aria-label="State select example" onchange="refresh_progress_actual_planned(this.value)">
                             <option value="AC">Acre</option>
                             <option value="AL">Alagoas</option>
                             <option value="AP">Amapá</option>
@@ -80,7 +77,7 @@
                         </select>
                     </div>
 
-                    <!-- SELECT ESTADO -->
+                    <!-- SELECT CIDADES -->
                     <div class="col-sm-4 mb-2">
                         <label for="city">Cidades</label>
                         <select  id="states" class="w-100 mb-0" name="states[]" multiple="multiple" aria-label="State select example" onchange="refresh_progress_actual_planned(this.value)">
@@ -131,46 +128,99 @@
         </div>
     </div>
 
-    <!-- ROW KPIS's -->
-    <div class="row">
-
-        <div class="col-12 col-sm-6 col-xl-4 mb-4">
-            <div class="row d-block d-xl-flex align-items-center">
-                <div id="kpi1" class="chart"></div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-4 mb-4">
-            <div class="row d-block d-xl-flex align-items-center">
-                <div id="kpi2" class="chart"></div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-4 mb-4">
-            <div class="row d-block d-xl-flex align-items-center">
-                <div id="kpi3" class="chart"></div>
-            </div>
-        </div>
-
-    </div>
-
     <!-- ROW PARA GRÁFICO E CARDS -->
     <div class="row">
-
         <!-- GRÁFICO 1 -->
         <div class="col-12 mb-4">
-
             <!-- BACKGROUND AREA -->
-            <div class="card bg-yellow-200 shadow-sm">
+            <div class="card shadow-sm">
 
-                <!-- CONTEÚDO DO GRÁFICO -->
-                <div class="card-body p-2">
-                    <div id="chart1" class="chart"></div>
-                </div>
-                <div class="card-body p-2">
-                    <div id="kpi4" class="chart"></div>
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-6 col-md-4 col-xl-4 bg-soft mb-2">
+                        <span>
+                            <div id="kpi1" class="chart"></div>
+                        </span>
+                    </div>
+            
+                    <div class="col-12 col-sm-6 col-md-4 col-xl-4 bg-soft mb-2">
+                        <span>
+                            <div id="kpi2" class="chart"></div>
+                        </span>
+                    </div>
+            
+                    <div class="col-12 col-sm-6 col-md-4 col-xl-4 bg-soft mb-2">
+                        <span>
+                            <div id="kpi3" class="chart"></div>
+                        </span>
+                    </div>
                 </div>
 
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 bg-soft mb-2">
+                        <span>
+                            <div id="chart1" class="chart"></div>
+                        </span>
+                    </div>
+            
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 bg-soft mb-2">
+                        <span>
+                            <div id="chart2" class="chart"></div>
+                        </span>
+                    </div>
+            
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 bg-soft mb-2">
+                        <span>
+                            <div id="chart3" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 bg-soft mb-2">
+                        <span>
+                            <div id="widget1" class="chart"></div>
+                        </span>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 bg-soft mb-2">
+                        <span>
+                            <div id="widget2" class="chart"></div>
+                        </span>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 bg-soft mb-2">
+                        <span>
+                            <div id="widget3" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="graph1" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="graph2" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="graph3" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex flex-row align-items-center flex-0 mb-2"> <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="map1" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -279,161 +329,27 @@
 
     </div>
 
-    <!-- ROW PARA GRÁFICO -->
-    <div class="row">
-        
-        <!-- GRÁFICO 2 -->
-        <div class="col-12 mb-4">
-
-            <!-- BACKGROUND AREA -->
-            <div class="card bg-yellow-200 shadow-sm">
-
-                <!-- CABEÇALHO -->
-                <div class="card-header d-flex flex-row align-items-center flex-0">
-                    <div class="d-block">
-                        <div class="h5 font-weight-normal mb-2">Sales Value</div>
-                        <h2 class="h3">$10,567</h2>
-                        <div class="small mt-2"> 
-                            <span class="font-weight-bold mr-2">Yesterday</span>                              
-                            <span class="fas fa-angle-up text-success"></span>                                   
-                            <span class="text-success font-weight-bold">10.57%</span>
-                        </div>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a href="#" class="btn btn-secondary text-dark btn-sm mr-2">Month</a>
-                        <a href="#" class="btn btn-primary btn-sm mr-3">Week</a>
-                    </div>
-                </div>
-
-                <!-- CONTEÚDO DO GRÁFICO -->
-                <div class="card-body p-2">
-                    <div id="chart2" class="chart"></div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-    <!-- LINHA #3 PARA GRÁFICO -->
-    <div class="row">
-
-        <!-- GRÁFICO 3 -->
-        <div class="col-12 mb-4">
-
-            <!-- BACKGROUND AREA -->
-            <div class="card bg-yellow-200 shadow-sm">
-
-                <!-- CABEÇALHO -->
-                <div class="card-header d-flex flex-row align-items-center flex-0">
-                    <div class="d-block">
-                        <div class="h5 font-weight-normal mb-2">Sales Value</div>
-                        <h2 class="h3">$10,567</h2>
-                        <div class="small mt-2"> 
-                            <span class="font-weight-bold mr-2">Yesterday</span>                              
-                            <span class="fas fa-angle-up text-success"></span>                                   
-                            <span class="text-success font-weight-bold">10.57%</span>
-                        </div>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a href="#" class="btn btn-secondary text-dark btn-sm mr-2">Month</a>
-                        <a href="#" class="btn btn-primary btn-sm mr-3">Week</a>
-                    </div>
-                </div>
-
-                <!-- CONTEÚDO DO GRÁFICO -->
-                <div class="card-body p-2">
-                    <div id="chart3" class="chart"></div>
-                </div>
-                
-            </div>
-
-        </div>
-    </div>
-
-    <!-- LINHA #4 PARA GRÁFICO -->
-    <div class="row">
-
-        <!-- GRÁFICO 4 -->
-        <div class="col-12 mb-4">
-
-            <!-- BACKGROUND AREA -->
-            <div class="card bg-yellow-200 shadow-sm">
-
-                <!-- CABEÇALHO -->
-                <div class="card-header d-flex flex-row align-items-center flex-0">
-                    <div class="d-block">
-                        <div class="h5 font-weight-normal mb-2">Sales Value</div>
-                        <h2 class="h3">$10,567</h2>
-                        <div class="small mt-2"> 
-                            <span class="font-weight-bold mr-2">Yesterday</span>                              
-                            <span class="fas fa-angle-up text-success"></span>                                   
-                            <span class="text-success font-weight-bold">10.57%</span>
-                        </div>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a href="#" class="btn btn-secondary text-dark btn-sm mr-2">Month</a>
-                        <a href="#" class="btn btn-primary btn-sm mr-3">Week</a>
-                    </div>
-                </div>
-
-                <!-- CONTEÚDO DO GRÁFICO -->
-                <div class="card-body p-2">
-                    <div id="chart4" class="chart"></div>
-                </div>
-                
-            </div>
-
-        </div>
-    </div>
-
-    <!-- LINHA #5 PARA GRÁFICO -->
-    <div class="row">
-
-        <!-- GRÁFICO 4 -->
-        <div class="col-12 mb-4">
-
-            <!-- BACKGROUND AREA -->
-            <div class="card bg-yellow-200 shadow-sm">
-
-                <!-- CABEÇALHO -->
-                <div class="card-header d-flex flex-row align-items-center flex-0">
-                    <div class="d-block">
-                        <div class="h5 font-weight-normal mb-2">Sales Value</div>
-                        <h2 class="h3">$10,567</h2>
-                        <div class="small mt-2"> 
-                            <span class="font-weight-bold mr-2">Yesterday</span>                              
-                            <span class="fas fa-angle-up text-success"></span>                                   
-                            <span class="text-success font-weight-bold">10.57%</span>
-                        </div>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a href="#" class="btn btn-secondary text-dark btn-sm mr-2">Month</a>
-                        <a href="#" class="btn btn-primary btn-sm mr-3">Week</a>
-                    </div>
-                </div>
-
-                <!-- CONTEÚDO DO GRÁFICO -->
-                <div class="card-body p-2">
-                    <div id="chart6" class="chart"></div>
-                </div>
-                
-            </div>
-
-        </div>
-    </div>
-
 {% endblock content %}
 
 {% include "includes/scripts.html" %}
 
-{% block javascripts_botton %}
+{% block javascripts %}
 
     <script>
 
-        d = {{ progress_actual_planned | safe }};
-        Plotly.newPlot('kpi1', d, {});
-
+        Plotly.newPlot('kpi1', {{ percentage_progress | safe }} );
+        Plotly.newPlot('kpi2', {{ spend_hours | safe }} );
+        Plotly.newPlot('kpi3', {{ tcpi | safe }} );
+        Plotly.newPlot('chart1', {{ small_bar_percentage_progress | safe }} );
+        Plotly.newPlot('chart2', {{ small_bar_spend_hours | safe }} );
+        Plotly.newPlot('chart3', {{ progress_actual_planned | safe }} );
+        Plotly.newPlot('widget1', {{ cost_variance | safe }} );
+        Plotly.newPlot('widget2', {{ schedule_variance | safe }} );
+        Plotly.newPlot('widget3', {{ gantt | safe }} ); 
+        Plotly.newPlot('graph1', {{ tributos_cidades | safe }} );
+        Plotly.newPlot('graph2', {{ tributos_cidades_norm | safe }} );
+        Plotly.newPlot('graph3', {{ tributos_ipca | safe }} );
+        Plotly.newPlot('map1', {{ calendar_heatmap | safe }} );
     </script>
 
-{% endblock javascripts_botton %}
+{% endblock javascripts %}
