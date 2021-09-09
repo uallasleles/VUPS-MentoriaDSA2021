@@ -10,12 +10,20 @@
 
 {% block javascripts_top %}
     <script>
-        function cb(selection){
+        function refresh_progress_actual_planned(selection){
             $.getJSON({
-                url:"/callback",
+                url:"/refresh_progress_actual_planned",
                 data: {'data': selection},
                 success: function(result){
                     Plotly.newPlot('chart1', result, {});
+                }
+            });
+        }
+        function refresh_kpi(){
+            $.getJSON({
+                url:"/refresh_kpi",
+                success: function(result){
+                    Plotly.newPlot('kpi1', {percentage_progress}, {});
                 }
             });
         }
@@ -24,43 +32,148 @@
 
 
 {% block content %}
-    <h3 style="text-align: center;">VUPS! Estamos quase lá!</h3>
 
+    <div class="container">
+        
+    </div>
+    <!-- CONTROLES -->
+    <div class="row">
+        <!-- GRÁFICO 1 -->
+        <div class="col-12 mb-4">
+            <!-- BACKGROUND AREA -->
+            <div class="card shadow-sm">
+
+                <!-- CONTROLES -->
+                <div class="card-header d-flex flex-row align-items-center flex-0">
+                    
+                    <!-- SELECT ESTADO -->
+                    <div class="col-sm-3 mb-2">
+                        <label class="my-1 me-2" for="state">Estado (UF)</label>
+                        <select class="w-100 mb-0" id="state" name="state" aria-label="State select example" onchange="">
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+
+                    <!-- SELECT ESTADO -->
+                    <div class="col-sm-4 mb-2">
+                        <label for="city">Cidades</label>
+                        <select  id="states" class="w-100 mb-0" name="states[]" multiple="multiple" aria-label="State select example" onchange="refresh_progress_actual_planned(this.value)">
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+
+                    <!-- BUTTON KPI -->
+                    <div class="d-flex ms-auto">
+                        <input type="button" onclick="refresh_kpi()" value="Progresso"/>
+                    </div>
+
+                    <!-- BUTTONS DATETIME -->
+                    <div class="d-flex ms-auto">
+                        <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
+                        <a href="#" class="btn btn-primary btn-sm">Week</a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ROW KPIS's -->
     <div class="row">
 
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
             <div class="row d-block d-xl-flex align-items-center">
-
                 <div id="kpi1" class="chart"></div>
-            
             </div>
-
         </div>
 
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
-            <!-- <div class="card border-0 shadow">
-                <div class="card-body"> -->
-                    <div class="row d-block d-xl-flex align-items-center">
-                        <div id="kpi2" class="chart"></div>
-                    </div>
-                <!-- </div>
-            </div> -->
+            <div class="row d-block d-xl-flex align-items-center">
+                <div id="kpi2" class="chart"></div>
+            </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
-            <!-- <div class="card border-0 shadow">
-                <div class="card-body"> -->
-                    <div class="row d-block d-xl-flex align-items-center">
-                        <div id="kpi3" class="chart"></div>
-                    </div>
-                <!-- </div>
-            </div> -->
+            <div class="row d-block d-xl-flex align-items-center">
+                <div id="kpi3" class="chart"></div>
+            </div>
         </div>
 
     </div>
 
-    <!-- LINHA #1 PARA GRÁFICO E CARDS -->
+    <!-- ROW PARA GRÁFICO E CARDS -->
     <div class="row">
+
+        <!-- GRÁFICO 1 -->
+        <div class="col-12 mb-4">
+
+            <!-- BACKGROUND AREA -->
+            <div class="card bg-yellow-200 shadow-sm">
+
+                <!-- CONTEÚDO DO GRÁFICO -->
+                <div class="card-body p-2">
+                    <div id="chart1" class="chart"></div>
+                </div>
+                <div class="card-body p-2">
+                    <div id="kpi4" class="chart"></div>
+                </div>
+
+            </div>
+
+        </div>
 
         <!-- CARD 1 - POPULAÇÃO -->
         <div class="col-12 col-sm-6 col-xl-4 mb-4">
@@ -164,44 +277,11 @@
             </div>
         </div>
 
-        <!-- GRÁFICO 1 -->
-        <div class="col-12 mb-4">
-
-            <!-- BACKGROUND AREA -->
-            <div class="card bg-yellow-200 shadow-sm">
-
-                <!-- CABEÇALHO -->
-                <div class="card-header d-flex flex-row align-items-center flex-0">
-                    <div class="d-block">
-                        <div class="h5 font-weight-normal mb-2">Sales Value</div>
-                        <h2 class="h3">$10,567</h2>
-                        <div class="small mt-2"> 
-                            <span class="font-weight-bold mr-2">Yesterday</span>                              
-                            <span class="fas fa-angle-up text-success"></span>                                   
-                            <span class="text-success font-weight-bold">10.57%</span>
-                        </div>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <input type="text" id="uf" name="uf" onchange="cb(this.value)"/>
-                        <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
-                        <a href="#" class="btn btn-primary btn-sm">Week</a>
-                    </div>
-                </div>
-
-                <!-- CONTEÚDO DO GRÁFICO -->
-                <div class="card-body p-2">
-                    <div id="chart1" class="chart"></div>
-                </div>
-
-            </div>
-
-        </div>
-
     </div>
 
-    <!-- LINHA #2 PARA GRÁFICO -->
+    <!-- ROW PARA GRÁFICO -->
     <div class="row">
-    
+        
         <!-- GRÁFICO 2 -->
         <div class="col-12 mb-4">
 
@@ -348,34 +428,12 @@
 {% include "includes/scripts.html" %}
 
 {% block javascripts_botton %}
-    <script type="text/javascript">
-        //$(document).ready( function(){
-            var d0 = {{graphJSON0 | safe}};
-            Plotly.newPlot('chart1', d0, {displayModeBar: false});
 
-            var d1 = {{graphJSON1 | safe}};
-            Plotly.newPlot('chart2', d1, {displayModeBar: false});
+    <script>
 
-            var d2 = {{graphJSON2 | safe}};
-            Plotly.newPlot('chart3', d2, {displayModeBar: false});
+        d = {{ progress_actual_planned | safe }};
+        Plotly.newPlot('kpi1', d, {});
 
-            var d3 = {{graphJSON3 | safe}};
-            Plotly.newPlot('chart4', d3, {displayModeBar: false});
-
-            var d4 = {{graphJSON4 | safe}};
-            Plotly.newPlot('kpi1', d4, {});
-
-            var d5 = {{graphJSON5 | safe}};
-            Plotly.newPlot('kpi2', d5, {});
-
-            var d6 = {{graphJSON6 | safe}};
-            Plotly.newPlot('kpi3', d6, {});
-
-            var d7 = {{graphJSON7 | safe}};
-            Plotly.newPlot('chart5', d7, {});
-
-            var d8 = {{graphJSON8 | safe}};
-            Plotly.newPlot('chart6', d8, {});
-        //});
     </script>
+
 {% endblock javascripts_botton %}
