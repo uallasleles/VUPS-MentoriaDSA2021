@@ -26,8 +26,21 @@ def index():
 @blueprint.route('/dashboard')
 @blueprint.route('/dashboard.html')
 def dashboard():
-    progress_actual_planned = get_plot_line_progress_actual_planned()
-    return render_template('dashboard.html', segment='dashboard', progress_actual_planned = progress_actual_planned)
+    return render_template('dashboard.html', segment='dashboard', 
+        percentage_progress             = get_plot_kpi_percentage_progress(),
+        spend_hours                     = get_plot_kpi_spend_hours(),
+        tcpi                            = get_plot_kpi_tcpi(),
+        small_bar_percentage_progress   = get_plot_small_bar_percentage_progress(),
+        small_bar_spend_hours           = get_plot_small_bar_spend_hours(),
+        progress_actual_planned         = get_plot_line_progress_actual_planned(),
+        cost_variance                   = get_plot_widget_cost_variance(),
+        schedule_variance               = get_plot_widget_schedule_variance(),
+        gantt                           = get_plot_gantt(),
+        tributos_cidades                = get_plot_comp_tributos_cidades(),
+        tributos_cidades_norm           = get_plot_comp_tributos_cidades_norm(),
+        tributos_ipca                   = get_plot_tributos_ipca(),
+        calendar_heatmap                = get_plot_calendar_heatmap()
+        )
 
 
 @blueprint.route('/<template>')
@@ -147,4 +160,10 @@ def get_plot_widget_cost_variance():
 def get_plot_widget_schedule_variance():
     return json.dumps(
         obj = graphs.plot_widget_schedule_variance(),
+        cls = utils.PlotlyJSONEncoder)
+
+# Gantt
+def get_plot_gantt():
+    return json.dumps(
+        obj = graphs.plot_gantt(),
         cls = utils.PlotlyJSONEncoder)

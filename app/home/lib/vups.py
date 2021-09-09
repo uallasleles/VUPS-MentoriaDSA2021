@@ -635,9 +635,9 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
                            mes_plot + ' ' +
                            str(ano_analise), title_x=0.5)
 
-    fig1.update_layout({
-    'plot_bgcolor': 'rgba(0,0,0,0)',
-    'paper_bgcolor': 'rgba(0,0,0,0)'})
+    # fig1.update_layout({
+    # 'plot_bgcolor': 'rgba(0,0,0,0)',
+    # 'paper_bgcolor': 'rgba(0,0,0,0)'})
 
     return fig1
 
@@ -925,9 +925,9 @@ def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARI
                                  mode='lines',
                                  name=list_cidades[i]))
 
-    fig.update_layout({
-    'plot_bgcolor': 'rgba(0,0,0,0)',
-    'paper_bgcolor': 'rgba(0,0,0,0)'})
+    # fig.update_layout({
+    # 'plot_bgcolor': 'rgba(0,0,0,0)',
+    # 'paper_bgcolor': 'rgba(0,0,0,0)'})
 
     return fig
 
