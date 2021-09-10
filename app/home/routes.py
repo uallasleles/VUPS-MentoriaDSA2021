@@ -3,15 +3,16 @@
 Programa de Mentoria DSA 2021
 """
 
-from flask import render_template, redirect, request, url_for
 from app.home import blueprint
+from flask import render_template, redirect, url_for, request
+from flask_login import login_required, current_user
+from app import login_manager
+from jinja2 import TemplateNotFound
+
 from app.home.lib import vups
 from app.home.lib import graphs
 import json
 from plotly import utils
-from jinja2 import TemplateNotFound
-
-
 
 ##############################################################################
 # ROTEAMENTO DAS PÁGINAS
@@ -19,12 +20,13 @@ from jinja2 import TemplateNotFound
 
 @blueprint.route('/')
 @blueprint.route('/index')
+@login_required
 def index():
     return render_template('index.html', segment='index')
 
-
 @blueprint.route('/dashboard')
 @blueprint.route('/dashboard.html')
+@login_required
 def dashboard():
     return render_template('dashboard.html', segment='dashboard', 
         percentage_progress             = get_plot_kpi_percentage_progress(),
@@ -42,10 +44,10 @@ def dashboard():
         calendar_heatmap                = get_plot_calendar_heatmap()
         )
 
-
 @blueprint.route('/<template>')
+@login_required
 def route_template(template):
-    print('/<template>')
+
     try:
         if not template.endswith( '.html' ):
             template += '.html'

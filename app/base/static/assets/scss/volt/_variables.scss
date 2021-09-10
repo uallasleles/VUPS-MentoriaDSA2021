@@ -66,9 +66,9 @@ $colors: ("blue": $blue,
 // scss-docs-end colors-map
 
 // Color scheme
-$primary  : #1F2937 !default;
-$secondary: #f0bc74 !default;
-$tertiary : #31316A !default;
+$primary  : #35BDF2 !default;
+$secondary: #F2F2F2 !default;
+$tertiary : #F2A0C6 !default;
 
 // Series names and colors. This can be extended or customized as desired. Just add more series and colors.
 $ct-series-names: (a, b, c, d, e, f, g) !default !default;
@@ -471,7 +471,7 @@ $font-family-code: var(--bs-font-monospace) !default;
 
 // $font-size-root effects the value of `rem`, which is used for as well font sizes, paddings and margins
 // $font-size-base effects the font size of the body text
-$font-size-root: 10px !default;
+$font-size-root: 62.5 !default;
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $font-size-xs  : ($font-size-base * .75) !default;
 $font-size-sm  : ($font-size-base * .875) !default;
