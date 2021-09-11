@@ -6,7 +6,7 @@ from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
 import sys
 from matplotlib import pyplot as plt
-from app.home.lib import const
+from . import const
 import json
 import requests
 import folium
@@ -22,7 +22,7 @@ import datetime
 pd.options.display.float_format = '{:.2f}'.format
 
 def get_data(
-    warn_bad_lines=True,
+    on_bad_lines='warn',
     usecols=None,
     nrows=None,
     file=const.DATAFILE['FILENAME'],
@@ -37,10 +37,9 @@ def get_data(
     dataset = pd.read_csv(  filepath_or_buffer  = PATH,
                             usecols             = usecols,
                             sep                 = sep,
-                            error_bad_lines     = False,
                             nrows               = nrows,
                             encoding            = encoding,
-                            warn_bad_lines      = warn_bad_lines,
+                            on_bad_lines        = on_bad_lines,
                             dtype               = dtype
                             )
     dataset = dtype_transform(dataset)
@@ -930,7 +929,3 @@ def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARI
     # 'paper_bgcolor': 'rgba(0,0,0,0)'})
 
     return fig
-
-##############################################################################
-# GRÁFICOS PARA SEREM APROVEITADOS
-##############################################################################

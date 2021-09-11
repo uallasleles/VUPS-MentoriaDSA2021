@@ -9,8 +9,8 @@ from flask_login import login_required, current_user
 from app import login_manager
 from jinja2 import TemplateNotFound
 
-from app.home.lib import vups
-from app.home.lib import graphs
+from app.home import vups
+from app.home.vups import graphs
 import json
 from plotly import utils
 

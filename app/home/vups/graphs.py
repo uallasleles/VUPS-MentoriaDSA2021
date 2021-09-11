@@ -1,5 +1,5 @@
 import plotly.express as px
-from app.home.lib import const
+from . import const
 import plotly.graph_objects as go
 import pandas as pd
 import os

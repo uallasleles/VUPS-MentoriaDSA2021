@@ -1,14 +1,13 @@
 # -*- encoding: utf-8 -*-
 """
-Copyright (c) 2019 - present AppSeed.us
+Programa de Mentoria DSA 2021
 """
 
 from flask_login import UserMixin
 from sqlalchemy import Binary, Column, Integer, String
-
 from app import db, login_manager
-
 from app.base.util import hash_pass
+
 
 class User(db.Model, UserMixin):
 
