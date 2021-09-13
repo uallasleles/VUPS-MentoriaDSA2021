@@ -103,8 +103,8 @@ class Microdados(db.Model):
     
             setattr(self, property, value)
         
-        def __repr__(self):
-            return str(self.Municipio)
+    def __repr__(self):
+        return str(self.Municipio)
 
 
 @login_manager.user_loader

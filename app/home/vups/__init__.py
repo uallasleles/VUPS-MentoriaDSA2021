@@ -12,17 +12,12 @@ import requests
 import folium
 import branca
 import datetime
-
-# from dask.distributed import Client, progress
-# client = Client(n_workers=2, threads_per_worker=2, memory_limit='1GB')
-# import dask
-# import dask.dataframe as dd
+from time import time
 
 # CONFIG #####################################################################
 pd.options.display.float_format = '{:.2f}'.format
 
 def get_data(
-    on_bad_lines='warn',
     usecols=None,
     nrows=None,
     file=const.DATAFILE['FILENAME'],
@@ -31,7 +26,9 @@ def get_data(
     dtype=None,
     FIELD = None,
     VALUE = None):
-
+    
+    t = time()
+    
     PATH = os.path.join(const.DATADIR + file)
 
     dataset = pd.read_csv(  filepath_or_buffer  = PATH,
@@ -39,62 +36,37 @@ def get_data(
                             sep                 = sep,
                             nrows               = nrows,
                             encoding            = encoding,
-                            on_bad_lines        = on_bad_lines,
+                            warn_bad_lines=True, error_bad_lines=False,
+                            #on_bad_lines        = 'skip',
                             dtype               = dtype
                             )
     dataset = dtype_transform(dataset)
+    print("Tempo decorrido: " + str( time() - t) + " s.")
 
     return dataset
 
-# def plot_qtd_pessoas_x_sintomas(df):
-    # Tratamento de dados
-    from itertools import compress
-    import matplotlib.pyplot as plt
-    plt.style.use('seaborn-talk')
+def getData_fromParquet(
+    columns=None):
 
-    df3 = df[['Classificacao', 'Febre', 'DificuldadeRespiratoria', 'Tosse', 'Coriza', 'DorGarganta', 'Diarreia', 'Cefaleia',
-        'ComorbidadePulmao', 'ComorbidadeCardio', 'ComorbidadeRenal', 'ComorbidadeDiabetes', 'ComorbidadeTabagismo',
-        'ComorbidadeObesidade', 'DataObito']].dropna()
+    print('###################################################################')
+    print('GetData_FromParquet')
+    t = time()
 
-    df3['Sintomas'] = df3[['Febre', 'DificuldadeRespiratoria', 'Tosse', 'Coriza', 'DorGarganta', 'Diarreia', 'Cefaleia',
-        'ComorbidadePulmao', 'ComorbidadeCardio', 'ComorbidadeRenal', 'ComorbidadeDiabetes', 'ComorbidadeTabagismo',
-        'ComorbidadeObesidade']].values.tolist()
+    file = 'df.parquet'
+    PATH = os.path.join(const.DATADIR + file)
 
-    sintomas = ['Febre', 'DificuldadeRespiratoria', 'Tosse', 'Coriza', 'DorGarganta', 'Diarreia', 'Cefaleia',
-        'ComorbidadePulmao', 'ComorbidadeCardio', 'ComorbidadeRenal', 'ComorbidadeDiabetes', 'ComorbidadeTabagismo',
-        'ComorbidadeObesidade']
+    dataset = pd.read_parquet(path=PATH, columns=columns)
+    dataset = dtype_transform(dataset)
 
-    df3['Sintomas'] = df3['Sintomas'].apply(lambda x: [True if item=='Sim' else False for item in x])
+    print("Tempo decorrido: " + str( time() - t) + " s.")
+    print('###################################################################')
 
-    df3['Sintomas'] = df3['Sintomas'].apply(lambda x: list(compress(sintomas, x)))
+    return dataset
 
-    df3['Qntd_sintomas'] = df3['Sintomas'].apply(lambda x: len(x))
 
-    df3['Classificacao'].value_counts()
+def convert_to_parquet(df):
+    df.to_parquet(const.DATADIR+'df.parquet')
 
-    # df2.iloc[df3[df3['Qntd_sintomas']==0].index].head()
-    confirmados = df3[df3['Classificacao']=='Confirmados']
-    descartados = df3[df3['Classificacao']=='Descartados']
-    suspeitos = df3[df3['Classificacao']=='Suspeitos']
-    #confirmados['DataObito'] = pd.to_datetime(confirmados['DataObito'])
-    #descartados['DataObito'] = pd.to_datetime(descartados['DataObito'])
-    #suspeitos['DataObito'] = pd.to_datetime(suspeitos['DataObito'])
-
-    confirmados['Assintomatico'] = confirmados['Sintomas'].apply(lambda x:  'sim' if x==[] else 'nao')
-
-    dic = {}
-
-    for i in confirmados['Sintomas'].apply(lambda x: x):
-        for j in i:
-            dic[j] = dic.get(j, 0) + 1
-
-    sintomas = pd.Series(dic)
-    sintomas_prop = round(sintomas / sintomas.sum() * 100, ndigits=2)
-    sintomas_prop.sort_values()
-
-    pd.DataFrame({'Qntd': sintomas}).sort_values('Qntd').plot.barh(legend=False, figsize=(12,10))
-
-    return plt.xlabel('# de pessoas com o sintoma', fontsize=12)
 
 def plot_bar():
     df = pd.DataFrame(
@@ -224,14 +196,17 @@ def dtype_transform(df):
     return df
 
 tax_cat_col = {
-    # 'ano_arrecadacao': 'category',
-    # 'mes_arrecadacao': 'category',
-    # 'co_tipo_arrecadacao': 'category'
+    #'ano_arrecadacao': 'category',
+    #'mes_arrecadacao': 'category',
+    #'co_tipo_arrecadacao': 'category'
     }
 
 class datasets:
     def microdados(columns=None, nrows=None, dtype={'DataObito': 'object'}, field=None, value=None):
         return get_data(file='MICRODADOS.csv', usecols=columns, nrows=nrows, sep=';', encoding='latin1', dtype=dtype, FIELD=field, VALUE=value)
+
+    # def microdados(columns=None):
+    #     return getData_fromParquet(columns=columns)
 
     def microdados_bairros(columns=None, nrows=None, dtype=None):
         return get_data(file='MICRODADOS_BAIRROS.csv', usecols=columns, nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
@@ -354,6 +329,9 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
     AUTOR:
     Guilherme
     """
+    print('###################################################################')
+    print('Calendar Heatmap')
+    t = time()
 
     COLUMNS = ['Municipio', 'Classificacao', 'DataDiagnostico', 'DataCadastro', 'DataEncerramento']
     
@@ -382,6 +360,8 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
 
     # --------- BUSCANDO DF ---------
     df = datasets.microdados(columns=COLUMNS, field='Municipio', value=filtro_es)
+    # df = datasets.microdados(columns=COLUMNS)
+    # df = df[df['Municipio']==filtro_es]
 
     # --------- CRIANDO DF_CALENDAR_NEW(CASOS NOVOS) E DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
     #df_calendar_new -> filtrar pacientes com covid confirmados; groupby(Municipio, DataDiagnostico); contar ocorrencias
@@ -637,6 +617,9 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
     # fig1.update_layout({
     # 'plot_bgcolor': 'rgba(0,0,0,0)',
     # 'paper_bgcolor': 'rgba(0,0,0,0)'})
+
+    print("Tempo decorrido: " + str( time() - t) + " s.")
+    print('###################################################################')
 
     return fig1
 

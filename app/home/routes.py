@@ -3,14 +3,18 @@
 Programa de Mentoria DSA 2021
 """
 
+from sqlalchemy.util.langhelpers import methods_equivalent
+from app.base.models import Microdados
 from app.home import blueprint
 from flask import render_template, redirect, url_for, request
 from flask_login import login_required, current_user
-from app import login_manager
 from jinja2 import TemplateNotFound
 
 from app.home import vups
 from app.home.vups import graphs
+from app.home.vups import data
+from sqlalchemy import select
+from app import db
 import json
 from plotly import utils
 
@@ -21,27 +25,44 @@ from plotly import utils
 @blueprint.route('/')
 @blueprint.route('/index')
 @login_required
-def index():
+def index():  
     return render_template('index.html', segment='index')
+
+
+
+@blueprint.route('/query', methods=["GET", "POST"])
+def query():
+    if request.method=='POST':
+        
+        municipio = request.form['city']
+        
+        result = db.session.query(Microdados).whereclause(Microdados.Municipio==municipio)
+        print(result)
+
+        for i in result:
+            print(f"{i.Municipio} {i.Classificacao}")    
+
+    return render_template('settings.html')
 
 @blueprint.route('/dashboard')
 @blueprint.route('/dashboard.html')
 @login_required
 def dashboard():
-    return render_template('dashboard.html', segment='dashboard', 
-        percentage_progress             = get_plot_kpi_percentage_progress(),
-        spend_hours                     = get_plot_kpi_spend_hours(),
-        tcpi                            = get_plot_kpi_tcpi(),
-        small_bar_percentage_progress   = get_plot_small_bar_percentage_progress(),
-        small_bar_spend_hours           = get_plot_small_bar_spend_hours(),
-        progress_actual_planned         = get_plot_line_progress_actual_planned(),
-        cost_variance                   = get_plot_widget_cost_variance(),
-        schedule_variance               = get_plot_widget_schedule_variance(),
-        gantt                           = get_plot_gantt(),
-        tributos_cidades                = get_plot_comp_tributos_cidades(),
-        tributos_cidades_norm           = get_plot_comp_tributos_cidades_norm(),
-        tributos_ipca                   = get_plot_tributos_ipca(),
-        calendar_heatmap                = get_plot_calendar_heatmap()
+    return render_template('dashboard.html', segment='dashboard'
+        #, calendar_heatmap                = get_plot_calendar_heatmap()
+        , year_taxs                       = get_plot_year_taxs()
+        , percentage_progress             = get_plot_kpi_percentage_progress()
+        , spend_hours                     = get_plot_kpi_spend_hours()
+        , tcpi                            = get_plot_kpi_tcpi()
+        , small_bar_percentage_progress   = get_plot_small_bar_percentage_progress()
+        , small_bar_spend_hours           = get_plot_small_bar_spend_hours()
+        , progress_actual_planned         = get_plot_line_progress_actual_planned()
+        , cost_variance                   = get_plot_widget_cost_variance()
+        , schedule_variance               = get_plot_widget_schedule_variance()
+        , gantt                           = get_plot_gantt()
+        , tributos_cidades                = get_plot_comp_tributos_cidades()
+        , tributos_cidades_norm           = get_plot_comp_tributos_cidades_norm()
+        , tributos_ipca                   = get_plot_tributos_ipca()
         )
 
 @blueprint.route('/<template>')
@@ -169,3 +190,10 @@ def get_plot_gantt():
     return json.dumps(
         obj = graphs.plot_gantt(),
         cls = utils.PlotlyJSONEncoder)
+
+# não usar FORM
+# alterar para javaScript
+@blueprint.route('/settings', methods=["GET", "POST"])
+def button():
+    if request.method == "POST":
+        return data.importer()
