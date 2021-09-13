@@ -7,13 +7,18 @@
 
 {% block content %}
 
+    <!-- BUTTONS TOP -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+
+        <!-- AREA DO BUTTON DROPDOWN New-->
         <div>
+            <!-- BUTTON DROPDOWN New -->
             <div class="dropdown">
                 <button class="btn btn-secondary d-inline-flex align-items-center me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     New
                 </button>
+                <!-- SUBBUTTONS DROPDOWN -->
                 <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>
@@ -35,32 +40,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- AREA DOS BUTTONS DROPDOWN Calendar e Reports -->
         <div>
+            <!-- BUTTON DROPDOWN Calendar -->
             <button type="button" class="btn btn-gray-800 d-inline-flex align-items-center me-2">
                 <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
             </button>
+
+            <!-- BUTTON DROPDOWN Reports -->
             <button class="btn btn-gray-800 d-inline-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
                 Reports
                 <svg class="icon icon-xs ms-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </button>
+            <!-- SUBBUTTONS DROPDOWN -->
             <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
+                <!-- SUBBUTTON DROPDOWN Products -->
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z"></path><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
                     Products
                 </a>
+                <!-- SUBBUTTON DROPDOWN Customers -->
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>                            
                     Customers
                 </a>
+                <!-- SUBBUTTON DROPDOWN Orders -->
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path></svg>
                     Orders
                 </a>
+                <!-- SUBBUTTON DROPDOWN Console -->
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11 4a1 1 0 10-2 0v4a1 1 0 102 0V7zm-3 1a1 1 0 10-2 0v3a1 1 0 102 0V8zM8 9a1 1 0 00-2 0v2a1 1 0 102 0V9z" clip-rule="evenodd"></path></svg>
                     Console
                 </a>
+                <!-- SUBBUTTON DROPDOWN All Reports -->
                 <div role="separator" class="dropdown-divider my-1"></div>
                 <a class="dropdown-item d-flex align-items-center" href="#">
                     <svg class="dropdown-icon text-gray-800 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
@@ -68,149 +84,68 @@
                 </a>
             </div>
         </div>
+
     </div>
+
+
     <div class="row">
         <div class="col-12 col-xl-8">
             <div class="card card-body border-0 shadow mb-4">
-                <h2 class="h5 mb-4">General information</h2>
-                <form>
+
+                <!-- FORM para Configurações -->
+                <h2 class="h5 mb-4">Configurações: Teste button: {{ButtonPressed}} </h2>
+                <form action="/query" method="POST">
+
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div>
-                                <label for="first_name">First Name</label>
-                                <input class="form-control" id="first_name" type="text" placeholder="Enter your first name" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div>
-                                <label for="last_name">Last Name</label>
-                                <input class="form-control" id="last_name" type="text" placeholder="Also your last name" required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-3">
-                            <label for="birthday">Birthday</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
-                                </span>
-                                <input data-datepicker="" class="form-control" id="birthday" type="text" placeholder="dd/mm/yyyy" required>                                               
-                              </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="gender">Gender</label>
-                            <select class="form-select mb-0" id="gender" aria-label="Gender select example">
-                                <option selected>Gender</option>
-                                <option value="1">Female</option>
-                                <option value="2">Male</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input class="form-control" id="email" type="email" placeholder="name@company.com" value="{{ current_user.email }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input class="form-control" id="phone" type="number" placeholder="+12-345 678 910" required>
-                            </div>
-                        </div>
-                    </div>
-                    <h2 class="h5 my-4">Location</h2>
-                    <div class="row">
-                        <div class="col-sm-9 mb-3">
-                            <div class="form-group">
-                                <label for="address">Address</label>
-                                <input class="form-control" id="address" type="text" placeholder="Enter your home address" required>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 mb-3">
-                            <div class="form-group">
-                                <label for="number">Number</label>
-                                <input class="form-control" id="number" type="number" placeholder="No." required>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
+                        <!-- TEXTBOX Município -->
                         <div class="col-sm-4 mb-3">
                             <div class="form-group">
-                                <label for="city">City</label>
-                                <input class="form-control" id="city" type="text" placeholder="City" required>
+                                <label for="city">Município</label>
+                                <input class="form-control" id="city" name="city" type="text" placeholder="Município" required>
                             </div>
                         </div>
+                        <!-- SELECT Estado -->
                         <div class="col-sm-4 mb-3">
-                            <label for="state">State</label>
+                            <label for="state">Estado</label>
                             <select class="form-select w-100 mb-0" id="state" name="state" aria-label="State select example">
-                                <option selected>State</option>
-                                <option value="AL">Alabama</option>
-                                <option value="AK">Alaska</option>
-                                <option value="AZ">Arizona</option>
-                                <option value="AR">Arkansas</option>
-                                <option value="CA">California</option>
-                                <option value="CO">Colorado</option>
-                                <option value="CT">Connecticut</option>
-                                <option value="DE">Delaware</option>
-                                <option value="DC">District Of Columbia</option>
-                                <option value="FL">Florida</option>
-                                <option value="GA">Georgia</option>
-                                <option value="HI">Hawaii</option>
-                                <option value="ID">Idaho</option>
-                                <option value="IL">Illinois</option>
-                                <option value="IN">Indiana</option>
-                                <option value="IA">Iowa</option>
-                                <option value="KS">Kansas</option>
-                                <option value="KY">Kentucky</option>
-                                <option value="LA">Louisiana</option>
-                                <option value="ME">Maine</option>
-                                <option value="MD">Maryland</option>
-                                <option value="MA">Massachusetts</option>
-                                <option value="MI">Michigan</option>
-                                <option value="MN">Minnesota</option>
-                                <option value="MS">Mississippi</option>
-                                <option value="MO">Missouri</option>
-                                <option value="MT">Montana</option>
-                                <option value="NE">Nebraska</option>
-                                <option value="NV">Nevada</option>
-                                <option value="NH">New Hampshire</option>
-                                <option value="NJ">New Jersey</option>
-                                <option value="NM">New Mexico</option>
-                                <option value="NY">New York</option>
-                                <option value="NC">North Carolina</option>
-                                <option value="ND">North Dakota</option>
-                                <option value="OH">Ohio</option>
-                                <option value="OK">Oklahoma</option>
-                                <option value="OR">Oregon</option>
-                                <option value="PA">Pennsylvania</option>
-                                <option value="RI">Rhode Island</option>
-                                <option value="SC">South Carolina</option>
-                                <option value="SD">South Dakota</option>
-                                <option value="TN">Tennessee</option>
-                                <option value="TX">Texas</option>
-                                <option value="UT">Utah</option>
-                                <option value="VT">Vermont</option>
-                                <option value="VA">Virginia</option>
-                                <option value="WA">Washington</option>
-                                <option value="WV">West Virginia</option>
-                                <option value="WI">Wisconsin</option>
-                                <option value="WY">Wyoming</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
                             </select>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="zip">ZIP</label>
-                                <input class="form-control" id="zip" type="tel" placeholder="ZIP" required>
-                            </div>
-                        </div>
                     </div>
+                    <!-- BUTTON Importar -->
                     <div class="mt-3">
-                        <button class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Save all</button>
+                        <!-- <button id="importar" class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Importar</button> -->
+                        <button id="query" class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Consultar</button>
                     </div>
+
                 </form>
+
             </div>
             <div class="card card-body border-0 shadow mb-4 mb-xl-0">
                 <h2 class="h5 mb-4">Alerts & Notifications</h2>
@@ -331,4 +266,12 @@
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+
+<script>
+    // $("#query").click(function() { // or $("input#<input id, if it has one>")...
+    //     $.get('/query');
+    // });
+</script>
+
+{% endblock javascripts %}
