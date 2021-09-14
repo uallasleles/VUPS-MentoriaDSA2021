@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
     <a class="navbar-brand me-lg-5" href="/">
-        <img class="navbar-brand-dark" src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v141/img/brand/light.svg" alt="Volt logo">
-        <img class="navbar-brand-light" src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v141/img/brand/dark.svg" alt="Volt logo">
+        <img class="navbar-brand-dark" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}" alt="DSA logo">
+        <img class="navbar-brand-light" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}" alt="DSA logo">
     </a>
     <div class="d-flex align-items-center">
         <button class="navbar-toggler d-lg-none collapsed" 
@@ -29,8 +29,8 @@
                             <div class="user-card d-flex d-md-none justify-content-between justify-content-md-center pb-4">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-lg me-4">
-                                        <img src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v141/img/team/profile-picture-3.jpg"
-                                            class="card-img-top rounded-circle border-white" alt="Bonnie Green">
+                                        <img src="{{ url_for('static', filename='assets/img/team/profile-picture-7.jpg') }}"
+                                            class="card-img-top rounded-circle border-white" alt="Uallas Leles">
                                     </div>
                                     <div class="d-block">
                                         <h2 class="h5 mb-3">Hi, Jane</h2>
@@ -42,7 +42,7 @@
                                                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
                                                 </path>
                                             </svg>
-                                            Sign Out
+                                            Sair
                                         </a>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                             <img src="/static/assets/img/icons/logo-dsa.png"
                                                 height="30" width="30" alt="DSA logo">
                                         </span>
-                                        <span class="mt-1 sidebar-text">Home</span>
+                                        <span class="mt-1 sidebar-text">Início</span>
                                     </a>
                                 </li>
 
@@ -95,7 +95,7 @@
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                         </span>
-                                        <span class="sidebar-text">Task List</span>
+                                        <span class="sidebar-text">Lista de Tarefas</span>
                                     </a>
                                 </li>
                                 <li class="nav-item ">
@@ -108,7 +108,7 @@
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                         </span>
-                                        <span class="sidebar-text">Settings</span>
+                                        <span class="sidebar-text">Configurações</span>
                                     </a>
                                 </li>
                                 <li class="nav-item ">
@@ -121,7 +121,7 @@
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                         </span>
-                                        <span class="sidebar-text">Calendar</span>
+                                        <span class="sidebar-text">Calendário</span>
                                     </a>
                                 </li>
                                 <li class="nav-item ">
@@ -134,12 +134,12 @@
                                                     clip-rule="evenodd"></path>
                                             </svg>
                                         </span>
-                                        <span class="sidebar-text">Map</span>
+                                        <span class="sidebar-text">Mapas</span>
                                     </a>
                                 </li>
                                 <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
                                 <li class="nav-item">
-                                    <a href="https://appseed.us/support" target="_blank"
+                                    <a href="https://github.com/uallasleles" target="_blank"
                                         class="nav-link d-flex align-items-center">
                                         <span class="sidebar-icon">
                                             <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"

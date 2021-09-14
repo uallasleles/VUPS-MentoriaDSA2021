@@ -44,7 +44,7 @@ def login():
             return redirect(url_for('base_blueprint.route_default'))
 
         # Something (user or pass) is not ok
-        return render_template( 'accounts/login.html', msg='Wrong user or password', form=login_form)
+        return render_template( 'accounts/login.html', msg='Usuário ou senha errada', form=login_form)
 
     if not current_user.is_authenticated:
         return render_template( 'accounts/login.html',
@@ -64,7 +64,7 @@ def register():
         user = User.query.filter_by(username=username).first()
         if user:
             return render_template( 'accounts/register.html', 
-                                    msg='Username already registered',
+                                    msg='Nome de usuário já registrado',
                                     success=False,
                                     form=create_account_form)
 
@@ -72,7 +72,7 @@ def register():
         user = User.query.filter_by(email=email).first()
         if user:
             return render_template( 'accounts/register.html', 
-                                    msg='Email already registered', 
+                                    msg='E-mail já registrado', 
                                     success=False,
                                     form=create_account_form)
 
@@ -82,7 +82,7 @@ def register():
         db.session.commit()
 
         return render_template( 'accounts/register.html', 
-                                msg='User created please <a href="/login">login</a>', 
+                                msg='Usuário criado, por favor <a href="/login">entre</a>', 
                                 success=True,
                                 form=create_account_form)
 
