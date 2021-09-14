@@ -1,7 +1,6 @@
 # VUPS Mentoria DSA 2021
 
-
-**Flask Bootstrap 5** dashboard gerado pela plataforma AppSeed com módulos básicos, banco de dados, autenticação e scripts de implantação em cima do Volt Dashboard. O Volt Dashboard é um modelo de painel de código aberto **Bootstrap 5** gratuito com mais de 100 componentes, 11 páginas de exemplo e 3 plug-ins com Vanilla JS.Existem mais de 100 componentes gratuitos do Bootstrap 5, incluindo alguns deles sendo botões, alertas, modais, selecionadores de data e assim por diante.
+Dashboard gerado pela plataforma AppSeed com módulos básicos, banco de dados, autenticação e scripts de implantação.
 
 <br />
 
@@ -12,19 +11,10 @@
 - Modular design with **Blueprints**, simple codebase
 - Session-Based authentication (via **flask_login**), Forms validation
 - Deployment scripts: Docker, Gunicorn / Nginx, Heroku
-- Support via **Github** and [Discord](https://discord.gg/fZC6hup).
 
 <br />
 
-> Links
-
-- [Flask Bootstrap 5 Volt](https://appseed.us/admin-dashboards/flask-dashboard-volt) - product page
-- [Flask Bootstrap 5 Volt](https://flask-volt-dashboard.appseed-srv1.com/) - LIVE deployment
-- [Flask Bootstrap 5 Volt](https://docs.appseed.us/products/flask-dashboards/volt) - product documentation
-
-<br />
-
-## How to use it
+## Como usá-lo
 
 ```bash
 $ # Get the code
