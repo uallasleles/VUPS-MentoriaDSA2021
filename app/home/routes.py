@@ -49,7 +49,7 @@ def query():
 @login_required
 def dashboard():
     return render_template('dashboard.html', segment='dashboard'
-        #, calendar_heatmap                = get_plot_calendar_heatmap()
+        , calendar_heatmap                = get_plot_calendar_heatmap()
         , year_taxs                       = get_plot_year_taxs()
         , percentage_progress             = get_plot_kpi_percentage_progress()
         , spend_hours                     = get_plot_kpi_spend_hours()

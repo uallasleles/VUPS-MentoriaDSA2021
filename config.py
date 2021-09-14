@@ -37,7 +37,7 @@ class ProductionConfig(Config):
 
 class DebugConfig(Config):
     #SQLALCHEMY_ECHO = True
-    DEBUG = False
+    DEBUG = True
 
 # Carregua todas as configurações possíveis
 config_dict = {
