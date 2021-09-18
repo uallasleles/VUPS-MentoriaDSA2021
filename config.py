@@ -12,9 +12,11 @@ class Config(object):
 
     # Configura o App SECRET_KEY
     SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_007')
+    
+    db_name = 'vups.db'
 
     # Isso criará um arquivo em <app> FOLDER
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db.sqlite3')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, db_name)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class ProductionConfig(Config):

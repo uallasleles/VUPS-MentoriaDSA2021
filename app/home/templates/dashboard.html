@@ -19,115 +19,232 @@
             }
         });
     }
-    function refresh_kpi() {
-        $.getJSON({
-            url: "/refresh_kpi",
-            success: function (result) {
-                Plotly.newPlot('kpi1', { percentage_progress }, {});
-            }
-        });
-    }
 </script>
 {% endblock javascripts_top %}
 
 
 {% block content %}
 
-<!-- CONTROLES -->
+<!-- Calendar Heatmap -->
+<div class="row">
+    <!-- GRÁFICO 1 -->
+    <div class="col-12 mb-2 mt-4">
+        <!-- BACKGROUND AREA -->
+        <div class="card shadow-sm">
+
+            <!-- CONTROLES -->
+            <div class="card-header d-flex flex-row align-items-center flex-0">
+                <div class="row mb-2">
+                    <h2 class="h5">Test: Calendar Heatmap</h2>
+
+                    <!-- BUTTON Consultar -->
+                    <div class="">
+                        <input id="query" name="query" class="btn btn-gray-800 mt-2 animate-up-2" type="button" value="Atualizar" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body border-0 mb-2">
+
+                <div class="row">
+                    <!-- SELECT ESTADO -->
+                    <!-- <div class="col-sm-3 mb-2">
+                        <label class="my-1 me-2" for="state">Estado (UF)</label>
+                        <select class="w-100 mb-0" id="state" name="state" aria-label="State select example"
+                            onchange="refresh_progress_actual_planned(this.value)">
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div> -->
+
+                    <!-- TEXTBOX Município -->
+                    <div class="col-sm-4 mb-3">
+                        <div class="form-group">
+                            <label for="city">Município</label>
+                            <input class="form-control" id="city" name="city" type="text" placeholder="Município" required>
+                        </div>
+                    </div>
+
+                    <!-- BUTTON KPI -->
+                    <!-- <div class="d-flex ms-auto">
+                        <input type="button" onclick="refresh_kpi()" value="Progresso" />
+                    </div> -->
+
+                    <!-- BUTTONS DATETIME -->
+                    <!-- <div class="d-flex ms-auto">
+                        <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
+                        <a href="#" class="btn btn-primary btn-sm">Week</a>
+                    </div> -->
+                </div>
+
+
+                <!-- GRÁFICO -->
+                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="heatmap" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico: TRIBUTOS -->
 <div class="row">
     <!-- GRÁFICO 1 -->
     <div class="col-12 mb-4">
         <!-- BACKGROUND AREA -->
         <div class="card shadow-sm">
 
-            <!-- CONTROLES -->
+            <!-- FILTROS -->
             <div class="card-header d-flex flex-row align-items-center flex-0">
+                <h2 class="h5 mb-2">Teste: Tributos</h2>
+            </div>
+            <div class="card-body border-0 mb-2">
 
-                <!-- SELECT ESTADO -->
-                <div class="col-sm-3 mb-2">
-                    <label class="my-1 me-2" for="state">Estado (UF)</label>
-                    <select class="w-100 mb-0" id="state" name="state" aria-label="State select example"
-                        onchange="refresh_progress_actual_planned(this.value)">
-                        <option value="AC">Acre</option>
-                        <option value="AL">Alagoas</option>
-                        <option value="AP">Amapá</option>
-                        <option value="AM">Amazonas</option>
-                        <option value="BA">Bahia</option>
-                        <option value="CE">Ceará</option>
-                        <option value="DF">Distrito Federal</option>
-                        <option value="ES">Espírito Santo</option>
-                        <option value="GO">Goiás</option>
-                        <option value="MA">Maranhão</option>
-                        <option value="MT">Mato Grosso</option>
-                        <option value="MS">Mato Grosso do Sul</option>
-                        <option value="MG">Minas Gerais</option>
-                        <option value="PA">Pará</option>
-                        <option value="PB">Paraíba</option>
-                        <option value="PR">Paraná</option>
-                        <option value="PE">Pernambuco</option>
-                        <option value="PI">Piauí</option>
-                        <option value="RJ">Rio de Janeiro</option>
-                        <option value="RN">Rio Grande do Norte</option>
-                        <option value="RS">Rio Grande do Sul</option>
-                        <option value="RO">Rondônia</option>
-                        <option value="RR">Roraima</option>
-                        <option value="SC">Santa Catarina</option>
-                        <option value="SP">São Paulo</option>
-                        <option value="SE">Sergipe</option>
-                        <option value="TO">Tocantins</option>
-                    </select>
+                <div class="row">
+
+                    <!-- Estado - OCULTEI ESTE COMPONENTE CONFIGUREI O ES COMO FIXO -->
+                    <div class="col-sm-4 mb-2" hidden>
+                        <div class="form-group">
+                            <label class="my-1 mr-2" for="uf">Estado:</label>
+                            <select id="uf" class="form-control" name="uf">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Cidades -->
+                    <div class="col-sm-6 mb-2">
+                        <div class="form-group">
+                            <label class="my-1 mr-2" for="cidades">Municípios</label>
+                            <select id="cidades" class="form-control" name="cidades[]" multiple="multiple">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- BUTTON Consultar -->
+                    <div class="mt-3">
+                        <input id="btn_tributos" name="btn_tributos" class="btn btn-gray-800 mt-2 animate-up-2" type="button" value="Atualizar" />
+                    </div>
+
                 </div>
 
-                <!-- SELECT CIDADES -->
-                <div class="col-sm-4 mb-2">
-                    <label for="city">Cidades</label>
-                    <select id="states" class="w-100 mb-0" name="states[]" multiple="multiple"
-                        aria-label="State select example" onchange="refresh_progress_actual_planned(this.value)">
-                        <option value="AC">Acre</option>
-                        <option value="AL">Alagoas</option>
-                        <option value="AP">Amapá</option>
-                        <option value="AM">Amazonas</option>
-                        <option value="BA">Bahia</option>
-                        <option value="CE">Ceará</option>
-                        <option value="DF">Distrito Federal</option>
-                        <option value="ES">Espírito Santo</option>
-                        <option value="GO">Goiás</option>
-                        <option value="MA">Maranhão</option>
-                        <option value="MT">Mato Grosso</option>
-                        <option value="MS">Mato Grosso do Sul</option>
-                        <option value="MG">Minas Gerais</option>
-                        <option value="PA">Pará</option>
-                        <option value="PB">Paraíba</option>
-                        <option value="PR">Paraná</option>
-                        <option value="PE">Pernambuco</option>
-                        <option value="PI">Piauí</option>
-                        <option value="RJ">Rio de Janeiro</option>
-                        <option value="RN">Rio Grande do Norte</option>
-                        <option value="RS">Rio Grande do Sul</option>
-                        <option value="RO">Rondônia</option>
-                        <option value="RR">Roraima</option>
-                        <option value="SC">Santa Catarina</option>
-                        <option value="SP">São Paulo</option>
-                        <option value="SE">Sergipe</option>
-                        <option value="TO">Tocantins</option>
-                    </select>
-                </div>
-
-                <!-- BUTTON KPI -->
-                <div class="d-flex ms-auto">
-                    <input type="button" onclick="refresh_kpi()" value="Progresso" />
-                </div>
-
-                <!-- BUTTONS DATETIME -->
-                <div class="d-flex ms-auto">
-                    <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
-                    <a href="#" class="btn btn-primary btn-sm">Week</a>
+                <!-- GRÁFICO - Tributos -->
+                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                    <!-- ROW KPIS's -->
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="tributos" class="chart"></div>
+                        </span>
+                    </div>
                 </div>
 
             </div>
-
         </div>
     </div>
+</div>
+
+<!-- Gráfico: TRIBUTOS NORMALIZADOS -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <!-- BACKGROUND AREA -->
+        <div class="card shadow-sm">
+
+            <!-- FILTROS -->
+            <div class="card-header d-flex flex-row align-items-center flex-0">
+                <h2 class="h5 mb-2">Teste: Tributos Normalizados</h2>
+            </div>
+            <div class="card-body border-0 mb-2">
+
+                <!-- BUTTON Consultar -->
+                <div class="row">
+                    <div class="mt-3">
+                        <input id="btn_tributos_norm" name="btn_tributos_norm" class="btn btn-gray-800 mt-2 animate-up-2" type="button" value="Atualizar" />
+                    </div>
+                </div>
+
+                <!-- GRÁFICO - Tributos Normalizados -->
+                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="tributos_norm" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico: TRIBUTOS IPCA -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <!-- BACKGROUND AREA -->
+        <div class="card shadow-sm">
+
+            <!-- FILTROS -->
+            <div class="card-header d-flex flex-row align-items-center flex-0">
+                <h2 class="h5 mb-2">Teste: Tributos IPCA</h2>
+            </div>
+            <div class="card-body border-0 mb-2">
+
+                <!-- BUTTON Consultar -->
+                <div class="row">
+                    <div class="mt-3">
+                        <input id="btn_tributos_ipca" name="btn_tributos_ipca" class="btn btn-gray-800 mt-2 animate-up-2" type="button" value="Atualizar" />
+                    </div>
+                </div>
+
+                <!-- GRÁFICO - Tributos IPCA -->
+                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="tributos_ipca" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TextArea -->
+<div class="my-4">
+    <label for="textarea">Example textarea</label>
+    <textarea class="form-control" placeholder="Enter your message..." id="textarea" rows="4">
+    </textarea>
 </div>
 
 <!-- ROW PARA GRÁFICO E CARDS -->
@@ -137,36 +254,35 @@
         <!-- BACKGROUND AREA -->
         <div class="card shadow-sm">
 
+            <!-- ROW KPIS's -->
             <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
+
+                <!-- KPI 1 -->
                 <div class="col-12 col-sm-6 col-md-4 col-xl-4 bg-soft mb-2">
                     <span>
                         <div id="kpi1" class="chart"></div>
                     </span>
                 </div>
 
+                <!-- KPI 2 -->
                 <div class="col-12 col-sm-6 col-md-4 col-xl-4 bg-soft mb-2">
                     <span>
                         <div id="kpi2" class="chart"></div>
                     </span>
                 </div>
 
+                <!-- KPI 3 -->
                 <div class="col-12 col-sm-6 col-md-4 col-xl-4 bg-soft mb-2">
                     <span>
                         <div id="kpi3" class="chart"></div>
                     </span>
                 </div>
+
             </div>
+
+            <!-- SMALL PLOTS -->
             <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
-                <div class="col-12 col-sm-12 bg-soft mb-2">
-                    <span>
-                        <div id="map1" class="chart"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
+                
                 <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 bg-soft mb-2">
                     <span>
                         <div id="chart1" class="chart"></div>
@@ -186,8 +302,9 @@
                 </div>
             </div>
 
+            <!-- WIDGETS -->
             <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
+
                 <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3 bg-soft mb-2">
                     <span>
                         <div id="widget1" class="chart"></div>
@@ -205,30 +322,6 @@
                 </div>
             </div>
 
-            <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
-                <div class="col-12 col-sm-12 bg-soft mb-2">
-                    <span>
-                        <div id="graph1" class="chart"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
-                <div class="col-12 col-sm-12 bg-soft mb-2">
-                    <span>
-                        <div id="graph2" class="chart"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                <!-- ROW KPIS's -->
-                <div class="col-12 col-sm-12 bg-soft mb-2">
-                    <span>
-                        <div id="graph3" class="chart"></div>
-                    </span>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -386,7 +479,52 @@
 
 {% block javascripts %}
 
-<script>
+<script type="text/javascript">
+
+    $(function () {
+        $('#query').bind('click', function () {
+            $.getJSON('/heatmap', {
+                city: $('input[name="city"]').val()
+            }, function (data) {
+                // $("#heatmap").text(data.result);
+                Plotly.newPlot('heatmap', data, {});
+            });
+            return false;
+        })
+    });
+
+    $(function () {
+        $('#btn_tributos').bind('click', function () {
+            $.getJSON('/tributos', {
+                cidades: $('#cidades').val()
+            }, function (data) {
+                Plotly.newPlot('tributos', data, {});
+            });
+            return false;
+        })
+    });
+
+    $(function () {
+        $('#btn_tributos_norm').bind('click', function () {
+            $.getJSON('/tributos_norm', {
+                cidades: $('#cidades').val()
+            }, function (data) {
+                Plotly.newPlot('tributos_norm', data, {});
+            });
+            return false;
+        })
+    });
+
+    $(function () {
+        $('#btn_tributos_ipca').bind('click', function () {
+            $.getJSON('/tributos_ipca', {
+                cidades: $('#cidades').val()
+            }, function (data) {
+                Plotly.newPlot('tributos_ipca', data, {});
+            });
+            return false;
+        })
+    });
 
     Plotly.newPlot('kpi1', {{ percentage_progress | safe }});
     Plotly.newPlot('kpi2', {{ spend_hours | safe }});
@@ -397,11 +535,48 @@
     Plotly.newPlot('widget1', {{ cost_variance | safe }});
     Plotly.newPlot('widget2', {{ schedule_variance | safe }});
     Plotly.newPlot('widget3', {{ gantt | safe }});
-    Plotly.newPlot('graph1', {{ tributos_cidades | safe }});
-    Plotly.newPlot('graph2', {{ tributos_cidades_norm | safe }});
-    Plotly.newPlot('graph3', {{ tributos_ipca | safe }});
-    Plotly.newPlot('map1', {{ calendar_heatmap | safe }});
-    
+    // Plotly.newPlot('tributos', {{ tributos_cidades | safe }});
+    // Plotly.newPlot('graph2', {{ tributos_cidades_norm | safe }});
+    // Plotly.newPlot('tributos_ipca', {{ tributos_ipca | safe }});
+    // Plotly.newPlot('heatmap', {{ calendar_heatmap | safe }});
+
+    // SELECT OPTIONS DINÂMICAS PARA ESTADOS E CIDADES
+    // =======================================================================
+    $(document).ready(function () {
+        url="{{ url_for('static', filename='assets/estados_cidades.json') }}"
+        var uf_cid = $.getJSON(url, function(jsonData) {
+            var list_estados = '<option selected="selected" value="0">- Select -</option>';
+            for (var i = 0; i < jsonData.Table.length; i++) {
+                list_estados += "<option value='" + jsonData.Table[i].sigla + "'>" + jsonData.Table[i].nome + "</option>";}
+            $("#uf").html(list_estados);
+            $("#uf").change( () => {				
+                var list_cidades = '<option>- Select -</option>';
+                
+                let str = 'ES';
+
+                // let str = $("#uf").val();
+
+                for (var i = 0; i < jsonData.Table.length; i++) {
+                    if(jsonData.Table[i].sigla == str) {
+                        for (val_city of jsonData.Table[i].cidades) {
+                            list_cidades += '<option value="' + val_city + '">' + val_city + '</option>';
+                        }
+                    }
+                }
+                
+                $("#cidades").html(list_cidades);
+
+                // // multiple
+                var selectStatesInputEl = d.querySelector('#cidades');
+                if(selectStatesInputEl) {
+                    const choices = new Choices(selectStatesInputEl, {removeItemButton: true});
+                }
+
+            }).change();
+        });
+    });
+
+
 </script>
 
 {% endblock javascripts %}

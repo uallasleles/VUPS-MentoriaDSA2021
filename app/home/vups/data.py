@@ -6,9 +6,9 @@ from datetime import datetime
 
 from app.base.models import Microdados
 from app.home import vups
-from app import db
+# from app import db
 from tqdm import tqdm
-
+from flask import Response
 
 def getData_fromTXT(file_name):
     data = genfromtxt(file_name, delimiter=',', skip_header=1, converters={0: lambda s: str(s)})
@@ -23,12 +23,9 @@ def getData_fromTXT(file_name):
 #         'close' : i[4],
 #         'vol' : i[5]
 
-def importer():
-    
+# def importer(data=vups.datasets.microdados(nrows=100)): 
     try:
         print("Importando Dataset")
-        data = vups.datasets.microdados()
-
         print("Informações sobre o Dataset importado:")
         print("===============================================================")
         print(data.info())
@@ -83,14 +80,15 @@ def importer():
                 'ResultadoSorologia_IGG' : col[44],
                 'TipoTesteRapido' : col[45]
             })
-            db.session.add(record)
-            db.session.flush()
-            db.session.commit()
+            print("Adicionando registro para sessão! %{}%".format(col.Index))
+            # db.session.add(record)
+            # db.session.flush()
+            # db.session.commit()
 
     except:
         print("Houve uma exceção! Revertendo as alterações!")
-        db.session.rollback() # Rollback the changes on error
+        # db.session.rollback() # Rollback the changes on error
     
     finally:
         print("Fechando a conexão")
-        db.session.close() # Close the connection
+        # db.session.close() # Close the connection

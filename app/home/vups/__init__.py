@@ -63,10 +63,8 @@ def getData_fromParquet(
 
     return dataset
 
-
 def convert_to_parquet(df):
     df.to_parquet(const.DATADIR+'df.parquet')
-
 
 def plot_bar():
     df = pd.DataFrame(
@@ -257,7 +255,6 @@ class datasets:
 
     def populacao_2021(columns=None, nrows=None, dtype=None):
         return get_data(file='populacao_2021.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
-
 
 def group_by(df, col):
     """

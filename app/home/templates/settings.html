@@ -5,6 +5,9 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
+{% block javascripts_top %}
+{% endblock javascripts_top %}
+
 {% block content %}
 
     <!-- BUTTONS TOP -->
@@ -87,66 +90,36 @@
 
     </div>
 
-
+    <!-- BOX -->
     <div class="row">
         <div class="col-12 col-xl-8">
+
+            <!-- Importar Dados -->
             <div class="card card-body border-0 shadow mb-4">
-
-                <!-- FORM para Configurações -->
-                <h2 class="h5 mb-4">Configurações: Teste button: {{ButtonPressed}} </h2>
-                <form action="/query" method="POST">
-
-                    <div class="row">
-                        <!-- TEXTBOX Município -->
-                        <div class="col-sm-4 mb-3">
-                            <div class="form-group">
-                                <label for="city">Município</label>
-                                <input class="form-control" id="city" name="city" type="text" placeholder="Município" required>
-                            </div>
+                <!-- BUTTON Importar -->
+                <div class="col-12 col-sm-6 col-xl-4 mb-4">
+                    <button id="importar" class="btn btn-gray-800 mt-2 animate-up-2" type="button">Importar Dataset</button>
+                </div>
+                
+                <div class="progress-wrapper">
+                    <div class="progress-info progress-bar-striped active">
+                        <div class="progress-label">
+                            <span class="text-primary">Importando o banco de dados...</span>
                         </div>
-                        <!-- SELECT Estado -->
-                        <div class="col-sm-4 mb-3">
-                            <label for="state">Estado</label>
-                            <select class="form-select w-100 mb-0" id="state" name="state" aria-label="State select example">
-                                <option value="AC">Acre</option>
-                                <option value="AL">Alagoas</option>
-                                <option value="AP">Amapá</option>
-                                <option value="AM">Amazonas</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="DF">Distrito Federal</option>
-                                <option value="ES">Espírito Santo</option>
-                                <option value="GO">Goiás</option>
-                                <option value="MA">Maranhão</option>
-                                <option value="MT">Mato Grosso</option>
-                                <option value="MS">Mato Grosso do Sul</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="PA">Pará</option>
-                                <option value="PB">Paraíba</option>
-                                <option value="PR">Paraná</option>
-                                <option value="PE">Pernambuco</option>
-                                <option value="PI">Piauí</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="RN">Rio Grande do Norte</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="RO">Rondônia</option>
-                                <option value="RR">Roraima</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="SE">Sergipe</option>
-                                <option value="TO">Tocantins</option>
-                            </select>
+                        <div>
+                            <span class="progress-percentage">0%</span>
                         </div>
                     </div>
-                    <!-- BUTTON Importar -->
-                    <div class="mt-3">
-                        <!-- <button id="importar" class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Importar</button> -->
-                        <button id="query" class="btn btn-gray-800 mt-2 animate-up-2" type="submit">Consultar</button>
+                    <div class="progress">
+                        <div class="progress-bar bg-primary progress-bar-striped active" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <span class="progress-bar-label">0%</span>
+                        </div>
                     </div>
-
-                </form>
+                </div>
 
             </div>
+
+            <!-- Alerts & Notifications -->
             <div class="card card-body border-0 shadow mb-4 mb-xl-0">
                 <h2 class="h5 mb-4">Alerts & Notifications</h2>
                 <ul class="list-group list-group-flush">
@@ -188,7 +161,9 @@
                     </li>
                 </ul>
             </div>
+
         </div>
+
         <div class="col-12 col-xl-4">
             <div class="row">
                 <div class="col-12 mb-4">
@@ -269,9 +244,21 @@
 {% block javascripts %}
 
 <script>
-    // $("#query").click(function() { // or $("input#<input id, if it has one>")...
-    //     $.get('/query');
-    // });
+
+    $(function () {
+        $('#importar').bind('click', function () {
+            var source = new EventSource("/importar");
+            source.onmessage = function(event) {
+                $('.progress-bar').css('width', event.data+'%').attr('aria-valuenow', event.data);
+                $('.progress-bar-label').text(event.data+'%');
+                $('.progress-percentage').text(event.data+'%');
+                if(event.data == 100) {
+                    source.close()
+                }
+            }
+        })
+    });
+
 </script>
 
 {% endblock javascripts %}

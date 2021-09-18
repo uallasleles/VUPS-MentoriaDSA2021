@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes SQL</title>
+</head>
+<body>
+    <h1 class="pt-5 pb-2">List of Socks</h1>
+
+    <p class="lead alert alert-warning">This is a list of all the socks of the
+        <strong>{{ style }}</strong> style in our inventory.
+    </p>
+    
+    <p class="ml-4"><a href="{{ url_for('index') }}">Return to the index.</a></p>
+    
+    <table class="table">
+        <tr>
+            <th>municipio</th>
+            <th>bairro</th>
+            <th>classificacao</th>
+            <th>sexo</th>
+            <th>idade</th>
+        </tr>
+    
+        <!-- here is a for-loop to give us all the socks -->
+        {% for md in mds %}
+        <tr>
+            <td>{{ md.municipio }}</td>
+            <td>{{ md.bairro }}</td>
+            <td>{{ md.classificacao }}</td>
+            <td>{{ md.sexo }}</td>
+            <td>{{ md.idade }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
