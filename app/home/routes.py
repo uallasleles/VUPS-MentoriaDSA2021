@@ -3,23 +3,18 @@
 Programa de Mentoria DSA 2021
 """
 
-from sqlalchemy.util.langhelpers import methods_equivalent
-from traitlets.traitlets import default
 from app.base.models import Microdados
 from app.home import blueprint
-from flask import render_template, redirect, url_for, request, Response, jsonify, flash
-from flask_login import login_required, current_user
+from flask import render_template, request, Response, stream_with_context
+from flask_login import login_required
 from jinja2 import TemplateNotFound
 
 from app.home import vups
 from app.home.vups import graphs
-from app.home.vups import data
-from sqlalchemy import select
 from app import db
 import json
 from plotly import utils
 import unicodedata
-import time
 
 def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
@@ -238,25 +233,29 @@ def get_plot_gantt():
         obj = graphs.plot_gantt(),
         cls = utils.PlotlyJSONEncoder)
 
-def progress():
-	def generate():
-		x = 0
-		while x <= 100:
-			yield "data:" + str(x) + "\n\n"
-			x = x + 1
-			time.sleep(0.5)
-	return Response(generate(), mimetype= 'text/event-stream')
+# def progress():
+# 	def generate():
+# 		x = 0
+# 		while x <= 100:
+# 			yield "data:" + str(x) + "\n\n"
+# 			x = x + 1
+# 			time.sleep(0.5)
+# 	return Response(generate(), mimetype= 'text/event-stream')
 
 @blueprint.route('/importar')
-def importer(data=vups.datasets.microdados(nrows=100)): 
+def importar():
+    print("Importando Dataset...")
+    data=vups.datasets.microdados()
     def generate():
+        total = data.shape[0]
+        inc = 100/total
+        x = 0
+        #yield str(total)
         try:
-            print("Importando Dataset")
-            total=data.shape[0]
-
-            print("Iterando registros")
+            print("Transferindo registros para a database...")
             for col in data.itertuples():
-                yield "data:" + format(col.Index+1) + "\n\n"
+                #print("Adicionando registro para sessão! Nº {}".format(col.Index+1))
+                #print(col)
                 record = Microdados(**{
                     'DataNotificacao' : col[1],
                     'DataCadastro' : col[2],
@@ -304,12 +303,12 @@ def importer(data=vups.datasets.microdados(nrows=100)):
                     'ResultadoSorologia_IGG' : col[44],
                     'TipoTesteRapido' : col[45]
                 })
-                print("Adicionando registro para sessão! Nº {}".format(col.Index+1))
-                with db.session as s:
-                    s.add(record)
-                    s.flush()
-                    s.commit()
-                time.sleep(0.5)
+                x = x + inc
+                yield "data:" + '{:.4f}'.format(x) + "\n\n"
+                db.session.add(record)
+                db.session.flush()
+                db.session.commit()
+                #time.sleep(2)
         except:
             print("Houve uma exceção! Revertendo as alterações!")
             db.session.rollback() # Rollback the changes on error
@@ -318,4 +317,4 @@ def importer(data=vups.datasets.microdados(nrows=100)):
             print("Fechando a conexão")
             db.session.close() # Close the connection
 
-    return Response(generate(), mimetype= 'text/event-stream')
+    return Response(stream_with_context(generate()), mimetype= 'text/event-stream')
