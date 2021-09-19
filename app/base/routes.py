@@ -4,27 +4,25 @@ Programa de Mentoria DSA 2021
 """
 
 from flask import jsonify, render_template, redirect, request, url_for
-from flask_login import (
-    current_user,
-    login_required,
-    login_user,
-    logout_user
-)
-
+from flask_login import(current_user,
+                        login_required,
+                        login_user,
+                        logout_user)
 from app import db, login_manager
 from app.base import blueprint
 from app.base.forms import LoginForm, CreateAccountForm
 from app.base.models import User
-
 from app.base.util import verify_pass
 
 
+# Rota para Login
+# ====================================================
 @blueprint.route('/')
 def route_default():
     return redirect(url_for('base_blueprint.login'))
 
-## Login & Registration
-
+# Métodos de Login, Registration e Logout
+# ====================================================
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm(request.form)
@@ -94,8 +92,8 @@ def logout():
     logout_user()
     return redirect(url_for('base_blueprint.login'))
 
-## Errors
-
+## Páginas de Erro
+# ====================================================
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return render_template('page-403.html'), 403

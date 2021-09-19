@@ -35,7 +35,7 @@
     <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v141/vendor/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
 
     <!-- Choices -->
-    <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v141/vendor/choices.js/public/assets/styles/choices.min.css" rel="stylesheet">
+    <link type="text/css" href="{{ url_for('static', filename='assets/vendor/choices/public/assets/styles/choices.min.css') }}" rel="stylesheet">
 
     <!-- Leaflet -->
     <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v141/vendor/leaflet/dist/leaflet.css" rel="stylesheet">
@@ -52,7 +52,7 @@
     <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&display=swap" rel="stylesheet"> -->
-    
+
     {% block javascripts_top %}{% endblock javascripts_top %}
 
 </head>
@@ -72,6 +72,7 @@
     </main>
 
     {% include "includes/scripts.html" %}
+    {% include "includes/scripts-vups.html" %}
 
 </body>
 

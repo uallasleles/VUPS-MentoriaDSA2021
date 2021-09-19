@@ -1,21 +1,13 @@
 import os
-from numpy import empty
-from numpy.ma import isin
 import pandas as pd
-from pandas.io.formats.format import CategoricalFormatter
+#from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
-import sys
-from matplotlib import pyplot as plt
 from . import const
-import json
-import requests
 import folium
-import branca
 import datetime
-from time import time
 
 # CONFIG #####################################################################
-pd.options.display.float_format = '{:.2f}'.format
+#pd.options.display.float_format = '{:.2f}'.format
 
 def get_data(
     usecols=None,
@@ -27,7 +19,7 @@ def get_data(
     FIELD = None,
     VALUE = None):
     
-    t = time()
+    # t = time()
     
     PATH = os.path.join(const.DATADIR + file)
 
@@ -36,21 +28,21 @@ def get_data(
                             sep                 = sep,
                             nrows               = nrows,
                             encoding            = encoding,
-                            warn_bad_lines=True, error_bad_lines=False,
-                            #on_bad_lines        = 'skip',
+                            # warn_bad_lines=True, error_bad_lines=False,
+                            # on_bad_lines        = 'skip',
                             dtype               = dtype
                             )
     dataset = dtype_transform(dataset)
-    print("Tempo decorrido: " + str( time() - t) + " s.")
+    # print("Tempo decorrido: " + str( time() - t) + " s.")
 
     return dataset
 
 def getData_fromParquet(
     columns=None):
 
-    print('###################################################################')
-    print('GetData_FromParquet')
-    t = time()
+    # print('###################################################################')
+    # print('GetData_FromParquet')
+    # t = time()
 
     file = 'df.parquet'
     PATH = os.path.join(const.DATADIR + file)
@@ -58,15 +50,13 @@ def getData_fromParquet(
     dataset = pd.read_parquet(path=PATH, columns=columns)
     dataset = dtype_transform(dataset)
 
-    print("Tempo decorrido: " + str( time() - t) + " s.")
-    print('###################################################################')
+    # print("Tempo decorrido: " + str( time() - t) + " s.")
+    # print('###################################################################')
 
     return dataset
 
-
 def convert_to_parquet(df):
     df.to_parquet(const.DATADIR+'df.parquet')
-
 
 def plot_bar():
     df = pd.DataFrame(
@@ -258,7 +248,6 @@ class datasets:
     def populacao_2021(columns=None, nrows=None, dtype=None):
         return get_data(file='populacao_2021.csv', usecols=columns, nrows=nrows, sep=',', encoding='utf-8', dtype=dtype)
 
-
 def group_by(df, col):
     """
     Função para agrupamento
@@ -329,9 +318,9 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
     AUTOR:
     Guilherme
     """
-    print('###################################################################')
-    print('Calendar Heatmap')
-    t = time()
+    # print('###################################################################')
+    # print('Calendar Heatmap')
+    # t = time()
 
     COLUMNS = ['Municipio', 'Classificacao', 'DataDiagnostico', 'DataCadastro', 'DataEncerramento']
     
@@ -618,8 +607,8 @@ def plot_calendar_heatmap(cidade='AFONSO CLAUDIO', tipo= 'NOVOS CASOS', mes_anal
     # 'plot_bgcolor': 'rgba(0,0,0,0)',
     # 'paper_bgcolor': 'rgba(0,0,0,0)'})
 
-    print("Tempo decorrido: " + str( time() - t) + " s.")
-    print('###################################################################')
+    # print("Tempo decorrido: " + str( time() - t) + " s.")
+    # print('###################################################################')
 
     return fig1
 
