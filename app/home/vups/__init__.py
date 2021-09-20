@@ -6,6 +6,10 @@ from . import const
 import folium
 import datetime
 
+# Ignorando mensagens de avisos.
+import warnings
+warnings.filterwarnings("ignore")
+
 # CONFIG #####################################################################
 #pd.options.display.float_format = '{:.2f}'.format
 
@@ -192,11 +196,11 @@ tax_cat_col = {
     }
 
 class datasets:
-    def microdados(columns=None, nrows=None, dtype={'DataObito': 'object'}, field=None, value=None):
-        return get_data(file='MICRODADOS.csv', usecols=columns, nrows=nrows, sep=';', encoding='latin1', dtype=dtype, FIELD=field, VALUE=value)
+    # def microdados(columns=None, nrows=None, dtype={'DataObito': 'object'}, field=None, value=None):
+    #     return get_data(file='MICRODADOS.csv', usecols=columns, nrows=nrows, sep=';', encoding='latin1', dtype=dtype, FIELD=field, VALUE=value)
 
-    # def microdados(columns=None):
-    #     return getData_fromParquet(columns=columns)
+    def microdados(columns=None):
+        return getData_fromParquet(columns=columns)
 
     def microdados_bairros(columns=None, nrows=None, dtype=None):
         return get_data(file='MICRODADOS_BAIRROS.csv', usecols=columns, nrows=nrows, sep=',', encoding='latin1', dtype=dtype)
