@@ -1,32 +1,35 @@
 <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
     <a class="navbar-brand me-lg-5" href="/">
-        <img class="navbar-brand-dark" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}" alt="DSA logo">
-        <img class="navbar-brand-light" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}" alt="DSA logo">
+        <img class="navbar-brand-dark" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}"
+            alt="DSA logo">
+        <img class="navbar-brand-light" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}"
+            alt="DSA logo">
     </a>
     <div class="d-flex align-items-center">
-        <button class="navbar-toggler d-lg-none collapsed" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#sidebarMenu"
-            aria-controls="sidebarMenu" 
-            aria-expanded="false" 
+        <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </nav>
 
-<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse simplebar-scrollable-y" data-simplebar="init">
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse simplebar-scrollable-y"
+    data-simplebar="init">
+
     <div class="simplebar-wrapper" style="margin: 0px;">
+
         <div class="simplebar-height-auto-observer-wrapper">
             <div class="simplebar-height-auto-observer"></div>
         </div>
+
         <div class="simplebar-mask">
             <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
                 <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
                     <div class="simplebar-content" style="padding: 0px;">
                         <div class="sidebar-inner px-4 pt-3">
-                            <div class="user-card d-flex d-md-none justify-content-between justify-content-md-center pb-4">
+                            <div
+                                class="user-card d-flex d-md-none justify-content-between justify-content-md-center pb-4">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-lg me-4">
                                         <img src="{{ url_for('static', filename='assets/img/team/profile-picture-7.jpg') }}"
@@ -58,18 +61,22 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <!-- LISTA DE MENUS -->
                             <ul class="nav flex-column pt-3 pt-md-0">
-                                
+
                                 <!-- HOME -->
                                 <li class="nav-item">
                                     <a href="/" class="nav-link d-flex align-items-center">
                                         <span class="sidebar-icon">
-                                            <img src="/static/assets/img/icons/logo-dsa.png"
-                                                height="30" width="30" alt="DSA logo">
+                                            <img src="/static/assets/img/icons/logo-dsa.png" height="30" width="30"
+                                                alt="DSA logo">
                                         </span>
                                         <span class="mt-1 sidebar-text">Início</span>
                                     </a>
                                 </li>
+
+                                <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
 
                                 <!-- DASHBOARD -->
                                 <li class="nav-item ">
@@ -84,20 +91,7 @@
                                         <span class="sidebar-text">Dashboard</span>
                                     </a>
                                 </li>
-                                <li class="nav-item ">
-                                    <a href="/tasks.html" class="nav-link">
-                                        <span class="sidebar-icon">
-                                            <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                                                <path fill-rule="evenodd"
-                                                    d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                        </span>
-                                        <span class="sidebar-text">Lista de Tarefas</span>
-                                    </a>
-                                </li>
+
                                 <li class="nav-item ">
                                     <a href="/settings.html" class="nav-link">
                                         <span class="sidebar-icon">
@@ -111,33 +105,7 @@
                                         <span class="sidebar-text">Configurações</span>
                                     </a>
                                 </li>
-                                <li class="nav-item ">
-                                    <a href="/calendar.html" class="nav-link">
-                                        <span class="sidebar-icon">
-                                            <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                        </span>
-                                        <span class="sidebar-text">Calendário</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a href="/map.html" class="nav-link">
-                                        <span class="sidebar-icon">
-                                            <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                        </span>
-                                        <span class="sidebar-text">Mapas</span>
-                                    </a>
-                                </li>
-                                <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
                                 <li class="nav-item">
                                     <a href="https://github.com/uallasleles" target="_blank"
                                         class="nav-link d-flex align-items-center">
@@ -152,19 +120,65 @@
                                         <span class="sidebar-text">Clã VUPS</span>
                                     </a>
                                 </li>
+
+                                <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+                                <!-- Estado - OCULTEI ESTE COMPONENTE, CONFIGUREI O ES COMO FIXO -->
+                                <div class="col-12 col-sm-12 col-sm-6 mb-2" hidden>
+                                    <div class="form-group">
+                                        <label class="my-1 mr-2" for="uf">Estado:</label>
+                                        <select id="uf" class="form-control" name="uf">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Cidade -->
+                                <div class="col-12 col-sm-12 col-sm-6 mb-2">
+                                    <div class="form-group">
+                                        <label class="my-1 mr-2" for="cidade">Município</label>
+                                        <select id="cidade" class="form-select" name="cidade" data-choice="active">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Cidades -->
+                                <div class="col-12 col-sm-12 col-sm-6 mb-2">
+                                    <div class="form-group">
+                                        <label class="my-1 mr-2" for="cidades">Municípios</label>
+                                        <select id="cidades" class="form-control" name="cidades[]" multiple="">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- BUTTONS DATETIME -->
+                                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-primary btn-sm">Week</a>
+                                    </div>
+                                </div>
+
                             </ul>
+                            <!-- FIM - LISTA DE MENUS -->
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="simplebar-placeholder" style="width: 96px; height: 944px;"></div>
     </div>
-    
+
     <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
         <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
     </div>
-    
+
     <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
         <div class="simplebar-scrollbar" style="height: 570px; transform: translate3d(0px, 0px, 0px); display: block;">
         </div>
