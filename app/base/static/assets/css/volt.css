@@ -14938,7 +14938,7 @@ textarea.form-control-lg {
   left: 0;
   z-index: 100;
   max-height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
   width: 100%;
   transition: max-width 0.1s; }
   @media (prefers-reduced-motion: reduce) {
@@ -14988,7 +14988,7 @@ textarea.form-control-lg {
   .sidebar .sidebar-text-contracted {
     display: none; }
   .sidebar.contracted {
-    max-width: 95px; }
+    max-width: 80px; }
     .sidebar.contracted .sidebar-text,
     .sidebar.contracted .link-arrow,
     .sidebar.contracted .badge {
@@ -15020,7 +15020,7 @@ textarea.form-control-lg {
       text-align: center; }
     @media (min-width: 768px) {
       .sidebar.contracted + .content {
-        margin-left: 95px; } }
+        margin-left: 80px; } }
 
 .sidebar-inner {
   position: relative;

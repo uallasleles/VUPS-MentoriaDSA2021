@@ -4,26 +4,25 @@ Programa de Mentoria DSA 2021
 """
 
 from flask import jsonify, render_template, redirect, request, url_for
-from flask_login import (
-    current_user,
-    login_required,
-    login_user,
-    logout_user
-)
-
+from flask_login import(current_user,
+                        login_required,
+                        login_user,
+                        logout_user)
 from app import db, login_manager
 from app.base import blueprint
 from app.base.forms import LoginForm, CreateAccountForm
 from app.base.models import User
-
 from app.base.util import verify_pass
 
+
+# Rota para Login
+# ====================================================
 @blueprint.route('/')
 def route_default():
     return redirect(url_for('base_blueprint.login'))
 
-## Login & Registration
-
+# Métodos de Login, Registration e Logout
+# ====================================================
 @blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm(request.form)
@@ -43,7 +42,7 @@ def login():
             return redirect(url_for('base_blueprint.route_default'))
 
         # Something (user or pass) is not ok
-        return render_template( 'accounts/login.html', msg='Wrong user or password', form=login_form)
+        return render_template( 'accounts/login.html', msg='Usuário ou senha errada', form=login_form)
 
     if not current_user.is_authenticated:
         return render_template( 'accounts/login.html',
@@ -63,7 +62,7 @@ def register():
         user = User.query.filter_by(username=username).first()
         if user:
             return render_template( 'accounts/register.html', 
-                                    msg='Username already registered',
+                                    msg='Nome de usuário já registrado',
                                     success=False,
                                     form=create_account_form)
 
@@ -71,7 +70,7 @@ def register():
         user = User.query.filter_by(email=email).first()
         if user:
             return render_template( 'accounts/register.html', 
-                                    msg='Email already registered', 
+                                    msg='E-mail já registrado', 
                                     success=False,
                                     form=create_account_form)
 
@@ -81,7 +80,7 @@ def register():
         db.session.commit()
 
         return render_template( 'accounts/register.html', 
-                                msg='User created please <a href="/login">login</a>', 
+                                msg='Usuário criado, por favor <a href="/login">entre</a>', 
                                 success=True,
                                 form=create_account_form)
 
@@ -93,8 +92,8 @@ def logout():
     logout_user()
     return redirect(url_for('base_blueprint.login'))
 
-## Errors
-
+## Páginas de Erro
+# ====================================================
 @login_manager.unauthorized_handler
 def unauthorized_handler():
     return render_template('page-403.html'), 403
@@ -110,3 +109,4 @@ def not_found_error(error):
 @blueprint.errorhandler(500)
 def internal_error(error):
     return render_template('page-500.html'), 500
+

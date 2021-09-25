@@ -26,11 +26,13 @@ def configure_database(app):
 
     @app.before_first_request
     def initialize_database():
-        db.create_all()
+        with app.app_context():
+            db.create_all()
 
     @app.teardown_request
     def shutdown_session(exception=None):
-        db.session.remove()
+        with app.app_context():
+            db.session.remove()
 
 def create_app(config):
     app = Flask(__name__, static_folder='base/static')
