@@ -21902,7 +21902,7 @@ fieldset:disabled .btn {
   left: 0;
   z-index: 100;
   max-height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
   width: 100%;
   -webkit-transition: max-width 0.1s;
   transition: max-width 0.1s;
@@ -21992,7 +21992,7 @@ fieldset:disabled .btn {
 }
 
 .sidebar.contracted {
-  max-width: 95px;
+  max-width: 80px;
 }
 
 .sidebar.contracted .sidebar-text,
@@ -22044,7 +22044,7 @@ fieldset:disabled .btn {
 
 @media (min-width: 768px) {
   .sidebar.contracted + .content {
-    margin-left: 95px;
+    margin-left: 80px;
   }
 }
 

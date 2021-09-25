@@ -1,3 +1,19 @@
+/*
+
+=========================================================
+* Volt - Free Bootstrap 5 Dashboard
+=========================================================
+
+* Product Page: https://themesberg.com/product/admin-dashboard/volt-bootstrap-5-dashboard
+* Copyright 2021 Themesberg (https://www.themesberg.com)
+
+* Designed and coded by https://themesberg.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal. Contact us if you want to remove it.
+
+*/
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 .datepicker {
   display: none; }
@@ -14922,7 +14938,7 @@ textarea.form-control-lg {
   left: 0;
   z-index: 100;
   max-height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
   width: 100%;
   transition: max-width 0.1s; }
   @media (prefers-reduced-motion: reduce) {
@@ -14972,7 +14988,7 @@ textarea.form-control-lg {
   .sidebar .sidebar-text-contracted {
     display: none; }
   .sidebar.contracted {
-    max-width: 95px; }
+    max-width: 80px; }
     .sidebar.contracted .sidebar-text,
     .sidebar.contracted .link-arrow,
     .sidebar.contracted .badge {
@@ -15004,7 +15020,7 @@ textarea.form-control-lg {
       text-align: center; }
     @media (min-width: 768px) {
       .sidebar.contracted + .content {
-        margin-left: 95px; } }
+        margin-left: 80px; } }
 
 .sidebar-inner {
   position: relative;
