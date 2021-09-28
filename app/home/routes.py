@@ -50,13 +50,13 @@ def dashboard():
         percentage_progress=get_plot_kpi_percentage_progress(),
         spend_hours=get_plot_kpi_spend_hours(),
         tcpi=get_plot_kpi_tcpi(),
-        # calendar_heatmap=get_plot_calendar_heatmap("SERRA"),
+        taxs=get_plot_year_taxs(),
         tributos_cidades=get_plot_comp_tributos_cidades(),
-        tributos_cidades_norm=get_plot_comp_tributos_cidades_norm()
+        tributos_cidades_norm=get_plot_comp_tributos_cidades_norm(),
+        color_palette = get_plot_bar_color_palette(),
+        pessoas_sintomas = get_plot_n_pessoas_por_sintomas(),
+        small_bar_percentage_progress=get_plot_small_bar_percentage_progress()
     )
-
-    # , year_taxs                       = get_plot_year_taxs()
-    # , percentage_progress             = get_plot_kpi_percentage_progress()
 
     # , small_bar_percentage_progress   = get_plot_small_bar_percentage_progress()
     # , small_bar_spend_hours           = get_plot_small_bar_spend_hours()
@@ -65,19 +65,12 @@ def dashboard():
     # , cost_variance                   = get_plot_widget_cost_variance()
     # , schedule_variance               = get_plot_widget_schedule_variance()
 
-    # , gantt                           = get_plot_gantt()
-
-    # , tributos_ipca                   = get_plot_tributos_ipca()
-
 
 # GRAPH UPDATE: Heatmap
 # ============================================================================
 @blueprint.route("/heatmap")
 def query():
-    municipio = request.args.get("cidade", default=None, type=None)
-    # data = request.get_json(force=True)
-    # municipio = data.get('cidade')
-    # print(municipio)
+    municipio = request.args.get("cidade", default='SERRA', type=None)
     municipio = strip_accents(
         municipio.upper()
     )  # TRATAMENTO - CAIXA ALTA E REMOVE ACENTOS
@@ -119,10 +112,11 @@ def tributos_norm():
 # ============================================================================
 @blueprint.route("/tributos_ipca")
 def tributos_ipca():
-    multiselect = request.args.getlist("cidades[]")
-    string_list = [each_string.upper() for each_string in multiselect]
-    string_list = [strip_accents(each_string) for each_string in string_list]
-    tributos_ipca = get_plot_tributos_ipca(lista=string_list)
+    municipio = request.args.get("cidade", default=None, type=None)
+    municipio = strip_accents(
+        municipio.upper()
+    )  # TRATAMENTO - CAIXA ALTA E REMOVE ACENTOS
+    tributos_ipca = get_plot_tributos_ipca(municipio=municipio)
     return tributos_ipca
 
 
@@ -195,38 +189,40 @@ def get_plot_kpi_tcpi():
 # Pimpão ##############################################################
 def get_plot_comp_tributos_cidades(lista=[]):
     return json.dumps(
-        obj=vups.plot_comp_tributos_cidades(list_cidades=lista),
+        obj=graphs.plot_comp_tributos_cidades(list_cidades=lista),
         cls=utils.PlotlyJSONEncoder,
     )
 
 
 def get_plot_comp_tributos_cidades_norm(lista=[]):
     return json.dumps(
-        obj=vups.plot_comp_tributos_cidades_norm(list_cidades=lista),
+        obj=graphs.plot_comp_tributos_cidades_norm(list_cidades=lista),
         cls=utils.PlotlyJSONEncoder,
     )
 
 
 def get_plot_calendar_heatmap(municipio):
     graphJSON = json.dumps(
-        obj=vups.plot_calendar_heatmap(cidade=municipio), cls=utils.PlotlyJSONEncoder
+        obj=graphs.plot_calendar_heatmap(cidade=municipio), cls=utils.PlotlyJSONEncoder
     )
     return graphJSON
 
 
-def get_plot_tributos_ipca():
-    return json.dumps(obj=vups.plot_tributos_ipca(), cls=utils.PlotlyJSONEncoder)
+def get_plot_tributos_ipca(municipio):
+    return json.dumps(obj=graphs.plot_tributos_ipca(cidade=municipio), cls=utils.PlotlyJSONEncoder)
 
 
 # ####################################################################
 
 # Uallas
 def get_plot_year_taxs(UF="ES"):
-    return json.dumps(obj=vups.plot_year_taxs(UF=UF), cls=utils.PlotlyJSONEncoder)
-
+    graphJSON = json.dumps(
+        obj=graphs.plot_year_taxs(UF=UF), 
+        cls=utils.PlotlyJSONEncoder)
+    return graphJSON
 
 def get_plot_map_folium():
-    return json.dumps(obj=vups.plot_map_folium(), cls=utils.PlotlyJSONEncoder)
+    return json.dumps(obj=graphs.plot_map_folium(), cls=utils.PlotlyJSONEncoder)
 
 
 # Small Bars
@@ -275,21 +271,32 @@ def get_plot_slider_bubbles():
     )
     return graphJSON
 
+# Bar with Line
+def get_plot_bar_with_line():
+    graphJSON = json.dumps(
+        obj=graphs.plot_bar_with_line(), 
+        cls=utils.PlotlyJSONEncoder
+    )
+    return graphJSON
 
-# def progress():
-# 	def generate():
-# 		x = 0
-# 		while x <= 100:
-# 			yield "data:" + str(x) + "\n\n"
-# 			x = x + 1
-# 			time.sleep(0.5)
-# 	return Response(generate(), mimetype= 'text/event-stream')
+def get_plot_bar_color_palette():
+    graphJSON = json.dumps(
+        obj=graphs.plot_bar_color_palette(), 
+        cls=utils.PlotlyJSONEncoder
+    )
+    return graphJSON
 
+def get_plot_n_pessoas_por_sintomas():
+    graphJSON = json.dumps(
+        obj=graphs.plot_n_pessoas_por_sintomas(), 
+        cls=utils.PlotlyJSONEncoder
+    )
+    return graphJSON
 
 @blueprint.route("/importar")
 def importar():
     print("Importando Dataset...")
-    data = vups.datasets.microdados()
+    data = graphs.datasets.microdados()
 
     def generate():
         total = data.shape[0]
