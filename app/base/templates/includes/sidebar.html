@@ -144,24 +144,28 @@
                                 </div>
 
                                 <!-- Cidades -->
+                                
                                 <div class="col-12 col-sm-12 col-sm-6 mb-2">
                                     <div class="form-group">
                                         <label class="my-1 mr-2" for="cidades">Municípios</label>
-                                        <select id="cidades" class="form-control" name="cidades[]" multiple="">
-                                            <option value=""></option>
-                                        </select>
+                                        <div class="choices" style="color: gray;" 
+                                            data-type="select-multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false">
+                                            <select id="cidades" class="form-control" name="cidades" tabindex="-1" multiple>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- BUTTONS DATETIME -->
-                                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                                <!-- <div class="d-flex flex-row align-items-center flex-0 mb-2">
                                     <div class="col-sm-6">
                                         <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
                                     </div>
                                     <div class="col-sm-6">
                                         <a href="#" class="btn btn-primary btn-sm">Week</a>
                                     </div>
-                                </div>
+                                </div> -->
 
                             </ul>
                             <!-- FIM - LISTA DE MENUS -->
