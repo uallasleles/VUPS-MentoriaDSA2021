@@ -26,15 +26,15 @@ def get_data(
     filepath_or_buffer=None,
     usecols=None,
     nrows=None,
-    sep=const.DATAFILE["SEP"],
-    encoding=const.DATAFILE["ENCODING"],
+    sep=None,
+    encoding=None,
     warn_bad_lines=None,
     error_bad_lines=None,
     dtype=None,
     mapa=None
 ):
 
-    filename, file_extension = os.path.splitext(filepath_or_buffer)
+    filename, file_extension = os.path.splitext(os.path.basename(filepath_or_buffer))
 
     if file_extension == ".csv":
         _PARAMS = {
@@ -50,6 +50,9 @@ def get_data(
         }
         dataset = pd.read_csv(**_PARAMS)
         dataset = dtype_transform(dataset, mapa)
+        lst_dfs = []
+        lst_dfs.append(dataset)
+        convert_to_parquet(lst_dfs, filename)
 
     if file_extension == ".parquet":
         _PARAMS = {
@@ -61,7 +64,10 @@ def get_data(
 
 
 def convert_to_parquet(lst_dfs: list, filename=None):
-    df = pd.concat(lst_dfs, ignore_index=True)
+    if len(lst_dfs) > 1:
+        df = pd.concat(lst_dfs, ignore_index=True)
+    else:
+        df = lst_dfs[0]
     df.to_parquet(const.DATADIR + "{}.parquet".format(filename))
 
 
@@ -180,7 +186,7 @@ def fn_number_cols(df):
 def dtype_transform(df, mapa):
 
     if mapa is not None:
-        date_cols = mapa['date_cols'].
+        date_cols = mapa.get('date_cols')
     else:
         date_cols = fn_date_cols(df)
 
@@ -222,25 +228,41 @@ def dtype_transform(df, mapa):
 class datasets:
     def microdados(columns=None, nrows=None, dtype={"DataObito": "object"}, field=None, value=None):
         url = "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv"
-        filename = "MICRODADOS.parquet"
-        filepath = os.path.join(const.DATADIR + filename)
+
+        name = "MICRODADOS"
+        if os.path.exists(os.path.join(const.DATADIR + name + '.parquet')):
+            filepath_or_buffer = os.path.join(const.DATADIR + name + '.parquet')
+        elif os.path.exists(os.path.join(const.DATADIR + name + '.csv')):
+            filepath_or_buffer = os.path.join(const.DATADIR + name + '.csv')
+        else:
+            filepath_or_buffer = url
+
         mapa = const.mapa_microdados
         return get_data(
-            filepath_or_buffer=filepath,
+            filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
             sep=";",
             encoding="ISO-8859-1",
+            warn_bad_lines=True,
+            error_bad_lines=True,
             dtype=dtype,
-            mapa=mapa,
+            mapa=mapa
         )
 
     def microdados_bairros(columns=None, nrows=None, error_bad_lines=False, dtype=None):
         url = "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv"
-        filename = "MICRODADOS_BAIRROS.parquet"
-        filepath = os.path.join(const.DATADIR + filename)
+        name = "MICRODADOS_BAIRROS"
+
+        if os.path.exists(os.path.join(const.DATADIR + name + '.parquet')):
+            filepath_or_buffer = os.path.join(const.DATADIR + name + '.parquet')
+        elif os.path.exists(os.path.join(const.DATADIR + name + '.csv')):
+            filepath_or_buffer = os.path.join(const.DATADIR + name + '.csv')
+        else:
+            filepath_or_buffer = url
+
         return get_data(
-            filepath_or_buffer=filepath,
+            filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
             sep=",",

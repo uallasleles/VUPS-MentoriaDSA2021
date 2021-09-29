@@ -168,5 +168,5 @@ microdados_cat_cols = []
 
 mapa_microdados = {
     'date_cols': microdados_date_cols,
-    'cat_cols': microdados_cat_cols,
+    'cat_cols': microdados_cat_cols
 }

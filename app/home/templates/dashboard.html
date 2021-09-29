@@ -14,17 +14,15 @@
 <div class="container">
     
     <!-- TÍTULO ============================================== -->
-    <div class="d-flex flex-row justify-content-center mb-2 mt-2">
-        <div class="col-sm-4">
+    <div class="row justify-content-center mb-2 mt-2">
+        <div class="card col-sm-12 bg-soft" style="text-align: center;">
             <span>
-                <h1>Painel - COVID19</h1>
-            </span>
-        </div>
-        <div class="col-sm-4">
-            <span>
+                <h2>Painel - COVID19</h2>
                 Estado: Espírito Santo
-            </span> 
+            </span>
+            
         </div>
+
     </div>
     
     <hr />
@@ -37,10 +35,10 @@
             <div>
                 <div class="card-body" style="border-radius: 10px 10px 0px 0px; background: #374151; padding-top: 5px; width: 200px; height: 36px;">
                     <h3 class="card-title" style="background-color:#374151; color:#fff; font-family:Georgia; text-align: center; padding: 0px 0;">
-                        População
+                        Confirmados
                     </h3>
                 </div>
-                <div id="kpi_populacao" class="chart"></div>
+                <div id="kpi_populacao" class="chart" value="{{ resumo.get('n_confirmados') }}"></div>
             </div>
         </div>
 
@@ -49,7 +47,7 @@
             <div>
                 <div class="card-body" style="border-radius: 10px 10px 0px 0px; background:#374151; padding-top: 5px; width: 200px; height: 36px;">
                     <h3 class="card-title" style="background-color:#374151; color:#fff; font-family:Georgia; text-align: center; padding: 0px 0;">
-                        Casos
+                        Descartados
                     </h3>
                 </div>
                 <div id="kpi_casos" class="chart"></div>
@@ -61,7 +59,7 @@
             <div>
                 <div class="card-body" style="border-radius: 10px 10px 0px 0px; background:#374151; padding-top: 5px; width: 200px; height: 36px;">
                     <h3 class="card-title" style="background-color:#374151; color:#fff; font-family:Georgia; text-align: center; padding: 0px 0;">
-                        Recuperados
+                        Suspeitos
                     </h3>
                 </div>
                 <div id="kpi_recuperados" class="chart"></div>
@@ -82,6 +80,7 @@
 
     </div>
 
+    <!-- Frequência dos Sintomas -->
     <div class="d-flex flex-row justify-content-around flex-0 mb-2">
 
         <div class="col col-sm-4 bg-soft">
@@ -90,7 +89,34 @@
             </span>
         </div>
         
-        <div class="row justify-content-around">
+        <!-- Calendar Heatmap -->
+        <div class="col col-sm-8 bg-soft">
+            <!-- GRÁFICO 1 -->
+            <!-- <div class="col-12 mb-2 mt-4"> -->
+                <!-- BACKGROUND AREA -->
+                <!-- <div class="card shadow-sm"> -->
+                    <!-- FILTROS -->
+                    <!-- <div class="card-header d-flex flex-row align-items-center flex-0">
+                        <h2 class="h5 mb-1">Calendar Heatmap</h2>
+                    </div> -->
+
+                    <!-- <div class="card-body border-0 mb-2"> -->
+                        <!-- GRÁFICO -->
+                        <!-- <div class="d-flex flex-row align-items-center flex-0 mb-2"> -->
+                            <!-- <div class="col-12 col-sm-12 bg-soft mb-2"> -->
+                                <span>
+                                    <div id="heatmap" class="chart"></div>
+                                </span>
+                            <!-- </div> -->
+                        <!-- </div> -->
+
+                    <!-- </div> -->
+                <!-- </div> -->
+            <!-- </div> -->
+        </div>
+
+        <div class="row justify-content-around" hidden>
+
             <div class="col-4 bg-soft mb-4">
                 <span>
                     <div id="percentage_progress" class="chart"></div>
@@ -114,79 +140,23 @@
 
 </div>
 
-
-
-
-
-
-<div class="col-12 col-sm-8 col-md-8 bg-soft mb-2">
-    <span>
-        <div id="taxs" class="chart"></div>
-    </span>
-</div>
-
-<div class="d-flex flex-row align-items-center flex-0 mb-2">
-    <div class="col-12 col-sm-12 bg-soft mb-2">
-        <span>
-            <div id="color_palette" name="color_palette" class="chart"></div>
-        </span>
-    </div>
-</div>
-
-<!-- Slider Bubbles -->
+<!-- Gráfico: TRIBUTOS IPCA -->
 <div class="row">
-    <!-- GRÁFICO 1 -->
-    <div class="col-12 col-sm-6 mb-2 mt-4">
+    <div class="col-12 mb-2">
         <!-- BACKGROUND AREA -->
         <div class="card shadow-sm">
-
-            <div class="card-body border-0 mb-2">
-                <!-- GRÁFICO -->
-                <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                    <div class="col-12 col-sm-12 bg-soft mb-2">
-                        <span>
-                            <div id="bubbles" name="bubbles" class="chart"></div>
-                        </span>
-                    </div>
-                </div>
+            <div class="card-header d-flex flex-row align-items-center flex-0">
+                <h2 class="h5 mb-1">Tributos - IPCA</h2>
             </div>
-        </div>
-    </div>
-    <!-- GRÁFICO 1 -->
-    <div class="col-12 col-sm-6 mb-2 mt-4">
-        <!-- BACKGROUND AREA -->
-        <div class="card shadow-sm">
-
-            <div class="card-body border-0 mb-2">
-                <!-- GRÁFICO -->
-                <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                    <div class="col-12 col-sm-12 bg-soft mb-2">
+            <div class="card-body border-0">
+                <!-- GRÁFICO - Tributos IPCA -->
+                <div class="d-flex flex-row align-items-center flex-0">
+                    <div class="col-12 col-sm-12 bg-soft">
                         <span>
-                            <div id="gantt" name="gantt" class="chart"></div>
+                            <div id="tributos_ipca" class="chart"></div>
                         </span>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Calendar Heatmap -->
-<div class="row">
-    <!-- GRÁFICO 1 -->
-    <div class="col-12 mb-2 mt-4">
-        <!-- BACKGROUND AREA -->
-        <div class="card shadow-sm">
-            <div class="card-body border-0 mb-2">
-                <!-- GRÁFICO -->
-                <div class="d-flex flex-row align-items-center flex-0 mb-2">
-                    <div class="col-12 col-sm-12 bg-soft mb-2">
-                        <span>
-                            <div id="heatmap" class="chart"></div>
-                        </span>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
@@ -233,20 +203,50 @@
     </div>
 </div>
 
-<!-- Gráfico: TRIBUTOS IPCA -->
-<div class="row">
-    <div class="col-12 mb-2">
+<div class="col-12 col-sm-8 col-md-8 bg-soft mb-2" hidden>
+    <span>
+        <div id="taxs" class="chart"></div>
+    </span>
+</div>
+
+<div class="d-flex flex-row align-items-center flex-0 mb-2" hidden>
+    <div class="col-12 col-sm-12 bg-soft mb-2" hidden>
+        <span>
+            <div id="color_palette" name="color_palette" class="chart"></div>
+        </span>
+    </div>
+</div>
+
+<!-- Slider Bubbles -->
+<div class="row" hidden>
+    <!-- GRÁFICO 1 -->
+    <div class="col-12 col-sm-6 mb-2 mt-4">
         <!-- BACKGROUND AREA -->
         <div class="card shadow-sm">
-            <div class="card-header d-flex flex-row align-items-center flex-0">
-                <h2 class="h5 mb-1">Tributos IPCA</h2>
-            </div>
-            <div class="card-body border-0">
-                <!-- GRÁFICO - Tributos IPCA -->
-                <div class="d-flex flex-row align-items-center flex-0">
-                    <div class="col-12 col-sm-12 bg-soft">
+
+            <div class="card-body border-0 mb-2">
+                <!-- GRÁFICO -->
+                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
                         <span>
-                            <div id="tributos_ipca" class="chart"></div>
+                            <div id="bubbles" name="bubbles" class="chart"></div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- GRÁFICO 1 -->
+    <div class="col-12 col-sm-6 mb-2 mt-4">
+        <!-- BACKGROUND AREA -->
+        <div class="card shadow-sm">
+
+            <div class="card-body border-0 mb-2">
+                <!-- GRÁFICO -->
+                <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                    <div class="col-12 col-sm-12 bg-soft mb-2">
+                        <span>
+                            <div id="gantt" name="gantt" class="chart"></div>
                         </span>
                     </div>
                 </div>
@@ -256,33 +256,11 @@
 </div>
 
 <!-- ROW PARA GRÁFICO E CARDS -->
-<div class="row">
+<div class="row" hidden>
     <!-- GRÁFICO 1 -->
     <div class="col-12 mb-2">
         <!-- BACKGROUND AREA -->
         <div class="card shadow-sm">
-
-            <!-- SMALL PLOTS -->
-            <div class="d-flex flex-row align-items-center flex-0">
-                <div class="col bg-soft">
-                    <span>
-                        <div id="percentage_progress" class="chart"></div>
-                    </span>
-                </div>
-                <div class="col bg-soft">
-                    <span>
-                        <div id="spend_hours" class="chart"></div>
-                    </span>
-                </div>
-
-                <div class="w-100"></div>
-
-                <div class="col bg-soft">
-                    <span>
-                        <div id="actual_planned" class="chart"></div>
-                    </span>
-                </div>
-            </div>
 
             <!-- WIDGETS -->
             <div class="d-flex flex-row align-items-center flex-0 mb-2">
@@ -512,7 +490,7 @@
     Plotly.newPlot('kpi_populacao', {{ percentage_progress | safe }});
     Plotly.newPlot('kpi_casos', {{ spend_hours | safe }});
     Plotly.newPlot('kpi_recuperados', {{ tcpi | safe }});
-    Plotly.newPlot('kpi_obitos', {{ spend_hours | safe }});
+    Plotly.newPlot('kpi_obitos', {{ kpi_obitos | safe }});
 
 
     Plotly.newPlot('percentage_progress', {{ small_bar_percentage_progress | safe }});
