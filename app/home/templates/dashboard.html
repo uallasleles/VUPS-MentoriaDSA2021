@@ -80,7 +80,7 @@
 
     </div>
 
-    <!-- Frequência dos Sintomas -->
+    <!-- Frequência dos Sintomas e Heatmap -->
     <div class="d-flex flex-row justify-content-around flex-0 mb-2">
 
         <div class="col col-sm-4 bg-soft">
@@ -91,28 +91,9 @@
         
         <!-- Calendar Heatmap -->
         <div class="col col-sm-8 bg-soft">
-            <!-- GRÁFICO 1 -->
-            <!-- <div class="col-12 mb-2 mt-4"> -->
-                <!-- BACKGROUND AREA -->
-                <!-- <div class="card shadow-sm"> -->
-                    <!-- FILTROS -->
-                    <!-- <div class="card-header d-flex flex-row align-items-center flex-0">
-                        <h2 class="h5 mb-1">Calendar Heatmap</h2>
-                    </div> -->
-
-                    <!-- <div class="card-body border-0 mb-2"> -->
-                        <!-- GRÁFICO -->
-                        <!-- <div class="d-flex flex-row align-items-center flex-0 mb-2"> -->
-                            <!-- <div class="col-12 col-sm-12 bg-soft mb-2"> -->
-                                <span>
-                                    <div id="heatmap" class="chart"></div>
-                                </span>
-                            <!-- </div> -->
-                        <!-- </div> -->
-
-                    <!-- </div> -->
-                <!-- </div> -->
-            <!-- </div> -->
+            <span>
+                <div id="heatmap" class="chart"></div>
+            </span>
         </div>
 
         <div class="row justify-content-around" hidden>
@@ -136,72 +117,78 @@
                 </span>
             </div>
         </div>
+
     </div>
 
-</div>
+    <!-- Gráfico: TRIBUTOS IPCA -->
+    <div class="d-flex flex-row justify-content-around flex-0 mb-2">
+        <div class="col-12 col-sm-12 bg-soft">
+            <span>
+                <div id="tributos_ipca" class="chart"></div>
+            </span>
+        </div>
+    </div>
 
-<!-- Gráfico: TRIBUTOS IPCA -->
-<div class="row">
-    <div class="col-12 mb-2">
-        <!-- BACKGROUND AREA -->
-        <div class="card shadow-sm">
-            <div class="card-header d-flex flex-row align-items-center flex-0">
-                <h2 class="h5 mb-1">Tributos - IPCA</h2>
-            </div>
-            <div class="card-body border-0">
-                <!-- GRÁFICO - Tributos IPCA -->
-                <div class="d-flex flex-row align-items-center flex-0">
-                    <div class="col-12 col-sm-12 bg-soft">
-                        <span>
-                            <div id="tributos_ipca" class="chart"></div>
-                        </span>
+    <!-- Gráfico: TRIBUTOS -->
+    <div class="d-flex flex-row justify-content-around flex-0 mb-2">
+        <div class="col-12 col-sm-12 bg-soft">
+            <span>
+                <div id="tributos" class="chart"></div>
+            </span>
+        </div>
+    </div>
+    <div class="d-flex flex-row justify-content-around flex-0 mb-2">
+        <div class="col-12 col-sm-12 bg-soft">
+            <span>
+                <div id="tributos_norm" class="chart"></div>
+            </span>
+        </div>
+    </div>
+
+    <!-- Gráfico: TRIBUTOS -->
+    <!-- <div class="row" hidden> -->
+        <!-- GRÁFICO 1 -->
+        <!-- <div class="col-12 mb-2"> -->
+            <!-- BACKGROUND AREA -->
+            <!-- <div class="card shadow-sm"> -->
+
+                <!-- FILTROS -->
+                <!-- <div class="card-header d-flex flex-row align-items-center flex-0">
+                    <h2 class="h5 mb-1">Tributos</h2>
+                    <div class="btn-group ms-auto" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary active">Brutos</button>
+                        <button type="button" class="btn btn-secondary">Normalizados</button>
                     </div>
+                </div> -->
+
+                <!-- <div class="card-body border-0"> -->
+
+                    <!-- <div class="d-flex flex-row align-items-center flex-0"> -->
+                        <!-- GRÁFICO - Tributos -->
+                        <!-- <div class="col-12 col-sm-12 bg-soft">
+                            <span>
+                                <div id="tributos" class="chart"></div>
+                            </span>
+                        </div>
+                    </div> -->
+                    
+                    <!-- <div class="d-flex flex-row align-items-center flex-0"> -->
+                        <!-- GRÁFICO - Tributos Normalizados -->
+                        <!-- <div class="col-12 col-sm-12 bg-soft">
+                            <span>
+                                <div id="tributos_norm" class="chart"></div>
+                            </span>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
 </div>
 
-<!-- Gráfico: TRIBUTOS -->
-<div class="row">
-    <!-- GRÁFICO 1 -->
-    <div class="col-12 mb-2">
-        <!-- BACKGROUND AREA -->
-        <div class="card shadow-sm">
-
-            <!-- FILTROS -->
-            <div class="card-header d-flex flex-row align-items-center flex-0">
-                <h2 class="h5 mb-1">Tributos</h2>
-                <div class="btn-group ms-auto" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary active">Brutos</button>
-                    <button type="button" class="btn btn-secondary">Normalizados</button>
-                </div>
-            </div>
-
-            <div class="card-body border-0">
-
-                <div class="d-flex flex-row align-items-center flex-0">
-                    <!-- GRÁFICO - Tributos -->
-                    <div class="col-12 col-sm-12 bg-soft">
-                        <span>
-                            <div id="tributos" class="chart"></div>
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="d-flex flex-row align-items-center flex-0">
-                    <!-- GRÁFICO - Tributos Normalizados -->
-                    <div class="col-12 col-sm-12 bg-soft">
-                        <span>
-                            <div id="tributos_norm" class="chart"></div>
-                        </span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
+<!-- ################################################################## -->
 
 <div class="col-12 col-sm-8 col-md-8 bg-soft mb-2" hidden>
     <span>

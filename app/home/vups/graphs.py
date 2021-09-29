@@ -1350,6 +1350,14 @@ def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA",
                 name=list_cidades[i],
             )
         )
+    
+    fig.update_layout({
+        # 'plot_bgcolor': 'rgba(0,0,0,0)',
+        # 'paper_bgcolor': 'rgba(0,0,0,0)'
+        'plot_bgcolor': "#d8e3d3",
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+    })
+
     return fig
 
 def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
@@ -1473,9 +1481,12 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
             )
         )
 
-    # fig.update_layout({
+    fig.update_layout({
     # 'plot_bgcolor': 'rgba(0,0,0,0)',
-    # 'paper_bgcolor': 'rgba(0,0,0,0)'})
+    # 'paper_bgcolor': 'rgba(0,0,0,0)'
+    'plot_bgcolor': "#d8e3d3",
+    'paper_bgcolor': 'rgba(0,0,0,0)',
+    })
 
     return fig
 
