@@ -37,24 +37,6 @@ DATAFILE = {
 #     'ENCODING': 'utf-8',
 #     'DATADIC': 'dictionary.md'}
 
-
-# Formatação dos argumentos da barra lateral
-SIDEBAR_STYLE = {
-    "position": "fixed",
-    "top": 0,
-    "left": 0,
-    "bottom": 0,
-    "width": "15rem",
-    "padding": "0rem 0rem",
-    "background-color": "dark",
-}
-
-# Formatação dos itens de navegação
-NAVITEM_STYLE = {"padding": "0rem 1rem"}
-
-# Os estilos do conteúdo principal posicionam-no à direita da barra lateral e adicionamos um preenchimento.
-CONTENT_STYLE = {"margin-left": "15rem", "padding": "0rem 0rem"}
-
 # Inicializa os nomes das colunas do dataset
 ID = "ID"
 STATUS = "Status"
@@ -169,3 +151,22 @@ def read_config():
     CSV_DATA_CRIACAO = key_list[val_list.index(DATA_CRIACAO)]
     CSV_DATA_FECHAMENTO = key_list[val_list.index(DATA_FECHAMENTO)]
     CSV_TIPO_CHAMADO = key_list[val_list.index(TIPO_CHAMADO)]
+
+
+microdados_date_cols = [
+    'DataNotificacao',
+    'DataCadastro',
+    'DataDiagnostico',
+    'DataColeta_RT_PCR',
+    'DataColetaTesteRapido',
+    'DataColetaSorologia',
+    'DataColetaSorologiaIGG',
+    'DataEncerramento',
+    'DataObito']
+    
+microdados_cat_cols = []
+
+mapa_microdados = {
+    'date_cols': microdados_date_cols,
+    'cat_cols': microdados_cat_cols,
+}

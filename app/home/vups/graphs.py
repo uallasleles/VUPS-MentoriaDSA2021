@@ -1474,6 +1474,7 @@ def plot_n_pessoas_por_sintomas():
     suspeitos = df3[df3['Classificacao']=='Suspeitos']
     #
     confirmados['Assintomatico'] = confirmados.Sintomas.apply(lambda x:  'sim' if x==[] else 'nao')
+
     # 7
     dic = {}
     for i in confirmados['Sintomas'].apply(lambda x: x):
@@ -1484,69 +1485,43 @@ def plot_n_pessoas_por_sintomas():
     x = pd.Series(sorted(dic.values()))
     # y_saving = sintomas_prop
     y_saving = round(x / x.sum() * 100, ndigits=2)
-    # mesmo valor por enquanto
-    y_net_worth = round(x / x.sum() * 100, ndigits=2)
 
     x = list(sorted(dic.keys()))
 
-    # Creating two subplots
-    fig = make_subplots(rows=1, cols=2, specs=[[{}, {}]], shared_xaxes=True,
-                        shared_yaxes=False, vertical_spacing=0.001)
-
-    fig.append_trace(go.Bar(
-        x=y_saving,
-        y=x,
-        marker=dict(
-            color='rgba(50, 171, 96, 0.6)',
-            line=dict(
-                color='rgba(50, 171, 96, 1.0)',
-                width=1),
-        ),
-        name='Percentual de Casos por Sintoma',
-        orientation='h',
-    ), 1, 1)
-
-    fig.append_trace(go.Scatter(
-        x=y_net_worth, y=x,
-        mode='lines+markers',
-        line_color='rgb(128, 0, 128)',
-        name='Número de Casos por Sintoma',
-    ), 1, 2)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+            x=y_saving,
+            y=x,
+            marker=dict(
+                color='rgba(50, 171, 96, 0.6)',
+                line=dict(
+                    color='rgba(50, 171, 96, 1.0)',
+                    width=1),
+            ),
+            name='Sintomas mais frequentes',
+            orientation='h',
+        )
+    )
 
     fig.update_layout(
-        title='Percentual e Número de Casos por Sintoma',
+        title={"text": "Sintomas mais frequentes", "x": 0.5},
         yaxis=dict(
             showgrid=False,
             showline=False,
             showticklabels=True,
-            domain=[0, 0.85],
+            domain=[0, 1],
         ),
-        yaxis2=dict(
-            showgrid=False,
-            showline=True,
-            showticklabels=False,
-            linecolor='rgba(102, 102, 102, 0.8)',
-            linewidth=2,
-            domain=[0, 0.85],
-        ),
+
         xaxis=dict(
             zeroline=False,
             showline=False,
-            showticklabels=True,
+            showticklabels=False,
             showgrid=True,
-            domain=[0, 0.42],
+            domain=[0, 1],
         ),
-        xaxis2=dict(
-            zeroline=False,
-            showline=False,
-            showticklabels=True,
-            showgrid=True,
-            domain=[0.47, 1],
-            side='top',
-            dtick=25000,
-        ),
+
         legend=dict(x=0.029, y=1.038, font_size=10),
-        margin=dict(l=100, r=20, t=70, b=70),
+        margin=dict(l=100, r=20, t=70, b=20),
         paper_bgcolor='rgb(248, 248, 255)',
         plot_bgcolor='rgb(248, 248, 255)',
     )
@@ -1554,31 +1529,22 @@ def plot_n_pessoas_por_sintomas():
     annotations = []
 
     y_s = np.round(y_saving, decimals=2)
-    y_nw = np.rint(y_net_worth)
 
     # Adding labels
-    for ydn, yd, xd in zip(y_nw, y_s, x):
-        # labeling the scatter savings
-        annotations.append(dict(xref='x2', yref='y2',
-                                y=xd, x=ydn - 20000,
-                                text='{:,}'.format(ydn) + 'M',
-                                font=dict(family='Arial', size=12,
-                                        color='rgb(128, 0, 128)'),
-                                showarrow=False))
+    for yd, xd in zip(y_s, x):
+
         # labeling the bar net worth
-        annotations.append(dict(xref='x1', yref='y1',
-                                y=xd, x=yd + 3,
-                                text=str(yd) + '%',
-                                font=dict(family='Arial', size=12,
-                                        color='rgb(50, 171, 96)'),
-                                showarrow=False))
-    # Source
-    annotations.append(dict(xref='paper', yref='paper',
-                            x=-0.2, y=-0.109,
-                            text='OECD "' +
-                                'Fonte: Sistema eSUS/VS – Secretaria de Saúde do Estado do Espírito Santo, ',
-                            font=dict(family='Arial', size=10, color='rgb(150,150,150)'),
-                            showarrow=False))
+        annotations.append(dict(
+            xref='x1', 
+            yref='y1',
+            y=xd, 
+            x=yd + 3,
+            text=str(yd) + '%',
+            font=dict(
+                family='Arial', 
+                size=12, 
+                color='rgb(50, 171, 96)'), 
+            showarrow=False))
 
     fig.update_layout(annotations=annotations)
 

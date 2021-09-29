@@ -1,3 +1,8 @@
+# -*- encoding: utf-8 -*-
+"""
+Programa de Mentoria DSA 2021
+"""
+
 import os
 import pandas as pd
 
@@ -8,14 +13,13 @@ import folium
 import datetime
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
-
-# Ignorando mensagens de avisos.
 import warnings
 
+# Ignorando mensagens de avisos.
 warnings.filterwarnings("ignore")
 
-# CONFIG #####################################################################
-# pd.options.display.float_format = '{:.2f}'.format
+# Formata ponto flutuante como string com 2 casas decimais
+pd.options.display.float_format = '{:.2f}'.format
 
 
 def get_data(
@@ -27,6 +31,7 @@ def get_data(
     warn_bad_lines=None,
     error_bad_lines=None,
     dtype=None,
+    mapa=None
 ):
 
     filename, file_extension = os.path.splitext(filepath_or_buffer)
@@ -44,6 +49,7 @@ def get_data(
             "dtype": dtype,
         }
         dataset = pd.read_csv(**_PARAMS)
+        dataset = dtype_transform(dataset, mapa)
 
     if file_extension == ".parquet":
         _PARAMS = {
@@ -51,7 +57,6 @@ def get_data(
             "columns": usecols}
         dataset = pd.read_parquet(**_PARAMS)
 
-    dataset = dtype_transform(dataset)
     return dataset
 
 
@@ -172,9 +177,13 @@ def fn_number_cols(df):
     return lst_cols
 
 
-def dtype_transform(df):
+def dtype_transform(df, mapa):
 
-    date_cols = fn_date_cols(df)
+    if mapa is not None:
+        date_cols = mapa['date_cols'].get
+    else:
+        date_cols = fn_date_cols(df)
+        
     for c in date_cols:
         try:
             df[c] = df[c].astype("datetime64[ns]")
@@ -207,14 +216,7 @@ def dtype_transform(df):
         except:
             pass
 
-    return df
-
-
-tax_cat_col = {
-    #'ano_arrecadacao': 'category',
-    #'mes_arrecadacao': 'category',
-    #'co_tipo_arrecadacao': 'category'
-}
+    return(df)
 
 
 class datasets:
@@ -222,6 +224,7 @@ class datasets:
         url = "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv"
         filename = "MICRODADOS.parquet"
         filepath = os.path.join(const.DATADIR + filename)
+        mapa = const.mapa_microdados
         return get_data(
             filepath_or_buffer=filepath,
             usecols=columns,
@@ -229,6 +232,7 @@ class datasets:
             sep=";",
             encoding="ISO-8859-1",
             dtype=dtype,
+            mapa=mapa,
         )
 
     def microdados_bairros(columns=None, nrows=None, error_bad_lines=False, dtype=None):
@@ -266,7 +270,7 @@ class datasets:
             nrows=nrows,
             sep=",",
             encoding="utf-8",
-            dtype=tax_cat_col,
+            dtype=dtype,
         )
 
     def arrecadacao_2002_a_2005(columns=None, nrows=None, dtype=None):
@@ -472,7 +476,4 @@ def group_by(df, col):
     # Agregação
     grouped = df.groupby(by=col, as_index=False).agg({"va_arrecadacao": "sum"})
 
-    # Calculando a margem de lucro
-    # grouped['Margem_Lucro'] = np.multiply(np.divide(grouped['Lucro'], grouped['Venda']), 100).round(2)
-
-    return grouped
+    return(grouped)
