@@ -180,10 +180,10 @@ def fn_number_cols(df):
 def dtype_transform(df, mapa):
 
     if mapa is not None:
-        date_cols = mapa['date_cols'].get
+        date_cols = mapa['date_cols'].
     else:
         date_cols = fn_date_cols(df)
-        
+
     for c in date_cols:
         try:
             df[c] = df[c].astype("datetime64[ns]")
