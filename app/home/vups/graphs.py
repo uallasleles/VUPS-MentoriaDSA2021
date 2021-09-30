@@ -761,7 +761,6 @@ def plot_calendar_heatmap(cidade="AFONSO CLAUDIO", tipo="NOVOS CASOS", mes_anali
     # --------- BUSCANDO DF ---------
     df = vups.datasets.microdados(columns=COLUMNS, field="Municipio", value=filtro_es)
 
-    df["DataDiagnostico"] = df["DataDiagnostico"].astype("datetime64[ns]")
     df["DataEncerramento"] = df["DataEncerramento"].astype("datetime64[ns]")
 
     # --------- CRIANDO DF_CALENDAR_NEW(CASOS NOVOS) E DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
