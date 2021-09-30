@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
+    <a class="navbar-brand me-lg-5" href="/">
+        <img class="navbar-brand-dark" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}"
+            alt="DSA logo">
+        <img class="navbar-brand-light" src="{{ url_for('static', filename='assets/img/icons/logo-dsa.png') }}"
+            alt="DSA logo">
+    </a>
+    <div class="d-flex align-items-center">
+        <button class="navbar-toggler d-lg-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse simplebar-scrollable-y"
+    data-simplebar="init">
+
+    <div class="simplebar-wrapper" style="margin: 0px;">
+
+        <div class="simplebar-height-auto-observer-wrapper">
+            <div class="simplebar-height-auto-observer"></div>
+        </div>
+
+        <div class="simplebar-mask">
+            <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
+                    <div class="simplebar-content" style="padding: 0px;">
+                        <div class="sidebar-inner px-4 pt-3">
+                            <div
+                                class="user-card d-flex d-md-none justify-content-between justify-content-md-center pb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-lg me-4">
+                                        <img src="{{ url_for('static', filename='assets/img/team/profile-picture-7.jpg') }}"
+                                            class="card-img-top rounded-circle border-white" alt="Uallas Leles">
+                                    </div>
+                                    <div class="d-block">
+                                        <h2 class="h5 mb-3">Hi, Jane</h2>
+                                        <a href="/page-sign-in.html"
+                                            class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+                                            <svg class="icon icon-xxs me-1" fill="none" stroke="currentColor"
+                                                viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                                </path>
+                                            </svg>
+                                            Sair
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="collapse-close d-md-none">
+                                    <a href="#sidebarMenu" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+                                        aria-controls="sidebarMenu" aria-expanded="true" aria-label="Toggle navigation">
+                                        <svg class="icon icon-xs" fill="currentColor" viewbox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- LISTA DE MENUS -->
+                            <ul class="nav flex-column pt-3 pt-md-0">
+
+                                <!-- HOME -->
+                                <li class="nav-item">
+                                    <a href="/" class="nav-link d-flex align-items-center">
+                                        <span class="sidebar-icon">
+                                            <img src="/static/assets/img/icons/logo-dsa.png" height="30" width="30"
+                                                alt="DSA logo">
+                                        </span>
+                                        <span class="mt-1 sidebar-text">Início</span>
+                                    </a>
+                                </li>
+
+                                <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+                                <!-- DASHBOARD -->
+                                <li class="nav-item ">
+                                    <a href="/dashboard.html" class="nav-link">
+                                        <span class="sidebar-icon">
+                                            <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                                                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                                            </svg>
+                                        </span>
+                                        <span class="sidebar-text">Dashboard</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item ">
+                                    <a href="/settings.html" class="nav-link">
+                                        <span class="sidebar-icon">
+                                            <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        </span>
+                                        <span class="sidebar-text">Configurações</span>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="https://github.com/uallasleles" target="_blank"
+                                        class="nav-link d-flex align-items-center">
+                                        <span class="sidebar-icon">
+                                            <svg class="icon icon-xs me-2" fill="currentColor" viewbox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <span class="sidebar-text">Clã VUPS</span>
+                                    </a>
+                                </li>
+
+                                <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+                                <!-- Estado - OCULTEI ESTE COMPONENTE, CONFIGUREI O ES COMO FIXO -->
+                                <div class="col-12 col-sm-12 col-sm-6 mb-2" hidden>
+                                    <div class="form-group">
+                                        <label class="my-1 mr-2" for="uf">Estado:</label>
+                                        <select id="uf" class="form-control" name="uf">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Cidade -->
+                                <div class="col-12 col-sm-12 col-sm-6 mb-2">
+                                    <div class="form-group">
+                                        <label class="my-1 mr-2" for="cidade">Município</label>
+                                        <select id="cidade" class="form-select" name="cidade" data-choice="active">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Cidades -->
+                                
+                                <div class="col-12 col-sm-12 col-sm-6 mb-2">
+                                    <div class="form-group">
+                                        <label class="my-1 mr-2" for="cidades">Municípios</label>
+                                        <div class="choices" style="color: gray;" 
+                                            data-type="select-multiple" role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false">
+                                            <select id="cidades" class="form-control" name="cidades" tabindex="-1" multiple>
+                                                <option value=""></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- BUTTONS DATETIME -->
+                                <!-- <div class="d-flex flex-row align-items-center flex-0 mb-2">
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-secondary text-dark btn-sm">Month</a>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-primary btn-sm">Week</a>
+                                    </div>
+                                </div> -->
+
+                            </ul>
+                            <!-- FIM - LISTA DE MENUS -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="simplebar-placeholder" style="width: 96px; height: 944px;"></div>
+    </div>
+
+    <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+        <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+    </div>
+
+    <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
+        <div class="simplebar-scrollbar" style="height: 570px; transform: translate3d(0px, 0px, 0px); display: block;">
+        </div>
+    </div>
+
+</nav>
