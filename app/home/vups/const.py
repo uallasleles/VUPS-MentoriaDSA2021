@@ -172,11 +172,53 @@ mapa_microdados = {
 }
 
 ARRECADACAO = {
+    "NAME": "ARRECADACAO",
     "URLS": {
         "Arrecadacao_01-01-1998_a_31-12-2001": "https://drive.economia.gov.br/owncloud/index.php/s/TD34YJTxalj4X3G/download",
         "Arrecadacao_01-01-2002_a_31-12-2005": "https://drive.economia.gov.br/owncloud/index.php/s/ktiBaOnGIF4K2fw/download",
         "Arrecadacao_01-01-2006_a_31-12-2009": "https://drive.economia.gov.br/owncloud/index.php/s/Jr6vLnMBHLH2dYJ/download",
         "Arrecadacao_01-01-2010_a_31-12-2013": "https://drive.economia.gov.br/owncloud/index.php/s/BaUyR54HEzTHajy/download",
         "Arrecadacao_01-01-2014_a_31-12-2017": "https://drive.economia.gov.br/owncloud/index.php/s/FNJFQQtoRpPZJd1/download",
+    }
+}
+
+MICRODADOS = {
+    "NAME": "MICRODADOS",
+    "URLS": {
+        "MICRODADOS": "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv",
+    }
+}
+
+MICRODADOS_BAIRROS = {
+    "NAME": "MICRODADOS_BAIRROS",
+    "URLS": {
+        "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
+    }
+}
+
+TIPO_ARRECADACAO = {
+    "NAME": "TIPO_ARRECADACAO",
+    "URLS": {
+        "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
+    }
+}
+
+TRANSFERENCIAS = {
+    "NAME": "TRANSFERENCIAS",
+    "URLS": {
+        "TRANSF_UF-MUN-2018": os.path.join(DATADIR + "transfestadomunicipios-2018.csv"),
+        "TRANSF_UF-MUN-2019": os.path.join(DATADIR + "transfestadomunicipios-2019.csv"),
+        "TRANSF_UF-MUN-2020": os.path.join(DATADIR + "transfestadomunicipios-2020.csv"),
+        "TRANSF_UF-MUN-2021": os.path.join(DATADIR + "transfestadomunicipios-2021.csv"),
+    }
+}
+
+POPULACAO = {
+    "NAME": "POPULACAO",
+    "URLS": {
+        "POPULACAO_2018": os.path.join(DATADIR + "populacao_2018.csv"),
+        "POPULACAO_2019": os.path.join(DATADIR + "populacao_2018.csv"),
+        "POPULACAO_2020": os.path.join(DATADIR + "populacao_2018.csv"),
+        "POPULACAO_2021": os.path.join(DATADIR + "populacao_2018.csv"),
     }
 }
