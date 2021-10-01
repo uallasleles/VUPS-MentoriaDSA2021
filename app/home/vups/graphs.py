@@ -4,6 +4,7 @@ Programa de Mentoria DSA 2021
 """
 
 from app.home import vups
+from app.home.vups import utils as vups_utils
 from plotly.data import gapminder
 import plotly.express as px
 from . import const
@@ -16,21 +17,23 @@ import os
 import datetime
 import itertools
 import numpy as np
+import folium
 
 def plot_kpi_percentage_progress():
     """
     Global Actual Progress
     Baseline 46%
     """
+    resumo = fn_resumo_microdados()
     fig_c1 = go.Figure(
         go.Indicator(
             mode="number+delta",
-            value=35,
+            value=resumo.get("n_confirmados"),
             number={
-                "suffix": "%",
+                # "suffix": "%",
                 "font": {"size": 36, "color": "#008080", "family": "Arial"},
             },
-            delta={"position": "bottom", "reference": 46, "relative": False},
+            delta={"position": "bottom", "reference": 46, "relative": True},
             domain={"x": [0, 1], "y": [0, 1]},
         )
     )
@@ -49,12 +52,13 @@ def plot_kpi_spend_hours():
     Global Spend Hours
     Baseline 92.700
     """
+    resumo = fn_resumo_microdados()
     fig_c2 = go.Figure(
         go.Indicator(
             mode="number+delta",
-            value=73500,
+            value=resumo.get('n_descartados'),
             number={
-                "suffix": " HH",
+                # "suffix": " HH",
                 "font": {"size": 36, "color": "#008080", "family": "Arial"},
                 "valueformat": ",f",
             },
@@ -82,10 +86,41 @@ def plot_kpi_tcpi():
     """
     TPCI - To Complete Performance Index ≤ 1.00
     """
+    resumo = fn_resumo_microdados()
     fig_c3 = go.Figure(
         go.Indicator(
             mode="number+delta",
-            value=1.085,
+            value=resumo.get('n_supeitos'),
+            number={"font": {"size": 36, "color": "#008080", "family": "Arial"}},
+            delta={"position": "bottom", "reference": 1, "relative": False},
+            domain={"x": [0, 1], "y": [0, 1]},
+        )
+    )
+    fig_c3.update_layout(
+        autosize=False,
+        width=200,
+        height=72,
+        margin=dict(l=20, r=20, b=20, t=30),
+        paper_bgcolor="#fbfff0",
+        font={"size": 36},
+    )
+    fig_c3.update_traces(
+        delta_decreasing_color="#3D9970",
+        delta_increasing_color="#FF4136",
+        delta_valueformat=".3f",
+        selector=dict(type="indicator"),
+    )
+    return fig_c3
+
+def plot_kpi_obitos():
+    """
+    TPCI - To Complete Performance Index ≤ 1.00
+    """
+    resumo = fn_resumo_microdados()
+    fig_c3 = go.Figure(
+        go.Indicator(
+            mode="number+delta",
+            value=resumo.get('n_obitos'),
             number={"font": {"size": 36, "color": "#008080", "family": "Arial"}},
             delta={"position": "bottom", "reference": 1, "relative": False},
             domain={"x": [0, 1], "y": [0, 1]},
@@ -569,6 +604,72 @@ def plot_bar_color_palette():
 
     return fig
 
+def plot_bar():
+    df = pd.DataFrame(
+        {
+            "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+            "Amount": [4, 1, 2, 2, 4, 5],
+            "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"],
+        }
+    )
+    return px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+
+def generate_table(df, max_rows=10):
+    import dash_html_components as html
+
+    return html.Table(
+        [
+            html.Thead(html.Tr([html.Th(col) for col in df.columns])),
+            html.Tbody(
+                [
+                    html.Tr([html.Td(df.iloc[i][col]) for col in df.columns])
+                    for i in range(min(len(df), max_rows))
+                ]
+            ),
+        ]
+    )
+
+def plot_sexo_idade(df):
+    fig = px.bar(df, x="Sexo", y="IdadeNaDataNotificacao")
+    return fig
+
+def plot_scatter(df, selected_year):
+    """
+    ===============================
+    plot_scatter
+    ===============================
+
+    Plot the classification probability for different classifiers. We use a 3 class
+    dataset, and we classify it with a Support Vector classifier, L1 and L2
+    penalized logistic regression with either a One-Vs-Rest or multinomial setting,
+    and Gaussian process classification.
+    """
+    print(__doc__)
+
+    # Author: Uallas Leles <uallasleles@hotmail.com>
+    # License: BSD 3 clause
+
+    filtered_df = df[df.year == selected_year]
+
+    fig = px.scatter(
+        filtered_df,
+        x="gdpPercap",
+        y="lifeExp",
+        size="pop",
+        color="continent",
+        hover_name="country",
+        log_x=True,
+        size_max=55,
+    )
+
+    fig.update_layout(transition_duration=500)
+
+    return fig
+
+def plot_map_folium():
+    map = folium.Map(location=[-16.3722412, -39.5757040], zoom_start=10)
+    map.save("map.html")
+
 ##############################################################################
 # OFICIAIS
 ##############################################################################
@@ -727,9 +828,8 @@ def plot_calendar_heatmap(cidade="AFONSO CLAUDIO", tipo="NOVOS CASOS", mes_anali
     ]
 
     # --------- BUSCANDO DF ---------
-    df = vups.datasets.microdados(columns=COLUMNS, field="Municipio", value=filtro_es)
+    df = vups.datasets.microdados(columns=COLUMNS)
 
-    df["DataDiagnostico"] = df["DataDiagnostico"].astype("datetime64[ns]")
     df["DataEncerramento"] = df["DataEncerramento"].astype("datetime64[ns]")
 
     # --------- CRIANDO DF_CALENDAR_NEW(CASOS NOVOS) E DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
@@ -1318,6 +1418,14 @@ def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA",
                 name=list_cidades[i],
             )
         )
+    
+    fig.update_layout({
+        # 'plot_bgcolor': 'rgba(0,0,0,0)',
+        # 'paper_bgcolor': 'rgba(0,0,0,0)'
+        'plot_bgcolor': "#d8e3d3",
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+    })
+
     return fig
 
 def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
@@ -1441,9 +1549,12 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
             )
         )
 
-    # fig.update_layout({
+    fig.update_layout({
     # 'plot_bgcolor': 'rgba(0,0,0,0)',
-    # 'paper_bgcolor': 'rgba(0,0,0,0)'})
+    # 'paper_bgcolor': 'rgba(0,0,0,0)'
+    'plot_bgcolor': "#d8e3d3",
+    'paper_bgcolor': 'rgba(0,0,0,0)',
+    })
 
     return fig
 
@@ -1549,3 +1660,33 @@ def plot_n_pessoas_por_sintomas():
     fig.update_layout(annotations=annotations)
 
     return fig
+
+def fn_resumo_microdados():
+    md = vups.datasets.microdados()
+    df_classificacao = pd.DataFrame(md.Classificacao.value_counts()).T
+    df_periodo = pd.DataFrame(vups_utils.minMax(md['DataNotificacao'])).T
+    
+    resumo_microdados = {
+        'n_obs': md.shape[0],
+        'n_var': md.shape[1],
+        'n_confirmados': df_classificacao.Confirmados[0],
+        'n_descartados': df_classificacao.Descartados[0],
+        'n_supeitos': df_classificacao.Suspeito[0],
+        'n_obitos': md.DataObito.count(),
+        'periodo_inicio': df_periodo['min'][0],
+        'periodo_fim': df_periodo['max'][0]
+    }
+
+    return(resumo_microdados)
+
+def fn_resumo():
+    resumo = fn_resumo_microdados()
+    texto1 = "Número de observações: {}".format(resumo.get('n_obs'))
+    texto2 = "\nNúmero de variáveis: {}".format(resumo.get('n_var'))
+    texto3 = "\nConfirmados: {}".format(resumo.get('n_confirmados'))
+    texto4 = "\nDescartados: {}".format(resumo.get('n_descartados'))
+    texto5 = "\nSuspeitos: {}".format(resumo.get('n_supeitos'))
+    texto6 = "\nÓbitos: {}".format(resumo.get('n_obitos'))
+    texto7 = "\nOs dados coletados compreendem um período de {:%d/%m/%Y} à {:%d/%m/%Y}.".format(resumo.get('periodo_inicio'), resumo.get('periodo_fim'))
+    texto = texto1 + texto2 + texto3 + texto4 + texto5 + texto6 + texto7
+    return(texto)

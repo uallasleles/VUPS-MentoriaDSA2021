@@ -45,14 +45,16 @@ def dashboard():
         percentage_progress=get_plot_kpi_percentage_progress(),
         spend_hours=get_plot_kpi_spend_hours(),
         tcpi=get_plot_kpi_tcpi(),
-        taxs=get_plot_year_taxs(),
+        # taxs=get_plot_year_taxs(),
         tributos_cidades=get_plot_comp_tributos_cidades(),
         tributos_cidades_norm=get_plot_comp_tributos_cidades_norm(),
         color_palette = get_plot_bar_color_palette(),
         pessoas_sintomas = get_plot_n_pessoas_por_sintomas(),
         small_bar_percentage_progress=get_plot_small_bar_percentage_progress(),
         small_bar_spend_hours=get_plot_small_bar_spend_hours(),
-        progress_actual_planned=get_plot_line_progress_actual_planned()
+        progress_actual_planned=get_plot_line_progress_actual_planned(),
+        kpi_obitos=get_plot_kpi_obitos(),
+        resumo = get_resumo()
     )
 
     # , cost_variance                   = get_plot_widget_cost_variance()
@@ -166,18 +168,16 @@ def refresh_kpi():
 
 # KPI's
 def get_plot_kpi_percentage_progress():
-    return json.dumps(
-        obj=graphs.plot_kpi_percentage_progress(), cls=utils.PlotlyJSONEncoder
-    )
-
+    return json.dumps(obj=graphs.plot_kpi_percentage_progress(), cls=utils.PlotlyJSONEncoder)
 
 def get_plot_kpi_spend_hours():
     return json.dumps(obj=graphs.plot_kpi_spend_hours(), cls=utils.PlotlyJSONEncoder)
 
-
 def get_plot_kpi_tcpi():
     return json.dumps(obj=graphs.plot_kpi_tcpi(), cls=utils.PlotlyJSONEncoder)
 
+def get_plot_kpi_obitos():
+    return json.dumps(obj=graphs.plot_kpi_obitos(), cls=utils.PlotlyJSONEncoder)
 
 # Pimpão ##############################################################
 def get_plot_comp_tributos_cidades(lista=[]):
@@ -285,6 +285,10 @@ def get_plot_n_pessoas_por_sintomas():
         cls=utils.PlotlyJSONEncoder
     )
     return graphJSON
+
+def get_resumo():
+    resumo = graphs.fn_resumo_microdados()
+    return resumo
 
 @blueprint.route("/importar")
 def importar():
