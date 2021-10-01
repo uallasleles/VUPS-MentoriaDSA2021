@@ -17,6 +17,7 @@ import os
 import datetime
 import itertools
 import numpy as np
+import folium
 
 def plot_kpi_percentage_progress():
     """
@@ -603,6 +604,72 @@ def plot_bar_color_palette():
 
     return fig
 
+def plot_bar():
+    df = pd.DataFrame(
+        {
+            "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
+            "Amount": [4, 1, 2, 2, 4, 5],
+            "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"],
+        }
+    )
+    return px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+
+def generate_table(df, max_rows=10):
+    import dash_html_components as html
+
+    return html.Table(
+        [
+            html.Thead(html.Tr([html.Th(col) for col in df.columns])),
+            html.Tbody(
+                [
+                    html.Tr([html.Td(df.iloc[i][col]) for col in df.columns])
+                    for i in range(min(len(df), max_rows))
+                ]
+            ),
+        ]
+    )
+
+def plot_sexo_idade(df):
+    fig = px.bar(df, x="Sexo", y="IdadeNaDataNotificacao")
+    return fig
+
+def plot_scatter(df, selected_year):
+    """
+    ===============================
+    plot_scatter
+    ===============================
+
+    Plot the classification probability for different classifiers. We use a 3 class
+    dataset, and we classify it with a Support Vector classifier, L1 and L2
+    penalized logistic regression with either a One-Vs-Rest or multinomial setting,
+    and Gaussian process classification.
+    """
+    print(__doc__)
+
+    # Author: Uallas Leles <uallasleles@hotmail.com>
+    # License: BSD 3 clause
+
+    filtered_df = df[df.year == selected_year]
+
+    fig = px.scatter(
+        filtered_df,
+        x="gdpPercap",
+        y="lifeExp",
+        size="pop",
+        color="continent",
+        hover_name="country",
+        log_x=True,
+        size_max=55,
+    )
+
+    fig.update_layout(transition_duration=500)
+
+    return fig
+
+def plot_map_folium():
+    map = folium.Map(location=[-16.3722412, -39.5757040], zoom_start=10)
+    map.save("map.html")
+
 ##############################################################################
 # OFICIAIS
 ##############################################################################
@@ -761,7 +828,7 @@ def plot_calendar_heatmap(cidade="AFONSO CLAUDIO", tipo="NOVOS CASOS", mes_anali
     ]
 
     # --------- BUSCANDO DF ---------
-    df = vups.datasets.microdados(columns=COLUMNS, field="Municipio", value=filtro_es)
+    df = vups.datasets.microdados(columns=COLUMNS)
 
     df["DataEncerramento"] = df["DataEncerramento"].astype("datetime64[ns]")
 
@@ -1623,6 +1690,3 @@ def fn_resumo():
     texto7 = "\nOs dados coletados compreendem um período de {:%d/%m/%Y} à {:%d/%m/%Y}.".format(resumo.get('periodo_inicio'), resumo.get('periodo_fim'))
     texto = texto1 + texto2 + texto3 + texto4 + texto5 + texto6 + texto7
     return(texto)
-
-# global resumo 
-# resumo = fn_resumo_microdados()

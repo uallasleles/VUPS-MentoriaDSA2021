@@ -45,7 +45,7 @@ def dashboard():
         percentage_progress=get_plot_kpi_percentage_progress(),
         spend_hours=get_plot_kpi_spend_hours(),
         tcpi=get_plot_kpi_tcpi(),
-        taxs=get_plot_year_taxs(),
+        # taxs=get_plot_year_taxs(),
         tributos_cidades=get_plot_comp_tributos_cidades(),
         tributos_cidades_norm=get_plot_comp_tributos_cidades_norm(),
         color_palette = get_plot_bar_color_palette(),
