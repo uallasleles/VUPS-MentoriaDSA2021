@@ -83,8 +83,6 @@ def get_data(
         filepath_or_buffer = {"filepath": {"ext": os.path.join(const.DATADIR, "{}{}".format(name.upper(), file_extension))}}
         filepath_or_buffer = list(filepath_or_buffer.get("filepath").items())
 
-        # filepath_or_buffer[0][1] = os.path.join(const.DATADIR, "{}{}".format(name.upper(), file_extension))
-
     if file_extension == ".csv":
 
         _PARAMS = {
@@ -240,8 +238,8 @@ class datasets:
             nrows=nrows,
             sep=";",
             encoding="ISO-8859-1",
-            warn_bad_lines=True,
-            error_bad_lines=True,
+            warn_bad_lines=False,
+            error_bad_lines=False,
             dtype=dtype,
             mapa=mapa,
             name=name
@@ -275,8 +273,8 @@ class datasets:
             nrows=nrows,
             sep=",",
             encoding="ISO-8859-1",
-            warn_bad_lines=True,
-            error_bad_lines=True,
+            warn_bad_lines=False,
+            error_bad_lines=False,
             dtype=dtype,
             mapa=mapa,
             name=name
@@ -309,9 +307,9 @@ class datasets:
             usecols=columns,
             nrows=nrows,
             sep=",",
-            encoding="UTF-8",
-            warn_bad_lines=True,
-            error_bad_lines=True,
+            encoding="utf-8",
+            warn_bad_lines=False,
+            error_bad_lines=False,
             dtype=dtype,
             mapa=mapa,
             name=name
@@ -343,9 +341,9 @@ class datasets:
             usecols=columns,
             nrows=nrows,
             sep=",",
-            encoding="ISO-8859-1",
-            warn_bad_lines=True,
-            error_bad_lines=True,
+            encoding="utf-8",
+            warn_bad_lines=False,
+            error_bad_lines=False,
             dtype=dtype,
             mapa=mapa,
             name=name
@@ -379,8 +377,8 @@ class datasets:
             nrows=nrows,
             sep=";",
             encoding="UTF-8",
-            warn_bad_lines=True,
-            error_bad_lines=True,
+            warn_bad_lines=False,
+            error_bad_lines=False,
             dtype=dtype,
             mapa=mapa,
             name=name
@@ -414,8 +412,8 @@ class datasets:
             nrows=nrows,
             sep=",",
             encoding="UTF-8",
-            warn_bad_lines=True,
-            error_bad_lines=True,
+            warn_bad_lines=False,
+            error_bad_lines=False,
             dtype=dtype,
             mapa=mapa,
             name=name
