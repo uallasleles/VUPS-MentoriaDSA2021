@@ -4,6 +4,7 @@ Programa de Mentoria DSA 2021
 """
 
 import os
+import io
 import pandas as pd
 
 # from pandas.io.formats.format import CategoricalFormatter
@@ -14,6 +15,8 @@ import datetime
 import plotly.figure_factory as ff
 import plotly.graph_objects as go
 import warnings
+import validators
+import requests
 
 # Ignorando mensagens de avisos.
 warnings.filterwarnings("ignore")
@@ -31,14 +34,28 @@ def get_data(
     warn_bad_lines=None,
     error_bad_lines=None,
     dtype=None,
-    mapa=None
+    mapa=None,
+    memory_map=True
 ):
 
     filename, file_extension = os.path.splitext(os.path.basename(filepath_or_buffer))
-
+    
     if file_extension == ".csv":
+        # for url in filepath_or_buffer:
+        #     pass
+
+        if validators.url(filepath_or_buffer):
+            r = requests.get(filepath_or_buffer, stream=True)
+            
+            filepath_or_buffer = os.path.join(const.DATADIR, "{}.{}".format(filename.upper(), file_extension))
+            with open(filepath_or_buffer, 'wb') as fd:
+                for chunk in r.iter_content(chunk_size=128):
+                    fd.write(chunk)
+
         _PARAMS = {
             "filepath_or_buffer": filepath_or_buffer,
+            "iterator": True,
+            "chunksize": 128,
             "usecols": usecols,
             "sep": sep,
             "nrows": nrows,
@@ -47,19 +64,23 @@ def get_data(
             "error_bad_lines": error_bad_lines,
             "parse_dates": True,
             "dtype": dtype,
+            "memory_map": memory_map
         }
-        dataset = pd.read_csv(**_PARAMS)
+
+        iter = pd.read_csv(**_PARAMS)
+        dataset = pd.concat(iter, ignore_index=True)
+            
         dataset = dtype_transform(dataset, mapa)
-        lst_dfs = []
-        lst_dfs.append(dataset)
-        convert_to_parquet(lst_dfs, filename)
+        file_extension = convert_to_parquet([dataset], filename)
+        filepath_or_buffer = os.path.join(const.DATADIR, "{}.{}".format(filename.upper(), file_extension))
 
     if file_extension == ".parquet":
         _PARAMS = {
             "path": filepath_or_buffer, 
-            "columns": usecols}
+            "columns": usecols
+        }
         dataset = pd.read_parquet(**_PARAMS)
-
+            
     return dataset
 
 
@@ -68,7 +89,13 @@ def convert_to_parquet(lst_dfs: list, filename=None):
         df = pd.concat(lst_dfs, ignore_index=True)
     else:
         df = lst_dfs[0]
-    df.to_parquet(const.DATADIR + "{}.parquet".format(filename))
+
+    filepath_pqt = const.DATADIR + "{}.parquet".format(filename)
+    
+    df.to_parquet(filepath_pqt)
+    resp = '.parquet' if os.path.exists(filepath_pqt) else '.csv'
+    
+    return resp
 
 
 def plot_bar():
@@ -227,17 +254,21 @@ def dtype_transform(df, mapa):
 
 class datasets:
     def microdados(columns=None, nrows=None, dtype={"DataObito": "object"}, field=None, value=None):
-        url = "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv"
-
         name = "MICRODADOS"
-        if os.path.exists(os.path.join(const.DATADIR + name + '.parquet')):
-            filepath_or_buffer = os.path.join(const.DATADIR + name + '.parquet')
-        elif os.path.exists(os.path.join(const.DATADIR + name + '.csv')):
-            filepath_or_buffer = os.path.join(const.DATADIR + name + '.csv')
+        url = "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv"
+        partial_path = os.path.join(const.DATADIR, name)
+        filepath_pqt = "{}.parquet".format(partial_path)
+        filepath_csv = "{}.csv".format(partial_path)
+
+        if os.path.exists(filepath_pqt):
+            filepath_or_buffer = filepath_pqt
+        elif os.path.exists(filepath_csv):
+            filepath_or_buffer = filepath_csv
         else:
             filepath_or_buffer = url
 
         mapa = const.mapa_microdados
+
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
@@ -254,12 +285,18 @@ class datasets:
         url = "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv"
         name = "MICRODADOS_BAIRROS"
 
-        if os.path.exists(os.path.join(const.DATADIR + name + '.parquet')):
-            filepath_or_buffer = os.path.join(const.DATADIR + name + '.parquet')
-        elif os.path.exists(os.path.join(const.DATADIR + name + '.csv')):
-            filepath_or_buffer = os.path.join(const.DATADIR + name + '.csv')
+        partial_path = os.path.join(const.DATADIR, name)
+        filepath_pqt = "{}.parquet".format(partial_path)
+        filepath_csv = "{}.csv".format(partial_path)
+
+        if os.path.exists(filepath_pqt):
+            filepath_or_buffer = filepath_pqt
+        elif os.path.exists(filepath_csv):
+            filepath_or_buffer = filepath_csv
         else:
             filepath_or_buffer = url
+
+        mapa = None
 
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
@@ -267,20 +304,39 @@ class datasets:
             nrows=nrows,
             sep=",",
             encoding="ISO-8859-1",
-            error_bad_lines=error_bad_lines,
+            warn_bad_lines=True,
+            error_bad_lines=True,
             dtype=dtype,
+            mapa=mapa
         )
 
     def arrecadacao(columns=None, nrows=None, dtype=None):
-        filename = "ARRECADACAO.parquet"
-        filepath = os.path.join(const.DATADIR + filename)
+        name = "ARRECADACAO"
+        lst_urls = [] # list(const.ARRECADACAO["URLS"].values())
+        
+        partial_path = os.path.join(const.DATADIR, name)
+        filepath_pqt = "{}.parquet".format(partial_path)
+        filepath_csv = "{}.csv".format(partial_path)
+
+        if os.path.exists(filepath_pqt):
+            filepath_or_buffer = filepath_pqt
+        elif os.path.exists(filepath_csv):
+            filepath_or_buffer = filepath_csv
+        else:
+            filepath_or_buffer = lst_urls
+
+        mapa = None
+
         return get_data(
-            filepath_or_buffer=filepath,
+            filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="utf-8",
+            sep=";",
+            encoding="ISO-8859-1",
+            warn_bad_lines=True,
+            error_bad_lines=True,
             dtype=dtype,
+            mapa=mapa
         )
 
     def arrecadacao_1998_a_2001(columns=None, nrows=None, dtype=None):

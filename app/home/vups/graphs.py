@@ -23,7 +23,7 @@ def plot_kpi_percentage_progress():
     Global Actual Progress
     Baseline 46%
     """
-    
+    resumo = fn_resumo_microdados()
     fig_c1 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -51,6 +51,7 @@ def plot_kpi_spend_hours():
     Global Spend Hours
     Baseline 92.700
     """
+    resumo = fn_resumo_microdados()
     fig_c2 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -84,6 +85,7 @@ def plot_kpi_tcpi():
     """
     TPCI - To Complete Performance Index ≤ 1.00
     """
+    resumo = fn_resumo_microdados()
     fig_c3 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -113,7 +115,7 @@ def plot_kpi_obitos():
     """
     TPCI - To Complete Performance Index ≤ 1.00
     """
-
+    resumo = fn_resumo_microdados()
     fig_c3 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -1622,5 +1624,5 @@ def fn_resumo():
     texto = texto1 + texto2 + texto3 + texto4 + texto5 + texto6 + texto7
     return(texto)
 
-global resumo 
-resumo = fn_resumo_microdados()
+# global resumo 
+# resumo = fn_resumo_microdados()
