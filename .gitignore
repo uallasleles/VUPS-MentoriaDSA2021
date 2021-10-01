@@ -57,3 +57,11 @@ target/
 # Visual Studio Code Settings
 .vscode/settings.json
 admin.md
+
+# Datasets
+app/home/data/
+*.parquet
+*.csv
+
+.gitignore
+

@@ -16,7 +16,7 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 # REALPATH = os.path.realpath('.')
 
 BASEDIR = os.path.dirname(os.path.dirname(__file__))
-DATADIR = os.path.join(BASEDIR + "/data/")
+DATADIR = os.path.join(BASEDIR + "\\data\\")
 
 # DATAFILE = {
 #     'FILENAME': 'MICRODADOS.csv',
@@ -168,5 +168,15 @@ microdados_cat_cols = []
 
 mapa_microdados = {
     'date_cols': microdados_date_cols,
-    'cat_cols': microdados_cat_cols,
+    'cat_cols': microdados_cat_cols
+}
+
+ARRECADACAO = {
+    "URLS": {
+        "Arrecadacao_01-01-1998_a_31-12-2001": "https://drive.economia.gov.br/owncloud/index.php/s/TD34YJTxalj4X3G/download",
+        "Arrecadacao_01-01-2002_a_31-12-2005": "https://drive.economia.gov.br/owncloud/index.php/s/ktiBaOnGIF4K2fw/download",
+        "Arrecadacao_01-01-2006_a_31-12-2009": "https://drive.economia.gov.br/owncloud/index.php/s/Jr6vLnMBHLH2dYJ/download",
+        "Arrecadacao_01-01-2010_a_31-12-2013": "https://drive.economia.gov.br/owncloud/index.php/s/BaUyR54HEzTHajy/download",
+        "Arrecadacao_01-01-2014_a_31-12-2017": "https://drive.economia.gov.br/owncloud/index.php/s/FNJFQQtoRpPZJd1/download",
+    }
 }
