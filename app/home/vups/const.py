@@ -10,13 +10,13 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 
 # ABSPATH = os.path.abspath('.')
 # BASENAME = os.path.basename('.')
-# #COMMONPATH = os.path.commonpath('.')
+# COMMONPATH = os.path.commonpath('.')
 # COMMONPREFIX = os.path.commonprefix('.')
 # DIRNAME = os.path.dirname(__file__)
 # REALPATH = os.path.realpath('.')
 
 BASEDIR = os.path.dirname(os.path.dirname(__file__))
-DATADIR = os.path.join(BASEDIR + "\\data\\")
+DATADIR = os.path.join(BASEDIR + "/data/")
 
 # DATAFILE = {
 #     'FILENAME': 'MICRODADOS.csv',
@@ -168,43 +168,61 @@ microdados_cat_cols = []
 
 mapa_microdados = {
     'date_cols': microdados_date_cols,
-    'cat_cols': microdados_cat_cols
+    'cat_cols': microdados_cat_cols,
+}
+
+# ############################################################################
+# REGISTROS DAS FONTES DE DADOS UTILIZADAS
+# ############################################################################
+
+MICRODADOS = {
+    "NAME": "MICRODADOS",
+    "DESCRIPTION": "",
+    "URLS": {
+        "MICRODADOS": "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv",
+    },
+    "FORMAT": "csv",
+    "DELIMITER": "",
+}
+
+MICRODADOS_BAIRROS = {
+    "NAME": "MICRODADOS_BAIRROS",
+    "DESCRIPTION": "",
+    "URLS": {
+        "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
+    },
+    "FORMAT": "csv",
+    "DELIMITER": "",
+}
+
+TIPO_ARRECADACAO = {
+    "NAME": "TIPO_ARRECADACAO",
+    "DESCRIPTION": "Dados referentes ao tipo de arrecadação dos tributos estaduais",
+    "URLS": {
+        "TipoArrecadacao": "https://drive.economia.gov.br/owncloud/index.php/s/OEehiiL427jBp7C/download",
+    },
+    "FORMAT": "csv",
+    "DELIMITER": "",
 }
 
 ARRECADACAO = {
     "NAME": "ARRECADACAO",
+    "DESCRIPTION": "Dados referentes aos boletins de arrecadação dos tributos estaduais",
     "URLS": {
         "Arrecadacao_01-01-1998_a_31-12-2001": "https://drive.economia.gov.br/owncloud/index.php/s/TD34YJTxalj4X3G/download",
         "Arrecadacao_01-01-2002_a_31-12-2005": "https://drive.economia.gov.br/owncloud/index.php/s/ktiBaOnGIF4K2fw/download",
         "Arrecadacao_01-01-2006_a_31-12-2009": "https://drive.economia.gov.br/owncloud/index.php/s/Jr6vLnMBHLH2dYJ/download",
         "Arrecadacao_01-01-2010_a_31-12-2013": "https://drive.economia.gov.br/owncloud/index.php/s/BaUyR54HEzTHajy/download",
         "Arrecadacao_01-01-2014_a_31-12-2017": "https://drive.economia.gov.br/owncloud/index.php/s/FNJFQQtoRpPZJd1/download",
-    }
-}
-
-MICRODADOS = {
-    "NAME": "MICRODADOS",
-    "URLS": {
-        "MICRODADOS": "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv",
-    }
-}
-
-MICRODADOS_BAIRROS = {
-    "NAME": "MICRODADOS_BAIRROS",
-    "URLS": {
-        "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
-    }
-}
-
-TIPO_ARRECADACAO = {
-    "NAME": "TIPO_ARRECADACAO",
-    "URLS": {
-        "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
-    }
+    },
+    "FORMAT": "csv",
+    "DELIMITER": "",
 }
 
 TRANSFERENCIAS = {
     "NAME": "TRANSFERENCIAS",
+    "TITLE": "Transferências constitucionais do Estado aos Municípios",
+    "DESCRIPTION": "As transferências constitucionais consistem na distribuição de recursos provenientes da arrecadação de tributos estaduais aos municípios, com base em dispositivos constitucionais.",
     "URLS": {
         "TRANSFESTADOMUNICIPIOS-2009": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/cf45af79-99fa-4b24-a150-4c2139282ec3/download/transfestadomunicipios-2009.csv",
         "TRANSFESTADOMUNICIPIOS-2010": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/7d75b44b-73b5-4c05-806a-0aa24a1d7141/download/transfestadomunicipios-2010.csv",
@@ -218,15 +236,20 @@ TRANSFERENCIAS = {
         "TRANSFESTADOMUNICIPIOS-2019": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/a91e3528-6e7e-499f-9cc2-e281433b1329/download/transfestadomunicipios-2019.csv",
         "TRANSFESTADOMUNICIPIOS-2020": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/511c02b1-93b7-421c-8727-d786f80fd8e5/download/transfestadomunicipios-2020.csv",
         "TRANSFESTADOMUNICIPIOS-2021": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/672f4fcc-c1aa-4c3d-b0a0-e4cd4e2695da/download/transfestadomunicipios-2021.csv",
-    }
+    },
+    "FORMAT": "csv",
+    "DELIMITER": "",
 }
 
 POPULACAO = {
     "NAME": "POPULACAO",
+    "DESCRIPTION": "",
     "URLS": {
         "POPULACAO_2018": os.path.join(DATADIR + "populacao_2018.csv"),
         "POPULACAO_2019": os.path.join(DATADIR + "populacao_2019.csv"),
         "POPULACAO_2020": os.path.join(DATADIR + "populacao_2020.csv"),
         "POPULACAO_2021": os.path.join(DATADIR + "populacao_2021.csv"),
-    }
+    },
+    "FORMAT": "csv",
+    "DELIMITER": "",
 }
