@@ -4,7 +4,7 @@ Programa de Mentoria DSA 2021
 """
 
 import os
-import io
+import sys
 import pandas as pd
 
 # from pandas.io.formats.format import CategoricalFormatter
@@ -40,8 +40,10 @@ def get_data(
     name=None
 ):
     filename, file_extension = os.path.splitext(os.path.basename(filepath_or_buffer[0][1]))
+    print("Importando o dataset {}...".format(filename))
 
     if validators.url(filepath_or_buffer[0][1]):
+        print("Buscando dataset de URL...")
         file_extension = '.csv'
         filepath = []
         for url in filepath_or_buffer:
@@ -50,7 +52,8 @@ def get_data(
                 r = requests.get(url[1], stream=True)
 
                 DATENAME = time.strftime("%Y%m%d-%H%M%S")
-                filepath.append(os.path.join(const.DATADIR, DATENAME + "-{}{}".format(filename.upper(), file_extension)))
+                filepath.append(os.path.join(const.DATADIR, "{}-{}{}".format(DATENAME, filename.upper(), file_extension)))
+                print("Gravando os dados em disco...")
                 with open(filepath[-1], 'wb') as fd:
                     for chunk in r.iter_content(chunk_size=128):
                         fd.write(chunk)
@@ -76,8 +79,11 @@ def get_data(
             subset = pd.concat(iter, ignore_index=True)
             ds_lst.append(subset)
 
+        print("Concatenando arquivos, caso sejam múltiplos datasets...")
         dataset = pd.concat(ds_lst, ignore_index=True)
+        print("Realizando transformações de dados no dataset consolidado...")
         dataset = dtype_transform(dataset, mapa)
+        print("Convertendo para PARQUET o dataset com os tipos de dados já tratados...")
         file_extension = convert_to_parquet([dataset], name)
 
         filepath_or_buffer = {"filepath": {"ext": os.path.join(const.DATADIR, "{}{}".format(name.upper(), file_extension))}}
@@ -105,9 +111,11 @@ def get_data(
             
         dataset = dtype_transform(dataset, mapa)
         file_extension = convert_to_parquet([dataset], name)
-        filepath_or_buffer[0][1] = os.path.join(const.DATADIR, "{}{}".format(name.upper(), file_extension))
+        filepath_or_buffer = which_file_exists(name)
+        # filepath_or_buffer[0][1] = os.path.join(const.DATADIR, "{}{}".format(name.upper(), file_extension))
 
     if file_extension == ".parquet":
+        print("Realizando importação de arquivo PARQUET.")
         _PARAMS = {
             "path": filepath_or_buffer[0][1],
             "columns": usecols
@@ -122,9 +130,16 @@ def convert_to_parquet(lst_dfs: list, filename=None):
     else:
         df = lst_dfs[0]
 
-    filepath_pqt = const.DATADIR + "{}.parquet".format(filename)
+    filepath_pqt = os.path.join(const.DATADIR, "{}.parquet".format(filename))
     
-    df.to_parquet(filepath_pqt)
+    # CRIA O ARQUIVO PARQUET
+    try:
+        print("Salvando em disco o arquivo convertido para PARQUET.")
+        df.to_parquet(filepath_pqt)
+    except:
+        print("O dataset {} no foi convertido para Parquet. \nCaminho utilizado:{}".format(filename, filepath_pqt))
+    
+    # Verificação
     resp = '.parquet' if os.path.exists(filepath_pqt) else '.csv'
     
     return resp
@@ -209,28 +224,29 @@ def dtype_transform(df, mapa):
 
     return(df)
 
+def which_file_exists(name):
+    extensions = [".parquet", ".csv"]
+    
+    for ext in extensions:
+        # CRIA UM PATH DO ARQUIVO PARA CADA EXTENSÃO
+        path = os.path.join(const.DATADIR, "{}{}".format(name, ext))
+        filepath = {"filepath": {"ext": path}}
+        filepath = list(filepath.get("filepath").items())
+
+        # TESTA SE O ARQUIVO EXISTE
+        if os.path.exists(filepath[0][1]):
+            return filepath
+
+    filepath = list(getattr(const, name).get("URLS").items())
+
+    return filepath
+
 class datasets:
     def microdados(columns=None, nrows=None, dtype=None):
-        name = const.MICRODADOS.get("NAME")
-        
-        partial_path = os.path.join(const.DATADIR, name)
-
-        filepath_pqt = {"filepath": {"ext": "{}.parquet".format(partial_path)}}
-        filepath_pqt = list(filepath_pqt.get("filepath").items())
-
-        filepath_csv = {"filepath": {"ext": "{}.csv".format(partial_path)}}
-        filepath_csv = list(filepath_csv.get("filepath").items())
-
-        filelist_url = list(const.MICRODADOS.get("URLS").items())
-        
-        if os.path.exists(filepath_pqt[0][1]):
-            filepath_or_buffer = filepath_pqt
-        elif os.path.exists(filepath_csv[0][1]):
-            filepath_or_buffer = filepath_csv
-        else:
-            filepath_or_buffer = filelist_url
-
-        mapa = const.mapa_microdados
+        # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NOMES! ^^
+        name = sys._getframe(  ).f_code.co_name.upper()
+        filepath_or_buffer = which_file_exists(name)
+        mapa = getattr(const, name).get("MAP")
 
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
@@ -246,26 +262,9 @@ class datasets:
         )
 
     def microdados_bairros(columns=None, nrows=None, dtype=None):
-        name = const.MICRODADOS_BAIRROS.get("NAME")
-        
-        partial_path = os.path.join(const.DATADIR, name)
-
-        filepath_pqt = {"filepath": {"ext": "{}.parquet".format(partial_path)}}
-        filepath_pqt = list(filepath_pqt.get("filepath").items())
-
-        filepath_csv = {"filepath": {"ext": "{}.csv".format(partial_path)}}
-        filepath_csv = list(filepath_csv.get("filepath").items())
-
-        filelist_url = list(const.MICRODADOS_BAIRROS.get("URLS").items())
-        
-        if os.path.exists(filepath_pqt[0][1]):
-            filepath_or_buffer = filepath_pqt
-        elif os.path.exists(filepath_csv[0][1]):
-            filepath_or_buffer = filepath_csv
-        else:
-            filepath_or_buffer = filelist_url
-
-        mapa = None
+        name = sys._getframe(  ).f_code.co_name.upper()
+        filepath_or_buffer = which_file_exists(name)
+        mapa = getattr(const, name).get("MAP")
 
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
@@ -281,26 +280,9 @@ class datasets:
         )
 
     def arrecadacao(columns=None, nrows=None, dtype=None):
-        name = const.ARRECADACAO.get("NAME")
-        
-        partial_path = os.path.join(const.DATADIR, name)
-
-        filepath_pqt = {"filepath": {"ext": "{}.parquet".format(partial_path)}}
-        filepath_pqt = list(filepath_pqt.get("filepath").items())
-
-        filepath_csv = {"filepath": {"ext": "{}.csv".format(partial_path)}}
-        filepath_csv = list(filepath_csv.get("filepath").items())
-
-        filelist_url = list(const.ARRECADACAO.get("URLS").items())
-        
-        if os.path.exists(filepath_pqt[0][1]):
-            filepath_or_buffer = filepath_pqt
-        elif os.path.exists(filepath_csv[0][1]):
-            filepath_or_buffer = filepath_csv
-        else:
-            filepath_or_buffer = filelist_url
-
-        mapa = None
+        name = sys._getframe(  ).f_code.co_name.upper()
+        filepath_or_buffer = which_file_exists(name)
+        mapa = getattr(const, name).get("MAP")
 
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
@@ -316,26 +298,10 @@ class datasets:
         )
 
     def tipo_arrecadacao(columns=None, nrows=None, dtype=None):
-        name = const.TIPO_ARRECADACAO.get("NAME")
-        
-        partial_path = os.path.join(const.DATADIR, name)
+        name = sys._getframe(  ).f_code.co_name.upper()
+        filepath_or_buffer = which_file_exists(name)
+        mapa = getattr(const, name).get("MAP")
 
-        filepath_pqt = {"filepath": {"ext": "{}.parquet".format(partial_path)}}
-        filepath_pqt = list(filepath_pqt.get("filepath").items())
-
-        filepath_csv = {"filepath": {"ext": "{}.csv".format(partial_path)}}
-        filepath_csv = list(filepath_csv.get("filepath").items())
-
-        filelist_url = list(const.TIPO_ARRECADACAO.get("URLS").items())
-        
-        if os.path.exists(filepath_pqt[0][1]):
-            filepath_or_buffer = filepath_pqt
-        elif os.path.exists(filepath_csv[0][1]):
-            filepath_or_buffer = filepath_csv
-        else:
-            filepath_or_buffer = filelist_url
-
-        mapa = None
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
@@ -350,26 +316,9 @@ class datasets:
         )
 
     def transferencias(columns=None, nrows=None, dtype=None):
-        name = const.TRANSFERENCIAS.get("NAME") # TRANSFERÊNCIAS Estados-Municipios
-        
-        partial_path = os.path.join(const.DATADIR, name)
-
-        filepath_pqt = {"filepath": {"ext": "{}.parquet".format(partial_path)}}
-        filepath_pqt = list(filepath_pqt.get("filepath").items())
-
-        filepath_csv = {"filepath": {"ext": "{}.csv".format(partial_path)}}
-        filepath_csv = list(filepath_csv.get("filepath").items())
-
-        filelist_url = list(const.TRANSFERENCIAS.get("URLS").items())
-        
-        if os.path.exists(filepath_pqt[0][1]):
-            filepath_or_buffer = filepath_pqt
-        elif os.path.exists(filepath_csv[0][1]):
-            filepath_or_buffer = filepath_csv
-        else:
-            filepath_or_buffer = filelist_url
-
-        mapa = None
+        name = sys._getframe(  ).f_code.co_name.upper()
+        filepath_or_buffer = which_file_exists(name)
+        mapa = getattr(const, name).get("MAP")
 
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
@@ -385,26 +334,9 @@ class datasets:
         )
 
     def populacao(columns=None, nrows=None, dtype=None):
-        name = const.POPULACAO.get("NAME")
-        
-        partial_path = os.path.join(const.DATADIR, name)
-
-        filepath_pqt = {"filepath": {"ext": "{}.parquet".format(partial_path)}}
-        filepath_pqt = list(filepath_pqt.get("filepath").items())
-
-        filepath_csv = {"filepath": {"ext": "{}.csv".format(partial_path)}}
-        filepath_csv = list(filepath_csv.get("filepath").items())
-
-        filelist_url = list(const.POPULACAO.get("URLS").items())
-        
-        if os.path.exists(filepath_pqt[0][1]):
-            filepath_or_buffer = filepath_pqt
-        elif os.path.exists(filepath_csv[0][1]):
-            filepath_or_buffer = filepath_csv
-        else:
-            filepath_or_buffer = filelist_url
-
-        mapa = None
+        name = sys._getframe(  ).f_code.co_name.upper()
+        filepath_or_buffer = which_file_exists(name)
+        mapa = getattr(const, name).get("MAP")
 
         return get_data(
             filepath_or_buffer=filepath_or_buffer,
