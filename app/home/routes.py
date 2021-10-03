@@ -52,7 +52,7 @@ def dashboard():
         pessoas_sintomas = get_plot_n_pessoas_por_sintomas(),
         small_bar_percentage_progress=get_plot_small_bar_percentage_progress(),
         small_bar_spend_hours=get_plot_small_bar_spend_hours(),
-        progress_actual_planned=get_plot_line_progress_actual_planned(),
+        progress_actual_planned = get_plot_line_progress_actual_planned(),
         kpi_obitos=get_plot_kpi_obitos(),
         resumo = get_resumo()
     )
