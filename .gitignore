@@ -59,9 +59,8 @@ target/
 admin.md
 
 # Datasets
-app/home/data/
-*.parquet
-*.csv
+app/home/data/*
+!app/home/data/curva.csv
 
 .gitignore
 

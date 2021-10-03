@@ -174,7 +174,7 @@ def plot_small_bar_spend_hours():
     fig_m_hh.update_traces(marker_color="#17A2B8", selector=dict(type="bar"))
     return fig_m_hh
 
-data = pd.read_excel(os.path.join(const.DATADIR + "curva.xlsx"))
+data = pd.read_excel(os.path.join(const.DATADIR, "curva.xlsx"))
 
 def plot_line_progress_actual_planned():
     y = data.loc[data.Activity_name == "Total"]

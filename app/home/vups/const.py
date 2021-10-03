@@ -16,26 +16,7 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 # REALPATH = os.path.realpath('.')
 
 BASEDIR = os.path.dirname(os.path.dirname(__file__))
-DATADIR = os.path.join(BASEDIR + "/data/")
-
-# DATAFILE = {
-#     'FILENAME': 'MICRODADOS.csv',
-#     'SEP': ';',
-#     'ENCODING': 'latin1',
-#     'DATADIC': 'dictionary.md'}
-
-DATAFILE = {
-    "FILENAME": "MICRODADOS_BAIRROS.csv",
-    "SEP": ";",
-    "ENCODING": "latin1",
-    "DATADIC": "dictionary.md",
-}
-
-# DATAFILE = {
-#     'FILENAME': 'Arrecadacao_01-01-1998_a_31-12-2001.csv',
-#     'SEP': ',',
-#     'ENCODING': 'utf-8',
-#     'DATADIC': 'dictionary.md'}
+DATADIR = os.path.join(BASEDIR, "data")
 
 # Inicializa os nomes das colunas do dataset
 ID = "ID"
@@ -166,10 +147,6 @@ microdados_date_cols = [
     
 microdados_cat_cols = []
 
-mapa_microdados = {
-    'date_cols': microdados_date_cols,
-    'cat_cols': microdados_cat_cols,
-}
 
 # ############################################################################
 # REGISTROS DAS FONTES DE DADOS UTILIZADAS
@@ -183,6 +160,10 @@ MICRODADOS = {
     },
     "FORMAT": "csv",
     "DELIMITER": "",
+    "MAP": {
+        'date_cols': microdados_date_cols,
+        'cat_cols': microdados_cat_cols,
+    }
 }
 
 MICRODADOS_BAIRROS = {
@@ -193,6 +174,10 @@ MICRODADOS_BAIRROS = {
     },
     "FORMAT": "csv",
     "DELIMITER": "",
+    "MAP": {
+        'date_cols': [],
+        'cat_cols': [],
+    }
 }
 
 TIPO_ARRECADACAO = {
@@ -203,6 +188,10 @@ TIPO_ARRECADACAO = {
     },
     "FORMAT": "csv",
     "DELIMITER": "",
+    "MAP": {
+        'date_cols': [],
+        'cat_cols': [],
+    }
 }
 
 ARRECADACAO = {
@@ -217,6 +206,10 @@ ARRECADACAO = {
     },
     "FORMAT": "csv",
     "DELIMITER": "",
+    "MAP": {
+        'date_cols': [],
+        'cat_cols': [],
+    }
 }
 
 TRANSFERENCIAS = {
@@ -239,17 +232,25 @@ TRANSFERENCIAS = {
     },
     "FORMAT": "csv",
     "DELIMITER": "",
+    "MAP": {
+        'date_cols': [],
+        'cat_cols': [],
+    }
 }
 
 POPULACAO = {
     "NAME": "POPULACAO",
     "DESCRIPTION": "",
     "URLS": {
-        "POPULACAO_2018": os.path.join(DATADIR + "populacao_2018.csv"),
-        "POPULACAO_2019": os.path.join(DATADIR + "populacao_2019.csv"),
-        "POPULACAO_2020": os.path.join(DATADIR + "populacao_2020.csv"),
-        "POPULACAO_2021": os.path.join(DATADIR + "populacao_2021.csv"),
+        "POPULACAO_2018": os.path.join(DATADIR, "populacao_2018.csv"),
+        "POPULACAO_2019": os.path.join(DATADIR, "populacao_2019.csv"),
+        "POPULACAO_2020": os.path.join(DATADIR, "populacao_2020.csv"),
+        "POPULACAO_2021": os.path.join(DATADIR, "populacao_2021.csv"),
     },
     "FORMAT": "csv",
     "DELIMITER": "",
+    "MAP": {
+        'date_cols': [],
+        'cat_cols': [],
+    }
 }
