@@ -1,5 +1,5 @@
 # Mentoria DSA 2021 - Clã VUPS
-Projeto elaborado durante o Programa de Mentoria entre Alunos da **Data Science Academy**.
+Projeto elaborado durante o *Programa de Mentoria entre Alunos* da **Data Science Academy**.
 
 ![DSA](https://github.com/uallasleles/VUPS-MentoriaDSA2021/blob/76c2293beb6e3df1a377bf5fdc7784dc3b082f9b/app/base/static/assets/img/icons/banner-dsa.jpg)
 
