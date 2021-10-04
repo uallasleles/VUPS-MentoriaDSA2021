@@ -244,7 +244,7 @@ def which_file_exists(name):
 
 class datasets:
     def microdados(columns=None, nrows=None, dtype=None):
-        # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NOMES! ^^
+        # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NAMESPACES! ^^
         name = sys._getframe(  ).f_code.co_name.upper()
         filepath_or_buffer = which_file_exists(name)
         mapa = getattr(const, name).get("MAP")
@@ -253,8 +253,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=";",
-            encoding="ISO-8859-1",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -271,8 +271,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="ISO-8859-1",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -289,8 +289,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="utf-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -307,8 +307,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="utf-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -325,8 +325,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=";",
-            encoding="UTF-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -343,8 +343,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="UTF-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,

@@ -4,10 +4,12 @@ Programa de Mentoria DSA 2021
 """
 
 import pandas as pd
+import os
 import string
 import unicodedata
 from datetime import datetime
 import math
+from . import const
 
 
 def minMax(x):
@@ -85,9 +87,6 @@ def tratando_microdados(df):
     # Renomeando coluna DataDiagnostico
     df_calendar_new.rename(columns={'DataDiagnostico': 'date'}, inplace=True)
 
-    # transformando o dtype na coluna 'date' para datetime
-    df_calendar_new['date'] = df_calendar_new['date'].astype('datetime64[ns]')
-
     # --------- CRIANDO DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
     # df_calendar_closed -> filtrar pacientes com covid confirmados; groupby(Municipio, DataEncerramento); contar ocorrencias
     df_calendar_closed = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataEncerramento'])['DataCadastro'].size().reset_index(name='count_closed')
@@ -95,17 +94,11 @@ def tratando_microdados(df):
     # renomendo coluna DataEncerramento
     df_calendar_closed.rename(columns={'DataEncerramento': 'date'}, inplace=True)
 
-    # transformando o dtype na coluna 'date' para datetime
-    df_calendar_closed['date'] = df_calendar_closed['date'].astype('datetime64[ns]')
-
     # --------- CRIANDO DF_CALENDAR_OBITOS ---------
     df_calendar_obitos = df[(df['Classificacao']=='Confirmados') & (df['Evolucao'] == 'Óbito pelo COVID-19')].groupby(['Municipio','DataEncerramento'])['DataCadastro'].size().reset_index(name='count_obito')
 
     # renomendo coluna DataEncerramento
     df_calendar_obitos.rename(columns={'DataEncerramento': 'date'}, inplace=True)
-
-    # transformando o dtype na coluna 'date' para datetime
-    df_calendar_obitos['date'] = df_calendar_obitos['date'].astype('datetime64[ns]')
 
     # --------- MERGE ENTRE OS DFs CRIADOS ---------
     df_calendar_temp = pd.merge(df_calendar_new, df_calendar_closed, how='outer', left_on=['Municipio', 'date'], right_on=['Municipio', 'date'])
@@ -342,3 +335,196 @@ def tratando_dados_populacao():
    populacao_es['POPULAÇÃO ESTIMADA'] = [int(i.replace(',', '')) for i in populacao_es['POPULAÇÃO ESTIMADA']]
 
    populacao_es.to_parquet('path/populacao_es_tratado.parquet')
+
+
+def tratando_microdados(df):
+
+    # --------- FILTROS ---------
+   COLUMNS = ['DataCadastro', 'DataDiagnostico', 'DataEncerramento', 'Classificacao', 'Evolucao', 'Municipio']
+   #Municipios do ES
+   filtro_es = ['AGUIA BRANCA', 'ALTO RIO NOVO', 'ARACRUZ', 'BAIXO GUANDU',
+      'COLATINA', 'GOVERNADOR LINDENBERG', 'IBIRACU', 'JOAO NEIVA',
+      'LINHARES', 'MANTENOPOLIS', 'MARILANDIA', 'PANCAS', 'RIO BANANAL',
+      'SAO DOMINGOS DO NORTE', 'SAO GABRIEL DA PALHA',
+      'SAO ROQUE DO CANAA', 'SOORETAMA', 'VILA VALERIO',
+      'AFONSO CLAUDIO', 'BREJETUBA', 'CARIACICA', 'CONCEICAO DO CASTELO',
+      'DOMINGOS MARTINS', 'FUNDAO', 'GUARAPARI', 'IBATIBA', 'ITAGUACU',
+      'ITARANA', 'LARANJA DA TERRA', 'MARECHAL FLORIANO',
+      'SANTA LEOPOLDINA', 'SANTA MARIA DE JETIBA', 'SANTA TERESA',
+      'SERRA', 'VENDA NOVA DO IMIGRANTE', 'VIANA', 'VILA VELHA',
+      'VITORIA', 'AGUA DOCE DO NORTE', 'BARRA DE SAO FRANCISCO',
+      'BOA ESPERANCA', 'CONCEICAO DA BARRA', 'ECOPORANGA', 'JAGUARE',
+      'MONTANHA', 'MUCURICI', 'NOVA VENECIA', 'PEDRO CANARIO',
+      'PINHEIROS', 'PONTO BELO', 'SAO MATEUS', 'VILA PAVAO', 'ALEGRE',
+      'ALFREDO CHAVES', 'ANCHIETA', 'APIACA', 'ATILIO VIVACQUA',
+      'BOM JESUS DO NORTE', 'CACHOEIRO DE ITAPEMIRIM', 'CASTELO',
+      'DIVINO DE SAO LOURENCO', 'DORES DO RIO PRETO', 'GUACUI',
+      'IBITIRAMA', 'ICONHA', 'IRUPI', 'ITAPEMIRIM', 'IUNA',
+      'JERONIMO MONTEIRO', 'MARATAIZES', 'MIMOSO DO SUL', 'MUNIZ FREIRE',
+      'MUQUI', 'PIUMA', 'PRESIDENTE KENNEDY', 'RIO NOVO DO SUL',
+      'SAO JOSE DO CALCADO', 'VARGEM ALTA']
+
+
+   ############################################################################
+
+   # --------- CRIANDO DF_CALENDAR_NEW(CASOS NOVOS) ---------
+   #df_calendar_new -> filtrar pacientes com covid confirmados; groupby(Municipio, DataDiagnostico); contar ocorrencias
+   df_calendar_new = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataDiagnostico'])['DataCadastro'].size().reset_index(name='count_new')
+
+   #renomendo coluna DataDiagnostico
+   df_calendar_new.rename(columns={'DataDiagnostico': 'date'}, inplace=True)
+
+   #transformando o dtype na coluna 'date' para datetime
+   df_calendar_new['date'] = df_calendar_new['date'].astype('datetime64[ns]')
+
+   # --------- CRIANDO DF_CALENDAR_CLOSED(CASOS FECHADOS) ---------
+   #df_calendar_closed -> filtrar pacientes com covid confirmados; groupby(Municipio, DataEncerramento); contar ocorrencias
+   df_calendar_closed = df[df['Classificacao']=='Confirmados'].groupby(['Municipio','DataEncerramento'])['DataCadastro'].size().reset_index(name='count_closed')
+
+   #renomendo coluna DataEncerramento
+   df_calendar_closed.rename(columns={'DataEncerramento': 'date'}, inplace=True)
+
+   #transformando o dtype na coluna 'date' para datetime
+   df_calendar_closed['date'] = df_calendar_closed['date'].astype('datetime64[ns]')
+
+   # --------- CRIANDO DF_CALENDAR_OBITOS ---------
+   df_calendar_obitos = df[(df['Classificacao']=='Confirmados') & (df['Evolucao'] == 'Óbito pelo COVID-19')].groupby(['Municipio','DataEncerramento'])['DataCadastro'].size().reset_index(name='count_obito')
+
+   #renomendo coluna DataEncerramento
+   df_calendar_obitos.rename(columns={'DataEncerramento': 'date'}, inplace=True)
+
+   #transformando o dtype na coluna 'date' para datetime
+   df_calendar_obitos['date'] = df_calendar_obitos['date'].astype('datetime64[ns]')
+
+   # --------- MERGE ENTRE OS DFs CRIADOS ---------
+   df_calendar_temp = pd.merge(df_calendar_new, df_calendar_closed, how='outer', left_on=['Municipio', 'date'], right_on=['Municipio', 'date'])
+   df_calendar = pd.merge(df_calendar_temp, df_calendar_obitos, how='outer', left_on=['Municipio', 'date'], right_on=['Municipio', 'date'])
+
+   # --------- FILTRO DE DATAS ---------
+   #filtrando por período entre 2020 e 2021 (extrair dados com datas erradas)
+   df_calendar = df_calendar[(df_calendar['date'].dt.year>=2020) & (df_calendar['date'].dt.year<2022)]
+
+   # --------- DF DE DATAS AUXILIAR ---------
+   #criando df_date_aux para preencher o df_calendar com todas as datas do períodom, e fazendo o merge com o df_calendar por cidade
+   municipios = df_calendar['Municipio'].unique()
+
+   for i in municipios:
+       delta = df_calendar[df_calendar['Municipio']==i]['date'].max() - df_calendar[df_calendar['Municipio']==i]['date'].min()
+       df_date_aux = pd.DataFrame({'Municipio':i, 'date': pd.date_range(df_calendar[df_calendar['Municipio']==i]['date'].min(), periods=delta.days).tolist()})
+       df_calendar = pd.merge(df_calendar, df_date_aux, how='outer', left_on=['Municipio', 'date'], right_on=['Municipio', 'date'])
+
+   # --------- AJUSTANDO DF_CALENDAR ---------
+   #organizando por cidade/data
+   df_calendar = df_calendar.sort_values(["Municipio", "date"]).reset_index()
+   df_calendar = df_calendar.drop('index', axis=1)
+
+   # --------- DEALING WITH NAN ---------
+   #preenchendo Nan com zero(0)
+   for i in ['count_new', 'count_closed', 'count_obito']:
+       df_calendar[i] = df_calendar[i].fillna(0)
+
+   # --------- FEATURE ENGINEERING ---------
+   #criando coluna acumulado por cidade
+   municipios = df_calendar['Municipio'].unique()
+   acum = []
+   for idx, i in enumerate(df_calendar['date']):
+       if df_calendar['Municipio'].iloc[idx] == df_calendar['Municipio'].iloc[idx-1]:
+           try:
+               acum.append(acum[idx-1] + df_calendar['count_new'].iloc[idx] - df_calendar['count_closed'].iloc[idx])
+           except:
+               acum.append(df_calendar['count_new'].iloc[idx] - df_calendar['count_closed'].iloc[idx])
+       else:
+           acum.append(0 + df_calendar['count_new'].iloc[idx] - df_calendar['count_closed'].iloc[idx])
+
+   df_calendar['acum'] = acum
+
+   #criando coluna casos recuperados por cidade
+   df_calendar['recup'] = df_calendar['count_closed'] - df_calendar['count_obito']
+
+
+   #criando colunas de dia/semana/dia_da_semana/mes/ano
+   df_calendar['day'] = [i.day for i in df_calendar['date']]
+   df_calendar['week'] = [i.week for i in df_calendar['date']]
+   df_calendar['weekday'] = [i.weekday() for i in df_calendar['date']]
+   df_calendar['month'] = [i.month for i in df_calendar['date']]
+   df_calendar['year'] = [i.year for i in df_calendar['date']]
+
+
+   #---------- CRIANDO COLUNAS PARA SEREM UTILIZADAS NO PLOT DE RESUMO ----------
+   cidades = df_calendar['Municipio'].unique()
+
+   #--- TOTAL CASOS FATAIS ACUMULADOS POR DIA POR CIDADE ---
+   fatais = []
+   for i in cidades:
+       for j in range(len(df_calendar[df_calendar['Municipio']==i])):
+           if j == 0:
+               total = df_calendar[df_calendar['Municipio']==i]['count_obito'].iloc[j]
+               fatais.append(total)
+           else:
+               total = total+df_calendar[df_calendar['Municipio']==i]['count_obito'].iloc[j]
+               fatais.append(total)
+
+   df_calendar['fatais'] = fatais
+
+
+   #--- TOTAL CASOS CONFIRMADOS ACUMULADOS POR DIA POR CIDADE ---
+   confirmados = []
+   for i in cidades:
+       for j in range(len(df_calendar[df_calendar['Municipio']==i])):
+           if j == 0:
+               total = df_calendar[df_calendar['Municipio']==i]['count_new'].iloc[j]
+               confirmados.append(total)
+           else:
+               total = total+df_calendar[df_calendar['Municipio']==i]['count_new'].iloc[j]
+               confirmados.append(total)
+
+   df_calendar['confirmados'] = confirmados
+
+   #--- TOTAL CASOS RECUPERADOS ACUMULADOS POR DIA POR CIDADE ---
+   recuperados = []
+   for i in cidades:
+       for j in range(len(df_calendar[df_calendar['Municipio']==i])):
+           if j == 0:
+               total = df_calendar[df_calendar['Municipio']==i]['recup'].iloc[j]
+               recuperados.append(total)
+           else:
+               total = total+df_calendar[df_calendar['Municipio']==i]['recup'].iloc[j]
+               recuperados.append(total)
+
+   df_calendar['recuperados'] = recuperados
+
+
+   # --------- SALVANDO DADOS TRATADOS EM .PARQUET ---------
+   df_calendar.to_parquet(os.path.join(const.DATADIR, 'MICRODADOS_tratado.parquet'))
+
+
+def tratando_transferencias_estaduais(transferencias):
+
+   # mudando os codigos municipais errados das tres cidades com homonimos
+   # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
+   # * Presidente Kenedy (TO - 1718402) -> (ES - 3204302)
+   # * Viana (MA - 2112803) -> (ES - 3205101)
+   for i in range(len(transferencias)):
+       #Boa Esperança
+       if transferencias.loc[i, 'CodMunicipio'] == 3107109:
+           transferencias.loc[i, 'CodMunicipio'] = 3201001
+       #Presidente Kenedy
+       elif transferencias.loc[i, 'CodMunicipio'] == 1718402:
+           transferencias.loc[i, 'CodMunicipio'] = 3204302
+       #Viana
+       elif transferencias.loc[i, 'CodMunicipio'] == 2112803:
+           transferencias.loc[i, 'CodMunicipio'] = 3205101
+
+
+   #transformando colunas pertinentes em numbers
+   calumns_to_num = ['IcmsTotal', 'Ipi', 'Ipva', 'FundoReducaoDesigualdades']
+   for x in calumns_to_num:
+       transferencias[x] = [round(float(transferencias[x].iloc[i].replace(',', '.')), 2) for i in range(len(transferencias))]
+
+   #criando coluna de totais
+   transferencias['TotalRepassado'] = transferencias[calumns_to_num[0]] + transferencias[calumns_to_num[1]] + transferencias[calumns_to_num[2]] + transferencias[calumns_to_num[3]]
+
+   #criando coluna com datatype
+   transferencias['Data'] = [datetime(transferencias['Ano'].iloc[i], transferencias['Mes'].iloc[i], 28) for i in range(len(transferencias))]
+
+   transferencias.to_parquet(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet'))
