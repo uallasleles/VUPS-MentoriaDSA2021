@@ -1,4 +1,97 @@
-# VUPS Mentoria DSA 2021
+# Clã VUPS - Mentoria DSA 2021
+Projeto elaborado durante o Programa de Mentoria entre Alunos da **Data Science Academy**.
+
+![Alt text](app\base\static\assets\img\icons\banner-dsa.jpg "Data Science Academy")
+
+# Sobre a análise de dados.
+
+## Tópicos
+- Problema de Negócio
+- Contexto
+- Datasets
+- Variáveis
+- Ranking
+   - PCA
+      - Sinais Variáveis
+      - Teste Estatístico
+      - Escolha dos Fatores
+      - Calculo da Puntuação
+- Visualizações
+   - Comparação de Repasses
+   - Poder de Compra do Município
+   - Calendário de Casos
+   - Resumo COVID
+   - Mapa com Ranking
+
+## Problema de Negócio
+---
+Quais Municípios estão se saindo melhor em relação ao combate ao COVID-19?
+
+## Contexto
+---
+Foi definido que iríamos focar nossa análise em um único estado brasileiro, dado o tamnho continetal
+do nosso país. Como sugestão do nosso Mentor, original do estado do Espírito Santo, resolvemos delimitar
+escomo do nosso trabalho aos municípios do ES.
+
+Uma vez decidido os limites geográficos, definimos o escopo temporal do projeto. Por conta do tempo para conclusão
+do trabalho, decidimos que uma avaliação mensal do desempenho do municípios seria a melhor estratêgia.
+
+## Datasets
+---
+Datasets utilizados:
+* Dados hitóricos COVID (fonte: )
+* Dados históricos Vacinação COVID (fonte: )
+* Dados Populacionais (fonte: )
+* Repasses Estaduais (fonte: )
+
+## Ranking
+---
+Para avaliar o desempenho no combate à pendemia, decidimos criar um ranking dos municípios. O desafio era criar
+um sistema de avaliação que eliminasse a ponderação arbitrária. Para isso, usamos a soma do produto entre os fatores
+oriundos de uma PCA e suas variancias compartilhadas.
+
+#### Variáveis
+As variáveis analisadas foram:
+* Quantidade de casos (per capita) por mês;
+* Quantidade de óbitos (per capita) por mês;
+* Quantidade de casos recuperados (per capita) por mês;
+* Quantidade de doses de vacina (per capita) por mês;
+* Quantidade em dinheiro repassada pelo estado (per capita) por mês;
+
+#### Teste Estatístico
+Foi rodado o teste de esfericidade de Bartlett que apontou adequação estatística global do dataset para o modelo.
+
+#### Escolha dos Fatores
+Como o dataset era pequeno e não requeria muito poder computacional, decidimos por incluir todos os fatores no modelo,
+de maneira que as comunalidades de cada variável tiveram valor final igual a 1.
+
+#### Calculo da Puntuação
+O calculo da pontuação se deu pela soma do produto entre os fatores e a variancia compartilhada
+
+## Visualizações
+---
+
+### Comparação de Repasses
+Criamos uma visualização que fizesse com que o usuário podesse comparar os repasses dos municípios de maneira simples
+e objetiva. Duas formas de comparação foram criadas:
+* Comparação Nominal: valor bruto recebido pelos municípios
+* Comparação de variabilidade: quanto cada repasse variou de mês a més
+
+### Poder de Compra do Município
+Visualização que compara o valor recebido com a variação do indice IPCA. De maneira que o primeiro mês de análise
+serviu como base de calculo para os mêses subsequentes. Com essa informação, o usuário pode ter uma noção melhor do
+poder economico do município em relação ao combate da pandemia.
+
+### Calendário de Casos
+Visualização em forma de heatmap com formato de calendário. Tem com objetivo entender padrões de contagio do vírus.
+É interessante observar, por exemplo, a quantidade de casos novos 1 semana após feriados municipais (como em AFONSO
+CALUDIO no dia 20 de JANEIRO -> valores default da função).
+### Resumo COVID
+Visualização em linha com o numero de casos totais, obitos, recuperados e ativos, no tempo.
+
+### Mapa com Ranking
+Mapa com as divisões domunicípios e coloração referente ao posicionamento das cidades no ranking.
+
 
 # Sobre a ignição do projeto
 
@@ -55,10 +148,10 @@ $ source env/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
-Para inicializar a aplicação é necessário definir as variáveis de ambiente FLASK_APP e FLASK_ENV. 
-A variável FLASK_APP é usada para especificar como carregar o aplicativo.
-A variável FLASK_ENV define o ambiente em que o aplicativo Flask é executado (production ou development).
-Porém, utilizamos o dotenv do Flask para definir variáveis ​​de ambiente automaticamente, em vez de configurarmos cada vez que inicialimos a aplicação.
+Para inicializar a aplicação é necessário definir as variáveis de ambiente FLASK_APP e FLASK_ENV.  
+A variável FLASK_APP é usada para especificar como carregar o aplicativo.  
+A variável FLASK_ENV define o ambiente em que o aplicativo Flask é executado (production ou development).  
+Porém, utilizamos o dotenv do Flask para definir variáveis ​​de ambiente automaticamente, em vez de configurarmos cada vez que inicializamos a aplicação.
 
 As declarações manuais referente as instruções que foram automatizadas são as seguintes:
 ```bash
@@ -132,15 +225,15 @@ O projeto é codificado usando blueprints, app factory pattern, perfil de config
 
 <br />
 
-> The bootstrap flow
+> O fluxo bootstrap
 
-- `run.py` loads the `.env` file
-- Inicialize o aplicativo usando o perfil especificado: *Debug* ou *Production*
+- `run.py` carrega o arquivo `.env`.
+- Inicializa o aplicativo usando o perfil especificado: *Debug* ou *Production*
   - Se env.DEBUG está configurado para *True* o armazenamento SQLite é usado
   - Se env.DEBUG está configurado para *False* o driver de banco de dados especificado é usado (MySql, PostgreSQL)
-- Chame o método de criação de aplicativos `create_app` definido em app/__init__.py
-- Redirecione os usuários convidados para a página de Login
-- Desbloqueie as páginas servidas pelo blueprint *home* para usuários autenticados
+- Chama o método de criação de aplicativos `create_app` definido em app/__init__.py
+- Redireciona os usuários convidados para a página de Login
+- Desbloqueia as páginas servidas pelo blueprint *home* para usuários autenticados.
 
 <br />
 
@@ -217,49 +310,6 @@ O blueprint *Home* lida com as páginas do UI Kit para usuários autenticados. E
    |
    |-- ************************************************************************
 ```
-
-<br />
-
-## Recompile CSS
-
-Para recompilar arquivos SCSS, siga esta configuração:
-
-<br />
-
-**Passo #1** - Ferramentas de instalação
-
-- [NodeJS](https://nodejs.org/en/) 12.x or higher
-- [Gulp](https://gulpjs.com/) - globally 
-    - `npm install -g gulp-cli`
-- [Yarn](https://yarnpkg.com/) (optional) 
-
-<br />
-
-**Passo #2** - Mude o diretório de trabalho para a pasta `assets`
-
-```bash
-$ cd app/base/static/assets
-```
-
-<br />
-
-**Passo #3** - Instale os módulos (isso criará um diretório `node_modules` clássico)
-
-```bash
-$ npm install
-// OR
-$ yarn
-```
-
-<br />
-
-**Passo #4** - Editar e recompilar arquivos SCSS
-
-```bash
-$ gulp scss
-```
-
-O arquivo gerado é salvo no diretório `static/assets/css`.
 
 <br />
 
@@ -410,91 +460,3 @@ Visit `http://localhost:8001` in your browser. The app should be up & running.
 ```
 
 
-# Sobre a Análise do dados.
-
-## Tópicos
-- Problema de Negócio
-- Contexto
-- Datasets
-- Variáveis
-- Ranking
-   - PCA
-      - Sinais Variáveis
-      - Teste Estatístico
-      - Escolha dos Fatores
-      - Calculo da Puntuação
-- Visualizações
-   - Comparação de Repasses
-   - Poder de Compra do Município
-   - Calendário de Casos
-   - Resumo COVID
-   - Mapa com Ranking
-
-## Problema de Negócio
----
-Quais Municípios estão se saindo melhor em relação ao combate ao COVID-19?
-
-## Contexto
----
-Foi definido que iríamos focar nossa análise em um único estado brasileiro, dado o tamnho continetal
-do nosso país. Como sugestão do nosso Mentor, original do estado do Espírito Santo, resolvemos delimitar
-escomo do nosso trabalho aos municípios do ES.
-
-Uma vez decidido os limites geográficos, definimos o escopo temporal do projeto. Por conta do tempo para conclusão
-do trabalho, decidimos que uma avaliação mensal do desempenho do municípios seria a melhor estratêgia.
-
-## Datasets
----
-Datasets utilizados:
-* Dados hitóricos COVID (fonte: )
-* Dados históricos Vacinação COVID (fonte: )
-* Dados Populacionais (fonte: )
-* Repasses Estaduais (fonte: )
-
-## Ranking
----
-Para avaliar o desempenho no combate à pendemia, decidimos criar um ranking dos municípios. O desafio era criar
-um sistema de avaliação que eliminasse a ponderação arbitrária. Para isso, usamos a soma do produto entre os fatores
-oriundos de uma PCA e suas variancias compartilhadas.
-
-#### Variáveis
-As variáveis analisadas foram:
-* Quantidade de casos (per capita) por mês;
-* Quantidade de óbitos (per capita) por mês;
-* Quantidade de casos recuperados (per capita) por mês;
-* Quantidade de doses de vacina (per capita) por mês;
-* Quantidade em dinheiro repassada pelo estado (per capita) por mês;
-
-#### Teste Estatístico
-Foi rodado o teste de esfericidade de Bartlett que apontou adequação estatística global do dataset para o modelo.
-
-#### Escolha dos Fatores
-Como o dataset era pequeno e não requeria muito poder computacional, decidimos por incluir todos os fatores no modelo,
-de maneira que as comunalidades de cada variável tiveram valor final igual a 1.
-
-#### Calculo da Puntuação
-O calculo da pontuação se deu pela soma do produto entre os fatores e a variancia compartilhada
-
-## Visualizações
----
-
-### Comparação de Repasses
-Criamos uma visualização que fizesse com que o usuário podesse comparar os repasses dos municípios de maneira simples
-e objetiva. Duas formas de comparação foram criadas:
-* Comparação Nominal: valor bruto recebido pelos municípios
-* Comparação de variabilidade: quanto cada repasse variou de mês a més
-
-### Poder de Compra do Município
-Visualização que compara o valor recebido com a variação do indice IPCA. De maneira que o primeiro mês de análise
-serviu como base de calculo para os mêses subsequentes. Com essa informação, o usuário pode ter uma noção melhor do
-poder economico do município em relação ao combate da pandemia.
-
-### Calendário de Casos
-Visualização em forma de heatmap com formato de calendário. Tem com objetivo entender padrões de contagio do vírus.
-É interessante observar, por exemplo, a quantidade de casos novos 1 semana após feriados municipais (como em AFONSO
-CALUDIO no dia 20 de JANEIRO -> valores default da função).
-### Resumo COVID
-Visualização em linha com o numero de casos totais, obitos, recuperados e ativos, no tempo.
-
-### Mapa com Ranking
-Mapa com as divisões domunicípios e coloração referente ao posicionamento das cidades no ranking.
