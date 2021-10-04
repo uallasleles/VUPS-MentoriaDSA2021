@@ -726,9 +726,6 @@ def plot_calendar_heatmap(cidade="AFONSO CLAUDIO", tipo="NOVOS CASOS", mes_anali
     por fazer uso da base de dados MICRODADOS, que tem aproximadamente 500mb, a função tem demorado
     por volta de 1min:30s para ser executada (no meu computador).
 
-    PONTOS DE ATENÇÃO:
-    (linha 8): tive que comentar #import folium #import branca para conseguir rodar o script
-
     (linha 356): por algum motivo, a coluna 'DataEncerramento' não está sendo tratada (str -> datatype)
     automaticamente pela função criada pelo Uallas. Fiz um tratamento forçado para que conseguisse rodar
     a função
