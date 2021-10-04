@@ -55,6 +55,12 @@ $ source env/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
+Para inicializar a aplicação é necessário definir as variáveis de ambiente FLASK_APP e FLASK_ENV. 
+A variável FLASK_APP é usada para especificar como carregar o aplicativo.
+A variável FLASK_ENV define o ambiente em que o aplicativo Flask é executado (production ou development).
+Porém, utilizamos o dotenv do Flask para definir variáveis ​​de ambiente automaticamente, em vez de configurarmos cada vez que inicialimos a aplicação.
+
+As declarações manuais referente as instruções que foram automatizadas são as seguintes:
 ```bash
 # Configurar a variável de ambiente FLASK_APP
 
@@ -72,15 +78,16 @@ $ env:FLASK_APP = ".\run.py"
 # Configurar o ambiente para DEBUG (opcional)
 
 # (Unix/Mac) 
-$ export FLASK_ENV=development
+$ export FLASK_ENV=production
 
 # Windows (CMD) 
-> set FLASK_ENV=development
+> set FLASK_ENV=production
 
 # Windows (Powershell) 
-> env:FLASK_ENV = "development"
+> env:FLASK_ENV = "production"
 ```
 
+Após estas configurações você pode inicializar a aplicação.
 ```bash
 # Iniciar o Dashboard App 
 
