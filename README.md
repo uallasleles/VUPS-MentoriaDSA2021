@@ -1,7 +1,7 @@
 # Clã VUPS - Mentoria DSA 2021
 Projeto elaborado durante o Programa de Mentoria entre Alunos da **Data Science Academy**.
 
-![Alt text](app\base\static\assets\img\icons\banner-dsa.jpg "Title")
+![Alt text](app\base\static\assets\img\icons\banner-dsa.jpg "Data Science Academy")
 
 # Sobre a análise de dados.
 
@@ -225,15 +225,15 @@ O projeto é codificado usando blueprints, app factory pattern, perfil de config
 
 <br />
 
-> The bootstrap flow
+> O fluxo bootstrap
 
-- `run.py` loads the `.env` file
-- Inicialize o aplicativo usando o perfil especificado: *Debug* ou *Production*
+- `run.py` carrega o arquivo `.env`.
+- Inicializa o aplicativo usando o perfil especificado: *Debug* ou *Production*
   - Se env.DEBUG está configurado para *True* o armazenamento SQLite é usado
   - Se env.DEBUG está configurado para *False* o driver de banco de dados especificado é usado (MySql, PostgreSQL)
-- Chame o método de criação de aplicativos `create_app` definido em app/__init__.py
-- Redirecione os usuários convidados para a página de Login
-- Desbloqueie as páginas servidas pelo blueprint *home* para usuários autenticados
+- Chama o método de criação de aplicativos `create_app` definido em app/__init__.py
+- Redireciona os usuários convidados para a página de Login
+- Desbloqueia as páginas servidas pelo blueprint *home* para usuários autenticados.
 
 <br />
 
@@ -310,49 +310,6 @@ O blueprint *Home* lida com as páginas do UI Kit para usuários autenticados. E
    |
    |-- ************************************************************************
 ```
-
-<br />
-
-## Recompile CSS
-
-Para recompilar arquivos SCSS, siga esta configuração:
-
-<br />
-
-**Passo #1** - Ferramentas de instalação
-
-- [NodeJS](https://nodejs.org/en/) 12.x or higher
-- [Gulp](https://gulpjs.com/) - globally 
-    - `npm install -g gulp-cli`
-- [Yarn](https://yarnpkg.com/) (optional) 
-
-<br />
-
-**Passo #2** - Mude o diretório de trabalho para a pasta `assets`
-
-```bash
-$ cd app/base/static/assets
-```
-
-<br />
-
-**Passo #3** - Instale os módulos (isso criará um diretório `node_modules` clássico)
-
-```bash
-$ npm install
-// OR
-$ yarn
-```
-
-<br />
-
-**Passo #4** - Editar e recompilar arquivos SCSS
-
-```bash
-$ gulp scss
-```
-
-O arquivo gerado é salvo no diretório `static/assets/css`.
 
 <br />
 
