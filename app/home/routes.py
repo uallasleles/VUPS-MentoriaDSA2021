@@ -42,9 +42,10 @@ def dashboard():
         segment="dashboard",
         bubbles=get_plot_slider_bubbles(),
         gantt=get_plot_gantt(),
-        percentage_progress=get_plot_kpi_percentage_progress(),
-        spend_hours=get_plot_kpi_spend_hours(),
-        tcpi=get_plot_kpi_tcpi(),
+        kpi_confirmados=get_kpi_confirmados(),
+        kpi_descartados=get_kpi_descartados(),
+        kpi_suspeitos=get_kpi_suspeitos(),
+        kpi_obitos=get_kpi_obitos(),
         # taxs=get_plot_year_taxs(),
         tributos_cidades=get_plot_comp_tributos_cidades(),
         tributos_cidades_norm=get_plot_comp_tributos_cidades_norm(),
@@ -53,7 +54,7 @@ def dashboard():
         small_bar_percentage_progress=get_plot_small_bar_percentage_progress(),
         small_bar_spend_hours=get_plot_small_bar_spend_hours(),
         progress_actual_planned = get_plot_line_progress_actual_planned(),
-        kpi_obitos=get_plot_kpi_obitos(),
+        
         resumo = get_resumo()
     )
 
@@ -167,17 +168,17 @@ def refresh_kpi():
 ##############################################################################
 
 # KPI's
-def get_plot_kpi_percentage_progress():
-    return json.dumps(obj=graphs.plot_kpi_percentage_progress(), cls=utils.PlotlyJSONEncoder)
+def get_kpi_confirmados():
+    return json.dumps(obj=graphs.kpi_confirmados(), cls=utils.PlotlyJSONEncoder)
 
-def get_plot_kpi_spend_hours():
-    return json.dumps(obj=graphs.plot_kpi_spend_hours(), cls=utils.PlotlyJSONEncoder)
+def get_kpi_descartados():
+    return json.dumps(obj=graphs.kpi_descartados(), cls=utils.PlotlyJSONEncoder)
 
-def get_plot_kpi_tcpi():
-    return json.dumps(obj=graphs.plot_kpi_tcpi(), cls=utils.PlotlyJSONEncoder)
+def get_kpi_suspeitos():
+    return json.dumps(obj=graphs.kpi_suspeitos(), cls=utils.PlotlyJSONEncoder)
 
-def get_plot_kpi_obitos():
-    return json.dumps(obj=graphs.plot_kpi_obitos(), cls=utils.PlotlyJSONEncoder)
+def get_kpi_obitos():
+    return json.dumps(obj=graphs.kpi_obitos(), cls=utils.PlotlyJSONEncoder)
 
 # Pimpão ##############################################################
 def get_plot_comp_tributos_cidades(lista=[]):

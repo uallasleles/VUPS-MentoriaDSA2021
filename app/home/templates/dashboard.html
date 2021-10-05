@@ -30,7 +30,7 @@
     <!-- ROW KPIS's ========================================== -->
     <div class="d-flex flex-row justify-content-around mb-4 mt-4">
 
-        <!-- KPI 1 -->
+        <!-- KPI 1 - CONFIRMADOS -->
         <div class="col-sm bg-soft">
             <div>
                 <div class="card-body" style="border-radius: 10px 10px 0px 0px; background: #374151; padding-top: 5px; width: 200px; height: 36px;">
@@ -38,7 +38,7 @@
                         Confirmados
                     </h3>
                 </div>
-                <div id="kpi_populacao" class="chart" value="{{ resumo.get('n_confirmados') }}"></div>
+                <div id="kpi_confirmados" class="chart" value="{{ resumo.get('n_confirmados') }}"></div>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
                         Descartados
                     </h3>
                 </div>
-                <div id="kpi_casos" class="chart"></div>
+                <div id="kpi_descartados" class="chart"></div>
             </div>
         </div>
 
@@ -62,7 +62,7 @@
                         Suspeitos
                     </h3>
                 </div>
-                <div id="kpi_recuperados" class="chart"></div>
+                <div id="kpi_suspeitos" class="chart"></div>
             </div>
         </div>
 
@@ -474,9 +474,9 @@
         })
     });
 
-    Plotly.newPlot('kpi_populacao', {{ percentage_progress | safe }});
-    Plotly.newPlot('kpi_casos', {{ spend_hours | safe }});
-    Plotly.newPlot('kpi_recuperados', {{ tcpi | safe }});
+    Plotly.newPlot('kpi_confirmados', {{ kpi_confirmados | safe }});
+    Plotly.newPlot('kpi_descartados', {{ kpi_descartados | safe }});
+    Plotly.newPlot('kpi_suspeitos', {{ kpi_suspeitos | safe }});
     Plotly.newPlot('kpi_obitos', {{ kpi_obitos | safe }});
 
 
