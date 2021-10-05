@@ -314,7 +314,7 @@ def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARI
     import numpy as np
     import datetime
 
-    transferencias = pd.read_parquet('path/transf_estadual_tratado.parquet') #uallas ver path do arquivo
+    transferencias = pd.read_parquet(const.'transf_estadual_tratado.parquet') #uallas ver path do arquivo
     populacao_es = pd.read_parquet('path/populacao_es_tratado.parquet') #uallas ver path do arquivo
 
 
