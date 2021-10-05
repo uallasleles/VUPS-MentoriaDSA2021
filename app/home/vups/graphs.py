@@ -1914,8 +1914,8 @@ def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARI
 def plot_mapa():
 
     if os.path.isfile(os.path.join(const.DATADIR, 'ranking_total.parquet')) == False:
-        microdados = vups.datasets.microdados()
-        vups_utils.tratando_microdados(microdados)
+        ranking = vups.datasets.microdados()
+        vups_utils.tratando_microdados(ranking)
     df_calendar = pd.read_parquet(os.path.join(const.DATADIR, 'ranking_total.parquet'))
 
     ranking_total = pd.read_parquet('ranking_total.parquet')

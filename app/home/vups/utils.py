@@ -597,7 +597,6 @@ def tratando_dados_populacao(populacao_2018, populacao_2019, populacao_2020, pop
    #salvando df para usar em outro notebook
    df_tipo_cidade.to_parquet("path/vacinas_tratado.parquet") # uallas -> ver path
 
-
 def tratando_dados_ranking_pre_pca():
    import pandas as pd
    import numpy as np
@@ -704,3 +703,37 @@ def tratando_dados_ranking_pre_pca():
    meses = ['janeiro', 'fevereiro', 'marco', 'abril']
    for i in range(1,5):
        df_pca_pc[(df_pca_pc['Ano'] == 2021) & (df_pca_pc['Mes'] == i)].to_csv('path/df_pca_' + meses[i-1] + '.csv') # uallas -> ajusta path dos arquivos (deixar formato .csv)
+
+def tratando_ranking_geoplot():
+   import numpy as np
+   import pandas as pd
+   import json
+   import math
+
+   # arquivos oriundos dos scripts R
+   ranking_janeiro_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_janeiro_21.parquet') # uallas -> ver path do arquivo
+   ranking_fevereiro_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_fevereiro_21.parquet') # uallas -> ver path do arquivo
+   ranking_marco_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_marco_21.parquet') # uallas -> ver path do arquivo
+   ranking_abril_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_abril_21.parquet') # uallas -> ver path do arquivo
+
+   ranking_janeiro_21['Mes_desc'] = 'Jan/2021'
+   ranking_fevereiro_21['Mes_desc'] = 'Fev/2021'
+   ranking_marco_21['Mes_desc'] = 'Mar/2021'
+   ranking_abril_21['Mes_desc'] = 'Abr/2021'
+
+   ranking_total = pd.concat([ranking_janeiro_21, ranking_fevereiro_21, ranking_marco_21, ranking_abril_21])
+   ranking_total.to_parquet('path/ranking_total.parquet') # uallas -> ver caminho do arquivo
+
+
+def tratando_GEOjason():
+   f = open('path/Limite_Municipal_2018.json',) # uallas -> ver caminho do arquivo
+   geofile = json.load(f)
+
+   for i in range(len(geofile['features'])):
+    for j in range(len(geofile['features'][i]['geometry']['coordinates'][0])):
+        zone = 24
+        lat = geofile['features'][i]['geometry']['coordinates'][0][j][0]
+        lon = geofile['features'][i]['geometry']['coordinates'][0][j][1]
+        geofile['features'][i]['geometry']['coordinates'][0][j] = utmToLatLng(zone, lat, lon)
+
+   geofile.to_parquet('path/mapa.parquet') # uallas -> ver caminho do arquivo
