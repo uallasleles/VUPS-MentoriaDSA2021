@@ -46,7 +46,7 @@ def kpi_confirmados():
     return fig_c1
 
 def kpi_descartados():
-    """    
+    """
     Baseline:
     """
     fig_c2 = go.Figure(
@@ -1564,8 +1564,7 @@ def plot_tributos_ipca(cidade='AFONSO CLAUDIO'):
 
     return fig
 
-
-def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
+def plot_comp_tributos_cidades__(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
     # import pandas as pd
     # import datetime
 
@@ -1695,7 +1694,51 @@ def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA",
 
     return fig
 
-def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
+def plot_comp_tributos_cidades(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARIACICA', 'GUARAPARI', 'LINHARES', 'PIUMA']):
+
+    if os.path.isfile(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet')) == False:
+        transferencias = vups.datasets.transferencias()
+        vups_utils.tratando_transferencias_estaduais(transferencias)
+    transferencias = pd.read_parquet(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet'))
+
+    if os.path.isfile(os.path.join(const.DATADIR, 'populacao_es_tratado.parquet')) == False:
+        populacao = vups.datasets.populacao()
+        vups_utils.tratando_dados_populacao(populacao)
+    populacao_es = pd.read_parquet(os.path.join(const.DATADIR, 'populacao_es_tratado.parquet'))
+
+
+    boolean_series = transferencias['NomeMunicipio'].isin(list_cidades)
+    df_repasse = transferencias[boolean_series][['NomeMunicipio', 'CodMunicipio', 'TotalRepassado', 'Data', 'Ano']]
+
+    codigos = []
+    for i in list_cidades:
+        cod = transferencias[transferencias['NomeMunicipio'] == i]['CodMunicipio'].iloc[0]
+        codigos.append(cod)
+
+    boolean_series = populacao_es['COD.GERAL'].isin(codigos)
+    df_pop = populacao_es[boolean_series][['COD.GERAL', 'POPULAÇÃO ESTIMADA', 'ANO']]
+
+    #merge
+    df = df_repasse.merge(df_pop, how= 'inner', left_on=['CodMunicipio', 'Ano'], right_on=['COD.GERAL', 'ANO'])
+    df = df.drop(columns=['COD.GERAL'])
+
+    #column arrec_percapita
+    df['RepassPercapita'] = [round(df['TotalRepassado'].iloc[i]/df['POPULAÇÃO ESTIMADA'].iloc[0], 2) for i in range(len(df))]
+
+    #plot percapita
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
+    for i in range(len(list_cidades)):
+        fig.add_trace(go.Scatter(y=df[df['NomeMunicipio']==list_cidades[i]]['RepassPercapita'],
+                                 x=df[df['NomeMunicipio']==list_cidades[i]]['Data'],
+                                 mode='lines',
+                                 name=list_cidades[i]))
+
+
+    return fig
+
+def plot_comp_tributos_cidades_norm__(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
 
     # Obtendo os dados
     # ==========================================
@@ -1823,6 +1866,89 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
     'paper_bgcolor': 'rgba(0,0,0,0)',
     })
 
+    return fig
+
+def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARIACICA', 'GUARAPARI', 'LINHARES', 'PIUMA']):
+
+    if os.path.isfile(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet')) == False:
+        transferencias = vups.datasets.transferencias()
+        vups_utils.tratando_transferencias_estaduais(transferencias)
+    transferencias = pd.read_parquet(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet'))
+
+    if os.path.isfile(os.path.join(const.DATADIR, 'populacao_es_tratado.parquet')) == False:
+        populacao_es = vups.datasets.populacao()
+        vups_utils.tratando_dados_populacao(populacao)
+    populacao_es = pd.read_parquet(os.path.join(const.DATADIR, 'populacao_es_tratado.parquet'))
+
+
+    boolean_series = transferencias['NomeMunicipio'].isin(list_cidades)
+    df_repasse = transferencias[boolean_series][['NomeMunicipio', 'CodMunicipio', 'TotalRepassado', 'Data', 'Ano']]
+
+    codigos = []
+    for i in list_cidades:
+        cod = transferencias[transferencias['NomeMunicipio'] == i]['CodMunicipio'].iloc[0]
+        codigos.append(cod)
+
+    boolean_series = populacao_es['COD.GERAL'].isin(codigos)
+    df_pop = populacao_es[boolean_series][['COD.GERAL', 'POPULAÇÃO ESTIMADA', 'ANO']]
+
+    #merge
+    df = df_repasse.merge(df_pop, how= 'inner', left_on=['CodMunicipio', 'Ano'], right_on=['COD.GERAL', 'ANO'])
+    df = df.drop(columns=['COD.GERAL'])
+
+    #column arrec_percapita
+    df['RepassPercapita'] = [round(df['TotalRepassado'].iloc[i]/df['POPULAÇÃO ESTIMADA'].iloc[i], 2) for i in range(len(df))]
+
+    #plot percapita normalizado
+    import plotly.graph_objects as go
+
+    fig = go.Figure()
+    for i in range(len(list_cidades)):
+        fig.add_trace(go.Scatter(y=df[df['NomeMunicipio']==list_cidades[i]]['RepassPercapita']/df[df['NomeMunicipio']==list_cidades[i]]['RepassPercapita'].iloc[0]*100,
+                                 x=df[df['NomeMunicipio']==list_cidades[i]]['Data'],
+                                 mode='lines',
+                                 name=list_cidades[i]))
+
+    return fig
+
+def plot_mapa():
+
+    if os.path.isfile(os.path.join(const.DATADIR, 'ranking_total.parquet')) == False:
+        microdados = vups.datasets.microdados()
+        vups_utils.tratando_microdados(microdados)
+    df_calendar = pd.read_parquet(os.path.join(const.DATADIR, 'ranking_total.parquet'))
+
+    ranking_total = pd.read_parquet('ranking_total.parquet')
+    geofile = pd.read_parquet('path/mapa.parquet')
+    fig = px.choropleth_mapbox(ranking_total, geojson=geofile, color="Ranking",
+                               locations="CodigoMunicipal", featureidkey="properties.cod_ibge",
+                               center={"lat": -19.7, "lon": -40.5},
+                               mapbox_style="carto-positron", zoom=6,
+                               hover_name='Municipio',
+                               color_continuous_scale='RdYlGn',
+                               opacity=0.9,
+                               animation_frame="Mes_desc")
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    fig.update_coloraxes(cauto=False, cmin = 78, cmax = 1)
+    return fig
+    #RdYlGn
+    #blues_r
+
+def plot_resumo(cidade='all'):
+    import pandas as pd
+    import plotly.express as px
+
+    if cidades == 'all':
+        df_casos = df_casos.groupby('date')[['acum', 'fatais', 'confirmados', 'recuperados']].sum()
+        fig = px.line(df_casos[df_casos['date']<=datetime(2021, 7, 1)],
+              x="date", y=["acum", 'fatais', 'confirmados', 'recuperados'],
+              #color_discrete_sequence=['yellow', 'grey', 'red', 'green'],
+              title='Dados Acumulativos')
+    else:
+        fig = px.line(df_casos[(df_casos['Municipio']==cidade) & (df_casos['date']<=datetime(2021, 7, 1))],
+              x="date", y=["acum", 'fatais', 'confirmados', 'recuperados'],
+              #color_discrete_sequence=['yellow', 'grey', 'red', 'green'],
+              title='Dados Acumulativos')
     return fig
 
 def plot_n_pessoas_por_sintomas():

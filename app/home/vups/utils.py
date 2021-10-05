@@ -51,7 +51,7 @@ def group_by(df, col):
     return(grouped)
 
 
-def tratando_microdados(df):
+def tratando_microdados__(df):
 
     # --------- FILTROS ---------
     COLUMNS = ['DataCadastro', 'DataDiagnostico', 'DataEncerramento', 'Classificacao', 'Evolucao', 'Municipio']
@@ -255,15 +255,7 @@ def utmToLatLng(zone, easting, northing, northernHemisphere=False):
    return [longitude, latitude]
 
 
-def tratando_transferencias_estaduais(transferencias):
-   import pandas as pd
-
-   # >>>>>>>>>>>>>>IMPORTAR AQUI DF POR FUNCAO<<<<<<<<<<<<<<<<<<
-
-   # transferencias = uallas -> ver se algum tratamento que esta sendo feito aqui, ja esta sendo feito pela sua funcao
-
-   #############################################################
-
+def tratando_transferencias_estaduais__(transferencias):
 
    # mudando os codigos municipais errados das tres cidades com homonimos
    # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
@@ -295,8 +287,7 @@ def tratando_transferencias_estaduais(transferencias):
    transferencias.to_parquet('path/transf_estadual_tratado.parquet') # uallas -> ver path
 
 
-def tratando_dados_populacao():
-   import pandas as pd
+def tratando_dados_populacao__():
 
    # populacao_2018 = pd.read_csv('../dados/originais/populacao_2018.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
    # populacao_2019 = pd.read_csv('../dados/originais/populacao_2019.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
@@ -528,3 +519,188 @@ def tratando_transferencias_estaduais(transferencias):
    transferencias['Data'] = [datetime(transferencias['Ano'].iloc[i], transferencias['Mes'].iloc[i], 28) for i in range(len(transferencias))]
 
    transferencias.to_parquet(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet'))
+
+def tratando_dados_populacao(populacao_2018, populacao_2019, populacao_2020, populacao_2021):
+   import pandas as pd
+
+   ##populacao_2018 = pd.read_csv('../dados/originais/populacao_2018.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+   ##populacao_2019 = pd.read_csv('../dados/originais/populacao_2019.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+   ##populacao_2020 = pd.read_csv('../dados/originais/populacao_2020.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+   ##populacao_2021 = pd.read_csv('../dados/originais/populacao_2021.csv')[['UF', 'COD. UF', 'COD. MUNIC', 'NOME DO MUNICÍPIO', 'POPULAÇÃO ESTIMADA']]
+
+   #filtro
+   ##populacao_es_2018 = populacao_2018[populacao_2018['UF']=='ES']
+   ##populacao_es_2019 = populacao_2019[populacao_2019['UF']=='ES']
+   ##populacao_es_2020 = populacao_2020[populacao_2020['UF']=='ES']
+   ##populacao_es_2021 = populacao_2021[populacao_2021['UF']=='ES']
+
+
+   #>>>>>>>>>>>>>>>>>>>>> ADICIONAR DF VIA FUNCAO AQUI <<<<<<<<<<<<<<<<<<<
+
+   # populacao =
+   ########################################################################
+
+   # ----------------- CODIGO ADICIONAL NO TRATAMENTO PRÉ CONCATENACAO --------------- uallas -> acho que vamos ter que adionar esse pedaço na tua funcao de tratamento pois precisa ser antes do concat
+   # Criando coluna código
+   ano = 2018
+   for x in [populacao_es_2018, populacao_es_2019, populacao_es_2020, populacao_es_2021]:
+       x['COD.GERAL'] = [int(str(int(x['COD. UF'].iloc[i])) + '00' +
+                                   str(int(x['COD. MUNIC'].iloc[i])))
+                                   if len(str(int(x['COD. MUNIC'].iloc[i]))) < 4
+                                   else int(str(int(x['COD. UF'].iloc[i])) + '0' +
+                                   str(int(x['COD. MUNIC'].iloc[i]))) for i in range(len(x))]
+       x['ANO'] = ano
+       ano += 1
+
+   # -----------------------------------------------------------------------------------
+   #merge
+   ##populacao_es = pd.concat([populacao_es_2018, populacao_es_2019, populacao_es_2020, populacao_es_2021], ignore_index=True)
+
+   #transformando populacao estimanda em int
+   populacao_es['POPULAÇÃO ESTIMADA'] = [int(i.replace(',', '')) for i in populacao_es['POPULAÇÃO ESTIMADA']]
+
+   populacao_es.to_parquet('path/populacao_es_tratado.parquet')
+
+   def tratando_dados_vacina():
+
+   import pandas as pd
+   import numpy as np
+
+   #o arquivo de vacinas é composto por 11 arquivos que precisam ser concatenadods em um arquivo parquet
+   df = pd.read_parquet("path/vacinas_original.parquet") # uallas -> ver path do arquivo
+
+   #----- AJUSTANDO COLUNAS -----
+   #valores str vieram cheios de espacos em branco
+   df['EstabelecimentoUF'] = df['EstabelecimentoUF'].str.strip()
+
+   #transformando em datatype
+   df['DataAplicacao'] = df['DataAplicacao'].astype('datetime64[ns]')
+
+   #criando coluna de ano e mes
+   df['Ano'] = [i.year for i in df['DataAplicacao']]
+   df['Mes'] = [i.month for i in df['DataAplicacao']]
+
+   #----- AGRUPANDO VACINAS POR TIPO E POR CIDADE -----
+   df_tipo_cidade = df[df['EstabelecimentoUF']=='ES'].groupby(['EstabelecimentoMunicipio', 'Ano', 'Mes', 'Vacina'])['Dose'].count().reset_index()
+
+   #ajustando nome das vacinas
+   vacinas = ['Covishield', 'Coronavac', 'Pfizer', 'AstraZeneca', 'Janssen']
+   for idx, i in enumerate(df_tipo_cidade['Vacina']):
+       for j in vacinas:
+           if j in i:
+               df_tipo_cidade.loc[idx, 'Vacina'] = j
+               pass
+
+   #Alguma cidade ficou com a AstraZeneca duplicada. Vamos rodar groupby() mais uma vez para arrumar
+   df_tipo_cidade = df_tipo_cidade.groupby(['EstabelecimentoMunicipio', 'Ano', 'Mes', 'Vacina'])['Dose'].sum().reset_index()
+
+   #salvando df para usar em outro notebook
+   df_tipo_cidade.to_parquet("path/vacinas_tratado.parquet") # uallas -> ver path
+
+
+def tratando_dados_ranking_pre_pca():
+   import pandas as pd
+   import numpy as np
+
+   vacinas = pd.read_parquet("path/vacinas_tratado.parquet") # uallas -> verificar paths dos arquivos
+   populacao = pd.read_parquet("path/populacao_es_tratado.parquet")
+   repasses = pd.read_parquet("path/treated_data/transf_estadual_tratado.parquet")
+   casos = pd.read_parquet("path/MICRODADOS_tratado.parquet")
+
+   # ----- VACINAS -----
+   #valores str vieram cheios de espacos em branco
+   vacinas['EstabelecimentoMunicipio'] = vacinas['EstabelecimentoMunicipio'].str.strip()
+
+   #criando codigo municipal para o df de vacinas
+   dict_cod_municipio = {}
+   for i in repasses['NomeMunicipio'].unique():
+       dict_cod_municipio[i] = repasses[repasses['NomeMunicipio'] == i]['CodMunicipio'].iloc[0]
+
+   #criando df
+   df_codMunicipal = pd.DataFrame.from_dict({'cidades': list(dict_cod_municipio.keys()), 'cod': list(dict_cod_municipio.values())})
+   df_codMunicipal['cidades']=vacinas['EstabelecimentoMunicipio'].unique()
+
+   #merge
+   vacinas_cod = pd.merge(
+       vacinas,
+       df_codMunicipal[['cidades', 'cod']],
+       how ='left',
+       left_on  = ['EstabelecimentoMunicipio'],
+       right_on = ['cidades'])
+
+   #dropando coluna de cidades (duplicado)
+   vacinas_cod.drop('cidades', axis='columns', inplace=True)
+
+   #decidimos nao urilizar o tipo de vacina como uma variavel, por esse motivo utilizaremos o total de vacinas
+   vacinas_pca = vacinas_cod.groupby(['EstabelecimentoMunicipio', 'cod', 'Ano', 'Mes'])['Dose'].sum().reset_index()
+
+   # ----- CASOS COVID -----
+   #agrupando info
+   casos_temp =  casos.groupby(['Municipio', 'year', 'month'])['count_new', 'count_obito', 'recup'].sum().reset_index()
+   #merge
+   casos_pca = pd.merge(
+       casos_temp,
+       df_codMunicipal[['cidades', 'cod']],
+       how ='left',
+       left_on  = ['Municipio'],
+       right_on = ['cidades'])
+
+   # ----- REPASSE ESTADUAL -----
+   repasses_pca = repasses[['CodMunicipio','NomeMunicipio', 'TotalRepassado', 'Ano', 'Mes']]
+
+   # ----- POPULACAO -----
+   populacao_pca = populacao[['COD.GERAL', 'POPULAÇÃO ESTIMADA', 'ANO']]
+
+   # ---------- MERGE DFs TRATADOS ----------
+   df_pca = pd.merge(casos_pca, vacinas_pca, how='left', left_on=['cod', 'year', 'month'], right_on=['cod', 'Ano', 'Mes'])
+   df_pca = pd.merge(df_pca, repasses_pca, how='left', left_on=['cod', 'year', 'month'], right_on=['CodMunicipio', 'Ano', 'Mes'])
+   df_pca = pd.merge(df_pca, populacao_pca, how='left', left_on=['cod', 'year'], right_on=['COD.GERAL', 'ANO'])
+
+   #drop de colunas
+   df_pca.drop(['cidades','EstabelecimentoMunicipio', 'Ano_x', 'Mes_x',
+          'CodMunicipio', 'NomeMunicipio', 'Ano_y', 'Mes_y',
+          'COD.GERAL', 'ANO'], axis = 'columns', inplace=True)
+
+   #renomeando colunas
+   df_pca.rename(columns={'year': 'Ano',
+                          'month': 'Mes',
+                          'cod': 'CodigoMunicipal',
+                          'count_new': 'CasosNovos',
+                          'count_obito': 'Obitos',
+                          'recup': 'Recuperados',
+                          'Dose': 'QtdDoses',
+                          'TotalRepassado':'RepasseEstadual',
+                          'POPULAÇÃO ESTIMADA': 'PopulacaoEstimada'}, inplace=True)
+
+   # ---------- FILTRANDO DATAFRAME PARA PERIODOS SEM NAN ----------
+   df_pca = df_pca[(df_pca['Ano'] == 2021) & (df_pca['Mes'].isin(range(1,5)))].reset_index()
+
+   # substituindo valores = 0 por 0.1
+   atributos = ['CasosNovos', 'Obitos', 'Recuperados', 'QtdDoses']
+   for i in atributos:
+       for j in range(len(df_pca)):
+           if df_pca[i].iloc[j] == 0:
+               df_pca[i].iloc[j] = 0.1
+           else:
+               pass
+
+   # ---------- CRIANDO DF PER CAPITA ---------
+   #criando df per capita
+   df_pca_pc = df_pca[['Municipio', 'CodigoMunicipal', 'Ano', 'Mes']].copy()
+
+   #funcao para criar colunas per capita a partir do df original
+   def divide_por_popuacao(col, pop, i):
+       try:
+           return col.iloc[i]/pop.iloc[i]
+       except:
+           return col.iloc[i]
+
+   #criando novas colunas a partir da funcao criada
+   colunas = ['CasosNovos', 'Obitos', 'Recuperados', 'QtdDoses', 'RepasseEstadual']
+   for x in colunas:
+       df_pca_pc[x + '_pc'] = [divide_por_popuacao(df_pca[x], df_pca['PopulacaoEstimada'], i) for i in range(len(df_pca))]
+
+   #--- SALVANDO ARQUIVO PER CAPITA POR MES PARA RODAR PCA PARA CADA CASO ---
+   meses = ['janeiro', 'fevereiro', 'marco', 'abril']
+   for i in range(1,5):
+       df_pca_pc[(df_pca_pc['Ano'] == 2021) & (df_pca_pc['Mes'] == i)].to_csv('path/df_pca_' + meses[i-1] + '.csv') # uallas -> ajusta path dos arquivos (deixar formato .csv)
