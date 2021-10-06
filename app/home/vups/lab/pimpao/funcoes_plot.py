@@ -314,7 +314,7 @@ def plot_comp_tributos_cidades_norm(list_cidades = ['ARACRUZ', 'ANCHIETA', 'CARI
     import numpy as np
     import datetime
 
-    transferencias = pd.read_parquet('path/transf_estadual_tratado.parquet') #uallas ver path do arquivo
+    transferencias = pd.read_parquet(const.'transf_estadual_tratado.parquet') #uallas ver path do arquivo
     populacao_es = pd.read_parquet('path/populacao_es_tratado.parquet') #uallas ver path do arquivo
 
 
@@ -376,6 +376,8 @@ def plot_resumo(cidade='all'):
     import pandas as pd
     import plotly.express as px
 
+    df_casos = pd.DataFrame() # coloquei só pra não dar erro, mas esse cdata frame não foi criado
+    
     if cidades == 'all':
         df_casos = df_casos.groupby('date')[['acum', 'fatais', 'confirmados', 'recuperados']].sum()
         fig = px.line(df_casos[df_casos['date']<=datetime(2021, 7, 1)],

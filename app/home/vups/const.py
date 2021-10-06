@@ -7,6 +7,8 @@ import json
 # Constantes
 APP_LOGO = "imagens/logo.png"
 MAPPING_FILE = "config/mapeamento_campos_dataset.json"
+BASEDIR = os.path.dirname(os.path.dirname(__file__))
+DATADIR = os.path.join(BASEDIR, "data")
 
 # ABSPATH = os.path.abspath('.')
 # BASENAME = os.path.basename('.')
@@ -14,9 +16,6 @@ MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 # COMMONPREFIX = os.path.commonprefix('.')
 # DIRNAME = os.path.dirname(__file__)
 # REALPATH = os.path.realpath('.')
-
-BASEDIR = os.path.dirname(os.path.dirname(__file__))
-DATADIR = os.path.join(BASEDIR, "data")
 
 # Inicializa os nomes das colunas do dataset
 ID = "ID"
@@ -154,12 +153,14 @@ microdados_cat_cols = []
 
 MICRODADOS = {
     "NAME": "MICRODADOS",
+    "TITLE": "",
     "DESCRIPTION": "",
     "URLS": {
         "MICRODADOS": "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv",
     },
     "FORMAT": "csv",
-    "DELIMITER": "",
+    "DELIMITER": ";",
+    "ENCODING": "ISO-8859-1",
     "MAP": {
         'date_cols': microdados_date_cols,
         'cat_cols': microdados_cat_cols,
@@ -168,12 +169,14 @@ MICRODADOS = {
 
 MICRODADOS_BAIRROS = {
     "NAME": "MICRODADOS_BAIRROS",
+    "TITLE": "",
     "DESCRIPTION": "",
     "URLS": {
         "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
     },
     "FORMAT": "csv",
-    "DELIMITER": "",
+    "DELIMITER": ",",
+    "ENCODING": "ISO-8859-1",
     "MAP": {
         'date_cols': [],
         'cat_cols': [],
@@ -182,12 +185,14 @@ MICRODADOS_BAIRROS = {
 
 TIPO_ARRECADACAO = {
     "NAME": "TIPO_ARRECADACAO",
+    "TITLE": "",
     "DESCRIPTION": "Dados referentes ao tipo de arrecadação dos tributos estaduais",
     "URLS": {
         "TipoArrecadacao": "https://drive.economia.gov.br/owncloud/index.php/s/OEehiiL427jBp7C/download",
     },
     "FORMAT": "csv",
-    "DELIMITER": "",
+    "DELIMITER": ",",
+    "ENCODING": "UTF-8",
     "MAP": {
         'date_cols': [],
         'cat_cols': [],
@@ -196,6 +201,7 @@ TIPO_ARRECADACAO = {
 
 ARRECADACAO = {
     "NAME": "ARRECADACAO",
+    "TITLE": "",
     "DESCRIPTION": "Dados referentes aos boletins de arrecadação dos tributos estaduais",
     "URLS": {
         "Arrecadacao_01-01-1998_a_31-12-2001": "https://drive.economia.gov.br/owncloud/index.php/s/TD34YJTxalj4X3G/download",
@@ -205,7 +211,8 @@ ARRECADACAO = {
         "Arrecadacao_01-01-2014_a_31-12-2017": "https://drive.economia.gov.br/owncloud/index.php/s/FNJFQQtoRpPZJd1/download",
     },
     "FORMAT": "csv",
-    "DELIMITER": "",
+    "DELIMITER": ",",
+    "ENCODING": "UTF-8",
     "MAP": {
         'date_cols': [],
         'cat_cols': [],
@@ -231,7 +238,8 @@ TRANSFERENCIAS = {
         "TRANSFESTADOMUNICIPIOS-2021": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/672f4fcc-c1aa-4c3d-b0a0-e4cd4e2695da/download/transfestadomunicipios-2021.csv",
     },
     "FORMAT": "csv",
-    "DELIMITER": "",
+    "DELIMITER": ";",
+    "ENCODING": "UTF-8",
     "MAP": {
         'date_cols': [],
         'cat_cols': [],
@@ -240,6 +248,7 @@ TRANSFERENCIAS = {
 
 POPULACAO = {
     "NAME": "POPULACAO",
+    "TITLE": "",
     "DESCRIPTION": "",
     "URLS": {
         "POPULACAO_2018": os.path.join(DATADIR, "populacao_2018.csv"),
@@ -248,7 +257,8 @@ POPULACAO = {
         "POPULACAO_2021": os.path.join(DATADIR, "populacao_2021.csv"),
     },
     "FORMAT": "csv",
-    "DELIMITER": "",
+    "DELIMITER": ",",
+    "ENCODING": "UTF-8",
     "MAP": {
         'date_cols': [],
         'cat_cols': [],
