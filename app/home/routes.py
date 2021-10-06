@@ -205,6 +205,7 @@ def get_plot_calendar_heatmap(municipio):
 def get_plot_tributos_ipca(municipio):
     return json.dumps(obj=graphs.plot_tributos_ipca(cidade=municipio), cls=utils.PlotlyJSONEncoder)
 
+
 # ####################################################################
 
 # Uallas
