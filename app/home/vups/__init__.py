@@ -9,7 +9,7 @@ import pandas as pd
 
 # from pandas.io.formats.format import CategoricalFormatter
 import plotly.express as px
-from . import const
+from . import const, utils
 
 import datetime
 import plotly.figure_factory as ff
@@ -189,10 +189,13 @@ def dtype_transform(df, mapa):
         date_cols = mapa.get('date_cols')
     else:
         date_cols = fn_date_cols(df)
+    numeric_cols = fn_number_cols(df)
+
+    df = utils.remove_espaco(df, date_cols + numeric_cols)
 
     for c in date_cols:
         try:
-            df[c] = df[c].astype("datetime64[ns]")
+            df[c] = pd.to_datetime(df[c], infer_datetime_format=True, errors='coerce')
         except:
             pass
 
@@ -202,8 +205,6 @@ def dtype_transform(df, mapa):
             df[c] = df[c].astype("category")
         except:
             pass
-
-    numeric_cols = fn_number_cols(df)
 
     for c in numeric_cols:
         i = df.columns.get_loc(c)  # ÍNDICE DA COLUNA
@@ -243,7 +244,7 @@ def which_file_exists(name):
 
 class datasets:
     def microdados(columns=None, nrows=None, dtype=None):
-        # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NOMES! ^^
+        # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NAMESPACES! ^^
         name = sys._getframe(  ).f_code.co_name.upper()
         filepath_or_buffer = which_file_exists(name)
         mapa = getattr(const, name).get("MAP")
@@ -252,8 +253,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=";",
-            encoding="ISO-8859-1",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -270,8 +271,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="ISO-8859-1",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -288,8 +289,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="utf-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -306,8 +307,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="utf-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -324,8 +325,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=";",
-            encoding="UTF-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,
@@ -342,8 +343,8 @@ class datasets:
             filepath_or_buffer=filepath_or_buffer,
             usecols=columns,
             nrows=nrows,
-            sep=",",
-            encoding="UTF-8",
+            sep=getattr(const, name).get("DELIMITER"),
+            encoding=getattr(const, name).get("ENCODING"),
             warn_bad_lines=False,
             error_bad_lines=False,
             dtype=dtype,

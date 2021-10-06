@@ -201,54 +201,33 @@ $ flask run --host=0.0.0.0 --port=5000
 
 ## Estrutura do código base
 
-O projeto é codificado usando blueprints, app factory pattern, perfil de configuração dual (desenvolvimento e produção) e uma estrutura intuitiva apresentada a seguir:
+O projeto é codificado usando blueprints, app factory pattern, perfil de configuração dual (desenvolvimento e produção), com a seguinte estrutura:
 
-> Versão Simplificada
+<br />
+
+> Árvore de Diretórios
 
 ```bash
 < PROJECT ROOT >
    |
-   |-- app/                      # Implements app logic
-   |    |-- base/                # Base Blueprint - handles the authentication
-   |    |-- home/                # Home Blueprint - serve UI Kit pages
-   |    |
-   |   __init__.py               # Initialize the app
-   |
-   |-- requirements.txt          # Development modules - SQLite storage
-   |
-   |-- .env                      # Inject Configuration via Environment
-   |-- config.py                 # Set up the app
-   |-- run.py                    # Start the app - WSGI gateway
-   |
-   |-- ************************************************************************
-```
-
-<br />
-
-> O fluxo bootstrap
-
-- `run.py` carrega o arquivo `.env`.
-- Inicializa o aplicativo usando o perfil especificado: *Debug* ou *Production*
-  - Se env.DEBUG está configurado para *True* o armazenamento SQLite é usado
-  - Se env.DEBUG está configurado para *False* o driver de banco de dados especificado é usado (MySql, PostgreSQL)
-- Chama o método de criação de aplicativos `create_app` definido em app/__init__.py
-- Redireciona os usuários convidados para a página de Login
-- Desbloqueia as páginas servidas pelo blueprint *home* para usuários autenticados.
-
-<br />
-
-> App / Base Blueprint
-
-O blueprint *Base* trata da autenticação (rotas e formulários) e do gerenciamento de ativos. A estrutura é apresentada a seguir:
-
-```bash
-< PROJECT ROOT >
-   |
-   |-- app/
+   |-- app/                                      # Implementa a lógica do aplicativo
+   |   __init__.py                               # Inicialize o aplicativo
    |    |-- home/                                # Home Blueprint - serve páginas do app (área privada)
+   |         |-- templates/                      # UI Kit Pages
+   |              |
+   |              |-- index.html                 # Página Início
+   |              |-- Dashboard.html             # Página Dashboard
+   |              |-- page-404.html              # Error 404 - mandatory page
+   |              |-- page-500.html              # Error 500 - mandatory page
+   |              |-- page-403.html              # Error 403 - mandatory page
+   |
    |    |-- base/                                # Base Blueprint - lida com a autenticação
-   |         |-- vups/
-   |         |    |-- __init__, JS, images>          # CSS files, Javascripts files
+   |         |-- vups/                           # Biblioteca com os modulos customizados
+   |         |    |-- __init__                   # Inicializa a biblioteca
+   |         |    |-- const.py                   # Constantes e registros para o aplicativo
+   |         |    |-- graphs.py                  # Módulo com as funções para plot de gráficos
+   |         |    |-- utils.py                   # Módulo com métodos acessários e utilitários
+   |         |    |-- data.py                    # Módulo para acesso a dados
    |         |-- static/
    |         |    |-- <css, JS, images>          # CSS files, Javascripts files
    |         |
@@ -268,195 +247,22 @@ O blueprint *Base* trata da autenticação (rotas e formulários) e do gerenciam
    |                   |-- login.html            # Página de login
    |                   |-- register.html         # Página de registro
    |
-   |-- requirements.txt                          # Development modules - SQLite storage
-   |-- requirements-mysql.txt                    # Production modules  - Mysql DMBS
-   |-- requirements-pqsql.txt                    # Production modules  - PostgreSql DMBS
+   |-- requirements.txt                          # Pacotes Python necessários
    |
    |-- .env                                      # Configuração de injeção via ambiente
-   |-- config.py                                 # Set up the app
-   |-- run.py                                    # Start the app - WSGI gateway
+   |-- config.py                                 # Configura o aplicativo
+   |-- run.py                                    # Inicia o aplicativo - gateway WSGI
    |
    |-- ************************************************************************
 ```
 
 <br />
 
-> App / Home Blueprint
+## Deploy
 
-O blueprint *Home* lida com as páginas do UI Kit para usuários autenticados. Esta é a zona privada do aplicativo - a estrutura é apresentada a seguir:
+O deploy do projeto foi feito na [Amazon Web Service](https://aws.amazon.com/). Instanciamos uma máquina virtual na nuvem e nela implantamos e configuramos o projeto.
 
-```bash
-< PROJECT ROOT >
-   |
-   |-- app/
-   |    |-- base/                     # Base Blueprint - handles the authentication
-   |    |-- home/                     # Home Blueprint - serve app pages (private area)
-   |         |
-   |         |-- templates/           # UI Kit Pages
-   |              |
-   |              |-- index.html      # Default page
-   |              |-- page-404.html   # Error 404 - mandatory page
-   |              |-- page-500.html   # Error 500 - mandatory page
-   |              |-- page-403.html   # Error 403 - mandatory page
-   |              |-- *.html          # All other HTML pages
-   |
-   |-- requirements.txt               # Development modules - SQLite storage
-   |-- requirements-mysql.txt         # Production modules  - Mysql DMBS
-   |-- requirements-pqsql.txt         # Production modules  - PostgreSql DMBS
-   |
-   |-- .env                           # Inject Configuration via Environment
-   |-- config.py                      # Set up the app
-   |-- run.py                         # Start the app - WSGI gateway
-   |
-   |-- ************************************************************************
-```
-
-<br />
-
-## Deployment
-
-O aplicativo é fornecido com uma configuração básica para ser executado em [Docker](https://www.docker.com/), [Heroku](https://www.heroku.com/), [Gunicorn](https://gunicorn.org/), e [Waitress](https://docs.pylonsproject.org/projects/waitress/en/stable/).
-
-<br />
-
-### [Docker](https://www.docker.com/) execution
----
-
-O aplicativo pode ser executado facilmente em um contêiner docker. Os passos:
-
-> Get the code
-
-```bash
-$ git clone https://github.com/app-generator/flask-dashboard-volt.git
-$ cd flask-dashboard-volt
-```
-
-> Start the app in Docker
-
-```bash
-$ sudo docker-compose pull && sudo docker-compose build && sudo docker-compose up -d
-```
-
-Visit `http://localhost:5005` in your browser. The app should be up & running.
-
-<br />
-
-### [Heroku](https://www.heroku.com/)
----
-
-Steps to deploy on **Heroku**
-
-- [Create a FREE account](https://signup.heroku.com/) on Heroku platform
-- [Install the Heroku CLI](https://devcenter.heroku.com/articles/getting-started-with-python#set-up) that match your OS: Mac, Unix or Windows
-- Open a terminal window and authenticate via `heroku login` command
-- Clone the sources and push the project for LIVE deployment
-
-```bash
-$ # Clone the source code:
-$ git clone https://github.com/app-generator/flask-dashboard-volt.git
-$ cd flask-dashboard-volt
-$
-$ # Check Heroku CLI is installed
-$ heroku -v
-heroku/7.25.0 win32-x64 node-v12.13.0 # <-- All good
-$
-$ # Check Heroku CLI is installed
-$ heroku login
-$ # this commaond will open a browser window - click the login button (in browser)
-$
-$ # Create the Heroku project
-$ heroku create
-$
-$ # Trigger the LIVE deploy
-$ git push heroku master
-$
-$ # Open the LIVE app in browser
-$ heroku open
-```
-
-<br />
-
-### [Gunicorn](https://gunicorn.org/)
----
-
-Gunicorn 'Green Unicorn' is a Python WSGI HTTP Server for UNIX.
-
-> Install using pip
-
-```bash
-$ pip install gunicorn
-```
-> Start the app using gunicorn binary
-
-```bash
-$ gunicorn --bind 0.0.0.0:8001 run:app
-Serving on http://localhost:8001
-```
-
-Visit `http://localhost:8001` in your browser. The app should be up & running.
-
-<br />
-
-### [Waitress](https://docs.pylonsproject.org/projects/waitress/en/stable/)
----
-
-Waitress (Gunicorn equivalent for Windows) is meant to be a production-quality pure-Python WSGI server with very acceptable performance. It has no dependencies except ones that live in the Python standard library.
-
-> Install using pip
-
-```bash
-$ pip install waitress
-```
-> Start the app using [waitress-serve](https://docs.pylonsproject.org/projects/waitress/en/stable/runner.html)
-
-```bash
-$ waitress-serve --port=8001 run:app
-Serving on http://localhost:8001
-```
-
-Visit `http://localhost:8001` in your browser. The app should be up & running.
-
+Link: http://ec2-18-220-57-143.us-east-2.compute.amazonaws.com:5000/ 
 <br />
 
 ---
-
-```bash
-< PROJECT ROOT >
-   |
-   |-- app/
-   |    |-- base/                               # Base Blueprint
-   |    |    |-- static/assets/
-   |    |    |           |-- css/               # UI Kit css
-   |    |    |           |-- JS/                # Javascript files
-   |    |    |           |-- images/            # images used by the app
-   |    |    |           |-- scss/              # SCSS files (if any)
-   |    |    |
-   |    |    |-- templates/                      # Templates used to render pages
-   |    |         |
-   |    |         |-- includes/                  #
-   |    |         |    |-- navigation.html       # Top menu component
-   |    |         |    |-- sidebar.html          # Sidebar component
-   |    |         |    |-- footer.html           # App Footer
-   |    |         |    |-- scripts.html          # Scripts common to all pages
-   |    |         |
-   |    |         |-- layouts/                   # Master pages
-   |    |         |    |-- base-fullscreen.html  # Used by Authentication pages
-   |    |         |    |-- base.html             # Used by common pages
-   |    |         |
-   |    |         |-- accounts/                  # Authentication pages
-   |    |              |-- login.html            # Login page
-   |    |              |-- register.html         # Registration page
-   |    |
-   |    |-- home/                                # Home Blueprint - serve app pages (private area)
-   |         |-- templates/                      # UI Kit Pages
-   |              |
-   |              |-- index.html                 # Default page
-   |              |-- page-404.html              # Error 404 - mandatory page
-   |              |-- page-500.html              # Error 500 - mandatory page
-   |              |-- page-403.html              # Error 403 - mandatory page
-   |              |-- *.html                     # All other HTML pages
-   |
-   |-- ************************************************************************
-```
-
-
