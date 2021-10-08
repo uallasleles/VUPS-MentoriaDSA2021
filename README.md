@@ -15,7 +15,7 @@ Projeto elaborado durante o Programa de Mentoria entre Alunos da **Data Science 
       - Sinais Variáveis
       - Teste Estatístico
       - Escolha dos Fatores
-      - Calculo da Puntuação
+      - Calculo da Pontuação
 - Visualizações
    - Comparação de Repasses
    - Poder de Compra do Município
@@ -25,30 +25,39 @@ Projeto elaborado durante o Programa de Mentoria entre Alunos da **Data Science 
 
 ## Problema de Negócio
 ---
-Quais Municípios estão se saindo melhor em relação ao combate ao COVID-19?
+Quais Municípios estão se saindo melhor em relação ao combate à COVID-19, levando em conta os repasses do estado aos municípios?
 
 ## Contexto
 ---
-Foi definido que iríamos focar nossa análise em um único estado brasileiro, dado o tamnho continetal
-do nosso país. Como sugestão do nosso Mentor, original do estado do Espírito Santo, resolvemos delimitar
-escomo do nosso trabalho aos municípios do ES.
+Foi definido que iríamos focar nossa análise em um único estado brasileiro, dado o tamanho continental
+do nosso país. Como sugestão do nosso Mentor, original do estado do Espírito Santo, resolvemos delimitar o
+escopo do nosso trabalho aos municípios do ES.
 
-Uma vez decidido os limites geográficos, definimos o escopo temporal do projeto. Por conta do tempo para conclusão
-do trabalho, decidimos que uma avaliação mensal do desempenho do municípios seria a melhor estratêgia.
+Uma vez decididos os limites geográficos, definimos o escopo temporal do projeto. Por conta do tempo para conclusão
+do trabalho, decidimos que uma avaliação mensal do desempenho do municípios seria a melhor estratégia.
 
 ## Datasets
 ---
 Datasets utilizados:
-* Dados hitóricos COVID (fonte: )
-* Dados históricos Vacinação COVID (fonte: )
-* Dados Populacionais (fonte: )
-* Repasses Estaduais (fonte: )
+* Dados históricos COVID (fonte: https://coronavirus.es.gov.br/painel-covid-19-es)
+* Dados históricos Vacinação COVID (fonte: https://coronavirus.es.gov.br/painel-vacinacao-distribuicao)
+* Dados Populacionais (fonte: https://ftp.ibge.gov.br/Estimativas_de_Populacao/)
+* Repasses Estaduais para Municípios (fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios)
+
+### Limitações
+Cada dataset segue um range de tempo, e muitas vezes não conseguimos ter todos os dados nos intervalos que desejaríamos.
+Dados históricos COVID (04/2020 - hoje)
+Dados históricos Vacinação (01/2021 - hoje)
+Dados populacionais (2018 - 2021)
+Repasses Estaduais (01/2018 - 04/2021)
+
+Dessa maneira, fizemos análises isoladas em cada dataset, respeitando seus limites temporais, mas só conseguimos ter todos os dados ao mesmo tempo entre 01/2021 e 04/2021, que foram os meses em que rodamos a PCA (Principal Component Analysis) para formação do ranking.
 
 ## Ranking
 ---
-Para avaliar o desempenho no combate à pendemia, decidimos criar um ranking dos municípios. O desafio era criar
+Para avaliar o desempenho no combate à pandemia, decidimos criar um ranking dos municípios. O desafio era criar
 um sistema de avaliação que eliminasse a ponderação arbitrária. Para isso, usamos a soma do produto entre os fatores
-oriundos de uma PCA e suas variancias compartilhadas.
+oriundos de uma PCA e suas variâncias compartilhadas.
 
 #### Variáveis
 As variáveis analisadas foram:
@@ -56,41 +65,41 @@ As variáveis analisadas foram:
 * Quantidade de óbitos (per capita) por mês;
 * Quantidade de casos recuperados (per capita) por mês;
 * Quantidade de doses de vacina (per capita) por mês;
-* Quantidade em dinheiro repassada pelo estado (per capita) por mês;
+* Quantidade em dinheiro repassada pelo estado (per capita) por mês para os municípios;
 
 #### Teste Estatístico
 Foi rodado o teste de esfericidade de Bartlett que apontou adequação estatística global do dataset para o modelo.
 
 #### Escolha dos Fatores
-Como o dataset era pequeno e não requeria muito poder computacional, decidimos por incluir todos os fatores no modelo,
-de maneira que as comunalidades de cada variável tiveram valor final igual a 1.
+Como o dataset era pequeno e não requeria muito poder computacional, decidimos por incluir todos os fatores no modelo.
+Por conta disso as comunalidades de cada variável tiveram valor final igual a 1.
 
-#### Calculo da Puntuação
-O calculo da pontuação se deu pela soma do produto entre os fatores e a variancia compartilhada
+#### Calculo da Pontuação
+O calculo da pontuação se deu pela soma do produto entre os fatores e a variância compartilhada.
 
 ## Visualizações
 ---
 
 ### Comparação de Repasses
-Criamos uma visualização que fizesse com que o usuário podesse comparar os repasses dos municípios de maneira simples
+Criamos uma visualização que fizesse com que o usuário pudesse comparar os repasses dos municípios de maneira simples
 e objetiva. Duas formas de comparação foram criadas:
 * Comparação Nominal: valor bruto recebido pelos municípios
-* Comparação de variabilidade: quanto cada repasse variou de mês a més
+* Comparação de variabilidade: quanto cada repasse variou de mês a mês
 
 ### Poder de Compra do Município
-Visualização que compara o valor recebido com a variação do indice IPCA. De maneira que o primeiro mês de análise
-serviu como base de calculo para os mêses subsequentes. Com essa informação, o usuário pode ter uma noção melhor do
-poder economico do município em relação ao combate da pandemia.
+Visualização que compara o valor recebido com a variação do índice IPCA. De maneira que o primeiro mês de análise
+serviu como base de calculo para os meses subsequentes. Com essa informação, o usuário pode ter uma noção melhor do
+poder econômico do município em relação ao combate da pandemia.
 
 ### Calendário de Casos
 Visualização em forma de heatmap com formato de calendário. Tem com objetivo entender padrões de contagio do vírus.
-É interessante observar, por exemplo, a quantidade de casos novos 1 semana após feriados municipais (como em AFONSO
+É interessante observar, por exemplo, a quantidade de Casos Novos 1 semana após feriados municipais (como em AFONSO
 CALUDIO no dia 20 de JANEIRO -> valores default da função).
 ### Resumo COVID
-Visualização em linha com o numero de casos totais, obitos, recuperados e ativos, no tempo.
+Visualização em linha com o numero de casos totais, óbitos, recuperados e ativos, no tempo.
 
 ### Mapa com Ranking
-Mapa com as divisões domunicípios e coloração referente ao posicionamento das cidades no ranking.
+Mapa com as divisões dos municípios e coloração referente ao posicionamento das cidades no ranking.
 
 
 # Sobre a ignição do projeto
@@ -267,8 +276,12 @@ Link: http://ec2-18-220-57-143.us-east-2.compute.amazonaws.com:5000/
 
 ---
 
+<<<<<<< HEAD
 Vídeos: 
 
    - https://youtu.be/L8R_8m5Nv7s
 
    - https://drive.google.com/file/d/1YC7DmPzXjv3pLgloc_wYwGHuCrhFIVFg/view
+=======
+Vídeo: https://youtu.be/L8R_8m5Nv7s
+>>>>>>> 4ad669a9ec25af7a6db022f4ca0a6012cd010852
