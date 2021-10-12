@@ -1,5 +1,3 @@
-# Módulo de valores constantes
-
 # Imports
 import os
 import json
