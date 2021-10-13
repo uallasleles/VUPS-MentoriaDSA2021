@@ -58,9 +58,6 @@ def dashboard():
         resumo = get_resumo()
     )
 
-    # , cost_variance                   = get_plot_widget_cost_variance()
-    # , schedule_variance               = get_plot_widget_schedule_variance()
-
 
 # GRAPH UPDATE: Heatmap
 # ============================================================================

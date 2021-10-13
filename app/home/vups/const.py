@@ -103,34 +103,34 @@ def read_config():
         CONFIG_OBJECT = json.load(f)
 
     # Mapeamento de campos
-    FIELD_MAP = CONFIG_OBJECT["KeyMapping"]["FieldMapping"]
-    ID = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["id"]
-    STATUS = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["status"]
-    CRIADO_POR = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["criado_por"]
-    ATRIBUIDO_A = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["atribuido_a"]
-    ATENDIDO_POR = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["atendido_por"]
-    SEVERIDADE = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["severidade"]
-    PRIORIDADE = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["prioridade"]
-    CLIENTE = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["cliente"]
-    DATA_CRIACAO = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["data_criacao"]
+    FIELD_MAP       = CONFIG_OBJECT["KeyMapping"]["FieldMapping"]
+    ID              = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["id"]
+    STATUS          = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["status"]
+    CRIADO_POR      = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["criado_por"]
+    ATRIBUIDO_A     = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["atribuido_a"]
+    ATENDIDO_POR    = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["atendido_por"]
+    SEVERIDADE      = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["severidade"]
+    PRIORIDADE      = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["prioridade"]
+    CLIENTE         = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["cliente"]
+    DATA_CRIACAO    = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["data_criacao"]
     DATA_FECHAMENTO = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["data_fechamento"]
-    TIPO_CHAMADO = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["tipo_chamado"]
-    DATE_FORMAT = CONFIG_OBJECT["DateFormat"]
+    TIPO_CHAMADO    = CONFIG_OBJECT["KeyMapping"]["VarMapping"]["tipo_chamado"]
+    DATE_FORMAT     = CONFIG_OBJECT["DateFormat"]
 
     key_list = list(FIELD_MAP.keys())
     val_list = list(FIELD_MAP.values())
 
-    CSV_ID = key_list[val_list.index(ID)]
-    CSV_STATUS = key_list[val_list.index(STATUS)]
-    CSV_CRIADO_POR = key_list[val_list.index(CRIADO_POR)]
-    CSV_ATRIBUIDO_A = key_list[val_list.index(ATRIBUIDO_A)]
-    CSV_ATENDIDO_POR = key_list[val_list.index(ATENDIDO_POR)]
-    CSV_SEVERIDADE = key_list[val_list.index(SEVERIDADE)]
-    CSV_PRIORIDADE = key_list[val_list.index(PRIORIDADE)]
-    CSV_CLIENTE = key_list[val_list.index(CLIENTE)]
-    CSV_DATA_CRIACAO = key_list[val_list.index(DATA_CRIACAO)]
+    CSV_ID              = key_list[val_list.index(ID)]
+    CSV_STATUS          = key_list[val_list.index(STATUS)]
+    CSV_CRIADO_POR      = key_list[val_list.index(CRIADO_POR)]
+    CSV_ATRIBUIDO_A     = key_list[val_list.index(ATRIBUIDO_A)]
+    CSV_ATENDIDO_POR    = key_list[val_list.index(ATENDIDO_POR)]
+    CSV_SEVERIDADE      = key_list[val_list.index(SEVERIDADE)]
+    CSV_PRIORIDADE      = key_list[val_list.index(PRIORIDADE)]
+    CSV_CLIENTE         = key_list[val_list.index(CLIENTE)]
+    CSV_DATA_CRIACAO    = key_list[val_list.index(DATA_CRIACAO)]
     CSV_DATA_FECHAMENTO = key_list[val_list.index(DATA_FECHAMENTO)]
-    CSV_TIPO_CHAMADO = key_list[val_list.index(TIPO_CHAMADO)]
+    CSV_TIPO_CHAMADO    = key_list[val_list.index(TIPO_CHAMADO)]
 
 
 microdados_date_cols = [

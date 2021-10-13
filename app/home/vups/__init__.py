@@ -8,12 +8,8 @@ import sys
 import pandas as pd
 
 # from pandas.io.formats.format import CategoricalFormatter
-import plotly.express as px
-from . import const, utils
+from . import const, utils, dump
 
-import datetime
-import plotly.figure_factory as ff
-import plotly.graph_objects as go
 import warnings
 import validators
 import requests
@@ -81,8 +77,14 @@ def get_data(
 
         print("Concatenando arquivos, caso sejam múltiplos datasets...")
         dataset = pd.concat(ds_lst, ignore_index=True)
+
+        # if map is not None:
         print("Realizando transformações de dados no dataset consolidado...")
         dataset = dtype_transform(dataset, mapa)
+        # else:
+        #print("Inicializando mapeamento de tipos de dados...")
+        #dump.field_map(dataset, name)
+        
         print("Convertendo para PARQUET o dataset com os tipos de dados já tratados...")
         file_extension = convert_to_parquet([dataset], name)
 
@@ -226,24 +228,28 @@ def dtype_transform(df, mapa):
     return(df)
 
 def which_file_exists(name):
-    extensions = [".parquet", ".csv"]
+    extensions = [".parquet", ".csv"] # EXTENSÕES PARA VERIFICAÇÃO, EM ORDEM DE PRECEDÊNCIA
     
     for ext in extensions:
+        
         # CRIA UM PATH DO ARQUIVO PARA CADA EXTENSÃO
         path = os.path.join(const.DATADIR, "{}{}".format(name, ext))
         filepath = {"filepath": {"ext": path}}
         filepath = list(filepath.get("filepath").items())
 
-        # TESTA SE O ARQUIVO EXISTE
+        # TESTA SE O ARQUIVO EXISTE (POR ORDEM DE PRECEDÊNCIA CONSIDERA O 1º ARQUIVO CORRESPONDIDO)
         if os.path.exists(filepath[0][1]):
             return filepath
 
+    # RECORRE AS URL'S REGISTRADAS, CASO AINDA NÃO EXISTA O ARQUIVO PARA ALGUMA DESTAS EXTENSÕES
     filepath = list(getattr(const, name).get("URLS").items())
 
+    # RETORNA O PATH DO DATASOURCE PARA SER IMPORTADO/CARREGADO
     return filepath
 
 class datasets:
     def microdados(columns=None, nrows=None, dtype=None):
+
         # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NAMESPACES! ^^
         name = sys._getframe(  ).f_code.co_name.upper()
         filepath_or_buffer = which_file_exists(name)
