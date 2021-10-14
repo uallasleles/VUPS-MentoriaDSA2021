@@ -5,10 +5,12 @@ import os
 import json
 
 # Constantes
-APP_LOGO = "imagens/logo.png"
-MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 BASEDIR = os.path.dirname(os.path.dirname(__file__))
 DATADIR = os.path.join(BASEDIR, "data")
+METADIR = os.path.join(DATADIR, "metadata")
+
+APP_LOGO = "imagens/logo.png"
+MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 
 # ABSPATH = os.path.abspath('.')
 # BASENAME = os.path.basename('.')
@@ -132,7 +134,6 @@ def read_config():
     CSV_DATA_FECHAMENTO = key_list[val_list.index(DATA_FECHAMENTO)]
     CSV_TIPO_CHAMADO    = key_list[val_list.index(TIPO_CHAMADO)]
 
-
 microdados_date_cols = [
     'DataNotificacao',
     'DataCadastro',
@@ -142,10 +143,9 @@ microdados_date_cols = [
     'DataColetaSorologia',
     'DataColetaSorologiaIGG',
     'DataEncerramento',
-    'DataObito']
-    
+    'DataObito']    
 microdados_cat_cols = []
-
+microdados_num_cols = []
 
 # ############################################################################
 # REGISTROS DAS FONTES DE DADOS UTILIZADAS
@@ -161,10 +161,10 @@ MICRODADOS = {
     "FORMAT": "csv",
     "DELIMITER": ";",
     "ENCODING": "ISO-8859-1",
-    "MAP": {
+    "MAP": { # data.load_json("MICRODADOS")
         'date_cols': microdados_date_cols,
         'cat_cols': microdados_cat_cols,
-    }
+    } 
 }
 
 MICRODADOS_BAIRROS = {
@@ -177,10 +177,10 @@ MICRODADOS_BAIRROS = {
     "FORMAT": "csv",
     "DELIMITER": ",",
     "ENCODING": "ISO-8859-1",
-    "MAP": {
+    "MAP": { # data.load_json("MICRODADOS_BAIRROS")
         'date_cols': [],
         'cat_cols': [],
-    }
+    } 
 }
 
 TIPO_ARRECADACAO = {

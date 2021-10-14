@@ -4,12 +4,8 @@ Programa de Mentoria DSA 2021
 """
 
 import pandas as pd
-import os
 import string
 import unicodedata
-from datetime import datetime
-import math
-from . import const
 
 
 def minMax(x):
