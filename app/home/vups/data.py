@@ -2,7 +2,7 @@
 
 # from typing import Text
 from numpy import genfromtxt
-from app.home.vups import const, utils
+from . import const, utils
 import os, json, pandas as pd
 # from tqdm import tqdm
 # from pandas.io.formats.format import CategoricalFormatter
@@ -31,7 +31,8 @@ def write_json(j):
 
 def create_dtype_map(df, name):
     PATH = const.METADIR
-    FILENAME = "{}{}".format(name, "_DTYPEMAP.json")
+    FILENAME = "DTYPEMAP_{}.json".format(name)
+    FILEPATH = os.path.join(PATH, FILENAME)
 
     MAP = {}
     MAP["DTypeMap"] = {}
@@ -51,13 +52,13 @@ def create_dtype_map(df, name):
     j = json.loads(MAP)
 
     # GRAVA O DICIONÁRIO EM UM ARQUIVO
-    with open(os.path.join(PATH, FILENAME), "w") as f:
+    with open(FILEPATH, "w") as f:
         json.dump(j, f, indent=4)
 
 def load_json(name):
     data = {}
-    filename = "{}_DTYPEMAP.json".format(name)
-    filepath = os.path.join(const.DATADIR, filename)
+    filename = "DTYPEMAP_{}.json".format(name)
+    filepath = os.path.join(const.METADIR, filename)
     if os.path.exists(filepath):
         with open(filepath) as f:
             data = json.load(f)
@@ -95,44 +96,65 @@ def dtype_transform(df, mapa):
     PRINCIPAL FUNÇÃO PARA TRANSFORMAÇÃO DE DADOS
     """
     
+    # TENTA IDENTIFICAR AS COLUNAS DE DATA
     if mapa is not None:
         date_cols = mapa.get('date_cols')
     else:
         date_cols = fn_date_cols(df)
 
+    # TENTA IDENTIFICAR AS COLUNAS NUMÉRICAS
     numeric_cols = fn_number_cols(df)
-    
-    cat_cols = list(df.select_dtypes(include="object").columns)
-    
+
+    # SELECIONA AS COLUNAS TIPO OBJECT PARA CONVERTÊ-LAS EM CATEGÓRICAS
+    cat_cols = list(df[df.columns[~df.columns.isin(date_cols + numeric_cols)]].select_dtypes(include="object").columns)
+    print(cat_cols)
+
+    # TRATAMENTO DE DADOS
+    # ========================================================================
     df = utils.remove_espaco(df, date_cols + numeric_cols)
 
+    # INICIA AS TRANFORMAÇÕES
+    # ========================================================================
+    
+    # TRANSFORMA AS COLUNAS DATETIME
     for c in date_cols:
         try:
             df[c] = pd.to_datetime(df[c], infer_datetime_format=True, errors='coerce')
         except:
+            print("ERRO DE CONVERSÃO - COLUNA:{}".format(df[c].column.name))
             pass
 
+    # TRANSFORMA AS COLUNAS CATEGÓRICAS
     for c in cat_cols:
         try:
             df[c] = df[c].astype("category")
         except:
+            print("ERRO DE CONVERSÃO - COLUNA:{}".format(df[c]))
             pass
 
+    # TRANSFORMA AS COLUNAS NUMÉRICAS (PARA float64 ou int64)
     for c in numeric_cols:
-        i = df.columns.get_loc(c)  # ÍNDICE DA COLUNA
-        v = df.iloc[:0, i]  # VALOR NA LINHA ZERO
+        i = df.columns.get_loc(c)   # ÍNDICE DA COLUNA
+        v = df.iloc[:0, i]          # VALOR NA LINHA ZERO
+
+        # A INFERÊNCIA DO TIPO DE DADO É FEITA ANALISANDO APENAS O 1º VALOR 'v' DE CADA VARIÁVEL DA LISTA
+
         try:
+            # TESTA SE É UM NÚMERO REAL PARA CONVERTER PARA float64
+            # isdecimal() APENAS RETORNA True SE TODOS OS CARACTERES FOREM NÚMEROS, NÃO PERMITE (.,-), ETC
             if float(v) and not v.isdecimal():
                 try:
                     df[c] = df[c].astype("float64")
                 except:
                     pass
-            else:  # isdecimal() - SE NÃO PASSAR, É UM NÚMERO INTEIRO (Verifica se todos os caracteres no Unicode são decimais)
+            else:  # isdecimal() - SE "NÃO PASSAR" (=True), É UM NÚMERO INTEIRO
                 try:
+                    # SE FOR NÚMERO INTEIRO, CONVERTE PARA int64
                     df[c] = df[c].astype("int64")
                 except:
                     pass
         except:
+            print("ERRO DE CONVERSÃO - COLUNA:{}".format(df[c]))
             pass
 
     return(df)
@@ -154,20 +176,20 @@ def convert_to_parquet(lst_dfs: list, filename=None):
     filepath_pqt = os.path.join(const.DATADIR, "{}.parquet".format(filename))
     
     # CRIA O ARQUIVO PARQUET
+    print("Salvando em disco o arquivo convertido para PARQUET.")
     try:
-        print("Salvando em disco o arquivo convertido para PARQUET.")
         df.to_parquet(filepath_pqt)
     except:
-        print("O dataset {} não foi convertido para Parquet. \nCaminho utilizado:{}".format(filename, filepath_pqt))
+        print("ERROR: Dataset {} - Gravação de arquivo PARQUET não realizada! \nCaminho utilizado:{}".format(filename, filepath_pqt))
     
-    # RETORNA A EXTENSÃO DO ARQUIVO COMO RESPOSTA PARA get_data()
-    resp = '.parquet' if os.path.exists(filepath_pqt) else '.csv'
-    
-    return resp
+     # VERIFICA QUAL ARQUIVO ESTÁ DISPONÍVEL (DEVERÁ RECONHECER O ARQUIVO PARQUET QUE ACABOU DE SER CRIADO)
+    filepath_or_buffer = which_file_exists(filename)
+
+    return filepath_or_buffer
 
 def fn_date_cols(df):
     """
-    RECURSO SECUNDÁRIO PARA DETERNINAR O DTYPE ANALISANDO COLUNA
+    RECURSO SECUNDÁRIO PARA DETERNINAR O DTYPE POR ANÁLISE DO CONTEÚDO DA COLUNA
     """
     
     import re
@@ -195,7 +217,7 @@ def fn_date_cols(df):
 
 def fn_number_cols(df):
     """
-    RECURSO SECUNDÁRIO PARA DETERNINAR O DTYPE ANALISANDO COLUNA
+    RECURSO SECUNDÁRIO PARA DETERNINAR O DTYPE POR ANÁLISE DO CONTEÚDO DA COLUNA
     """
 
     lst_cols = []
