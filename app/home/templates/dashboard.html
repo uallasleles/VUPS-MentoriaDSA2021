@@ -25,8 +25,6 @@
 
     </div>
     
-    <hr />
-    
     <!-- ROW KPIS's ========================================== -->
     <div class="d-flex flex-row justify-content-around mb-4 mt-4">
 
@@ -38,7 +36,7 @@
                         Confirmados
                     </h3>
                 </div>
-                <div id="kpi_confirmados" class="chart" value="{{ resumo.get('n_confirmados') }}"></div>
+                <div id="kpi_confirmados" class="chart"></div>
             </div>
         </div>
 
@@ -430,49 +428,38 @@
 
     var config = {responsive: true}
 
-    $(function () {
-        $('#cidade').bind('change', function () {
-            $.getJSON('/heatmap', {
-                cidade: $('#cidade').val()
-            }, function (data) {
-                Plotly.newPlot('heatmap', data, {}, config)
-            });
-            return false;
-        })
-    });
+    // $(function () {
+    //     $('#cidades').bind('change', function () {
+    //         $.getJSON('/tributos', {
+    //             cidades: $('#cidades').val()
+    //         }, function (data) {
+    //             Plotly.newPlot('tributos', data, {});
+    //         });
+    //         return false;
+    //     })
+    // });
 
-    $(function () {
-        $('#cidades').bind('change', function () {
-            $.getJSON('/tributos', {
-                cidades: $('#cidades').val()
-            }, function (data) {
-                Plotly.newPlot('tributos', data, {});
-            });
-            return false;
-        })
-    });
+    // $(function () {
+    //     $('#cidades').bind('change', function () {
+    //         $.getJSON('/tributos_norm', {
+    //             cidades: $('#cidades').val()
+    //         }, function (data) {
+    //             Plotly.newPlot('tributos_norm', data, {});
+    //         });
+    //         return false;
+    //     })
+    // });
 
-    $(function () {
-        $('#cidades').bind('change', function () {
-            $.getJSON('/tributos_norm', {
-                cidades: $('#cidades').val()
-            }, function (data) {
-                Plotly.newPlot('tributos_norm', data, {});
-            });
-            return false;
-        })
-    });
-
-    $(function () {
-        $('#cidade').bind('change', function () {
-            $.getJSON('/tributos_ipca', {
-                cidade: $('#cidade').val()
-            }, function (data) {
-                Plotly.newPlot('tributos_ipca', data, {});
-            });
-            return false;
-        })
-    });
+    // $(function () {
+    //     $('#cidade').bind('change', function () {
+    //         $.getJSON('/tributos_ipca', {
+    //             cidade: $('#cidade').val()
+    //         }, function (data) {
+    //             Plotly.newPlot('tributos_ipca', data, {});
+    //         });
+    //         return false;
+    //     })
+    // });
 
     Plotly.newPlot('kpi_confirmados', {{ kpi_confirmados | safe }});
     Plotly.newPlot('kpi_descartados', {{ kpi_descartados | safe }});
@@ -501,6 +488,16 @@
     // SELECT OPTIONS DINÂMICAS PARA ESTADOS E CIDADES
     // =======================================================================
     $(document).ready(function () {
+        // $(function () {
+        $('#cidade').bind('change', function () {
+            $.getJSON('/heatmap', {
+                cidade: $('#cidade').val()
+            }, function (data) {
+                Plotly.newPlot('heatmap', data, {}, config)
+            });
+            return false;
+        })
+        // });
 
         url="{{ url_for('static', filename='assets/estados_cidades.json') }}"
         var uf_cid = $.getJSON(url, function(jsonData) {

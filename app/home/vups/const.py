@@ -1,12 +1,18 @@
+# -*- encoding: utf-8 -*-
+"""
+* MÓDULO: const
+"""
+
+
 # Imports
 import os
 import json
 
 # Constantes
-APP_LOGO = "imagens/logo.png"
-MAPPING_FILE = "config/mapeamento_campos_dataset.json"
 BASEDIR = os.path.dirname(os.path.dirname(__file__))
 DATADIR = os.path.join(BASEDIR, "data")
+DATATMP = os.path.join(DATADIR, "tmp")
+METADIR = os.path.join(DATADIR, "metadata")
 
 # ABSPATH = os.path.abspath('.')
 # BASENAME = os.path.basename('.')
@@ -15,18 +21,33 @@ DATADIR = os.path.join(BASEDIR, "data")
 # DIRNAME = os.path.dirname(__file__)
 # REALPATH = os.path.realpath('.')
 
-microdados_date_cols = [
-    'DataNotificacao',
-    'DataCadastro',
-    'DataDiagnostico',
-    'DataColeta_RT_PCR',
-    'DataColetaTesteRapido',
-    'DataColetaSorologia',
-    'DataColetaSorologiaIGG',
-    'DataEncerramento',
-    'DataObito']
-    
-microdados_cat_cols = []
+# ############################################################################
+# TRIAGEM DOS TIPOS DE DADOS
+# ############################################################################
+
+def read_dtype_map(DS_NAME):
+    DTYPE_DICT = {
+        "date_cols": [],
+        "cat_cols": [],
+        "float_cols": [],
+        "int_cols": [],
+        }
+
+    try:
+        with open(os.path.join(METADIR, DS_NAME)) as f:
+            DTYPE_MAP = json.load(f)
+
+        for key, value in DTYPE_MAP["DTypeMap"].items():
+            if value == 'datetime64[ns]':   DTYPE_DICT["date_cols"].append(key)
+            if value == 'float64':          DTYPE_DICT["float_cols"].append(key)
+            if value == 'int64':            DTYPE_DICT["int_cols"].append(key)
+            if value == 'category':         DTYPE_DICT["cat_cols"].append(key)
+            
+    except:
+        pass
+
+    return(DTYPE_DICT)
+
 
 # ############################################################################
 # REGISTROS DAS FONTES DE DADOS UTILIZADAS
@@ -39,13 +60,10 @@ MICRODADOS = {
     "URLS": {
         "MICRODADOS": "https://bi.s3.es.gov.br/covid19/MICRODADOS.csv",
     },
-    "FORMAT": "csv",
+    "FORMAT": ".csv",
     "DELIMITER": ";",
     "ENCODING": "ISO-8859-1",
-    "MAP": {
-        'date_cols': microdados_date_cols,
-        'cat_cols': microdados_cat_cols,
-    }
+    "MAP": read_dtype_map("DTYPEMAP_MICRODADOS.json")
 }
 
 MICRODADOS_BAIRROS = {
@@ -55,13 +73,10 @@ MICRODADOS_BAIRROS = {
     "URLS": {
         "MICRODADOS_BAIRROS": "https://bi.s3.es.gov.br/covid19/MICRODADOS_BAIRROS.csv",
     },
-    "FORMAT": "csv",
+    "FORMAT": ".csv",
     "DELIMITER": ",",
     "ENCODING": "ISO-8859-1",
-    "MAP": {
-        'date_cols': [],
-        'cat_cols': [],
-    }
+    "MAP": read_dtype_map("DTYPEMAP_MICRODADOS_BAIRROS.json")
 }
 
 TIPO_ARRECADACAO = {
@@ -71,13 +86,10 @@ TIPO_ARRECADACAO = {
     "URLS": {
         "TipoArrecadacao": "https://drive.economia.gov.br/owncloud/index.php/s/OEehiiL427jBp7C/download",
     },
-    "FORMAT": "csv",
+    "FORMAT": ".csv",
     "DELIMITER": ",",
     "ENCODING": "UTF-8",
-    "MAP": {
-        'date_cols': [],
-        'cat_cols': [],
-    }
+    "MAP": read_dtype_map("DTYPEMAP_TIPO_ARRECADACAO.json")
 }
 
 ARRECADACAO = {
@@ -91,13 +103,10 @@ ARRECADACAO = {
         "Arrecadacao_01-01-2010_a_31-12-2013": "https://drive.economia.gov.br/owncloud/index.php/s/BaUyR54HEzTHajy/download",
         "Arrecadacao_01-01-2014_a_31-12-2017": "https://drive.economia.gov.br/owncloud/index.php/s/FNJFQQtoRpPZJd1/download",
     },
-    "FORMAT": "csv",
+    "FORMAT": ".csv",
     "DELIMITER": ",",
     "ENCODING": "UTF-8",
-    "MAP": {
-        'date_cols': [],
-        'cat_cols': [],
-    }
+    "MAP": read_dtype_map("DTYPEMAP_ARRECADACAO.json")
 }
 
 TRANSFERENCIAS = {
@@ -118,13 +127,10 @@ TRANSFERENCIAS = {
         "TRANSFESTADOMUNICIPIOS-2020": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/511c02b1-93b7-421c-8727-d786f80fd8e5/download/transfestadomunicipios-2020.csv",
         "TRANSFESTADOMUNICIPIOS-2021": "https://dados.es.gov.br/dataset/d85497f8-3dc4-4104-8e18-f242ae82b6ee/resource/672f4fcc-c1aa-4c3d-b0a0-e4cd4e2695da/download/transfestadomunicipios-2021.csv",
     },
-    "FORMAT": "csv",
+    "FORMAT": ".csv",
     "DELIMITER": ";",
     "ENCODING": "UTF-8",
-    "MAP": {
-        'date_cols': [],
-        'cat_cols': [],
-    }
+    "MAP": read_dtype_map("DTYPEMAP_TRANSFERENCIAS.json")
 }
 
 POPULACAO = {
@@ -137,11 +143,8 @@ POPULACAO = {
         "POPULACAO_2020": os.path.join(DATADIR, "populacao_2020.csv"),
         "POPULACAO_2021": os.path.join(DATADIR, "populacao_2021.csv"),
     },
-    "FORMAT": "csv",
+    "FORMAT": ".csv",
     "DELIMITER": ",",
     "ENCODING": "UTF-8",
-    "MAP": {
-        'date_cols': [],
-        'cat_cols': [],
-    }
+    "MAP": read_dtype_map("DTYPEMAP_POPULACAO.json")
 }

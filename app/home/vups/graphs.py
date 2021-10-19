@@ -1,17 +1,13 @@
 # -*- encoding: utf-8 -*-
 """
-Programa de Mentoria DSA 2021
+* MÓDULO: graphs
 """
 
-from app.home import vups
-from app.home.vups import utils as vups_utils
-from plotly.data import gapminder
+from app.home.vups import datasets, const, data, utils as vups_utils
 import plotly.express as px
-from . import const
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.figure_factory as ff
-import matplotlib.pyplot as plt
 import pandas as pd
 import os
 import datetime
@@ -26,12 +22,12 @@ def kpi_confirmados():
     fig_c1 = go.Figure(
         go.Indicator(
             mode="number+delta",
-            value=resumo.get("n_confirmados"),
+            value=fn_resumo_microdados().get("n_confirmados"),
             number={
                 # "suffix": "%",
                 "font": {"size": 36, "color": "#008080", "family": "Arial"},
             },
-            delta={"position": "bottom", "reference": resumo.get("n_confirmados"), "relative": True},
+            delta={"position": "bottom", "reference": fn_resumo_microdados().get("n_confirmados"), "relative": True},
             domain={"x": [0, 1], "y": [0, 1]},
         )
     )
@@ -49,6 +45,10 @@ def kpi_descartados():
     """
     Baseline:
     """
+    try:
+        resumo = fn_resumo_microdados()
+    except:
+        pass
     fig_c2 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -82,6 +82,10 @@ def kpi_suspeitos():
     """
     TPCI - To Complete Performance Index ≤ 1.00
     """
+    try:
+        resumo = fn_resumo_microdados()
+    except:
+        pass
     fig_c3 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -111,6 +115,10 @@ def kpi_obitos():
     """
     Número de Óbitos
     """
+    try:
+        resumo = fn_resumo_microdados()
+    except:
+        pass
     fig_c3 = go.Figure(
         go.Indicator(
             mode="number+delta",
@@ -168,9 +176,8 @@ def plot_small_bar_spend_hours():
     fig_m_hh.update_traces(marker_color="#17A2B8", selector=dict(type="bar"))
     return fig_m_hh
 
-data = pd.read_excel(os.path.join(const.DATADIR, "curva.xlsx"))
-
 def plot_line_progress_actual_planned():
+    data = pd.read_excel(os.path.join(const.DATADIR, "curva.xlsx"))
     y = data.loc[data.Activity_name == "Total"]
     # Create traces
     fig3 = go.Figure()
@@ -366,9 +373,8 @@ def plot_gantt():
     fig2.update_traces(marker_color="#17A2B8", selector=dict(type="bar"))
     return fig2
 
-gapminder = px.data.gapminder()
-
-def plot_slider_bubbles(df=gapminder):
+def plot_slider_bubbles():
+    df = px.data.gapminder()
     fig = px.scatter(
         df,
         x="gdpPercap",
@@ -608,21 +614,6 @@ def plot_bar():
     )
     return px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
 
-def generate_table(df, max_rows=10):
-    import dash_html_components as html
-
-    return html.Table(
-        [
-            html.Thead(html.Tr([html.Th(col) for col in df.columns])),
-            html.Tbody(
-                [
-                    html.Tr([html.Td(df.iloc[i][col]) for col in df.columns])
-                    for i in range(min(len(df), max_rows))
-                ]
-            ),
-        ]
-    )
-
 def plot_sexo_idade(df):
     fig = px.bar(df, x="Sexo", y="IdadeNaDataNotificacao")
     return fig
@@ -672,15 +663,15 @@ def plot_year_taxs(UF="ES"):
     
     # INNER JOIN COM OS TIPOS DE ARRECADAÇÃO
     df = pd.merge(
-        vups.datasets.arrecadacao(),
-        vups.datasets.tipo_arrecadacao(),
+        datasets.Datasets.arrecadacao(),
+        datasets.Datasets.tipo_arrecadacao(),
         how="left",
         left_on="co_tipo_arrecadacao",
         right_on="CD_TIP_ARRECAD",
     )
 
     # AGRUPANDO POR: UF, ANO, TRIBUTO
-    df = vups.group_by(df, ["sg_uf", "ano_arrecadacao", "NM_TIP_ARRECAD"]).sort_values(
+    df = vups_utils.group_by(df, ["sg_uf", "ano_arrecadacao", "NM_TIP_ARRECAD"]).sort_values(
         ["ano_arrecadacao", "va_arrecadacao"], ascending=False
     )
 
@@ -796,7 +787,7 @@ def plot_calendar_heatmap(cidade="AFONSO CLAUDIO", tipo="NOVOS CASOS", mes_anali
     ]
 
     # --------- BUSCANDO DF ---------
-    df = vups.datasets.microdados(columns=COLUMNS)
+    df = datasets.Datasets.microdados(columns=COLUMNS)
 
     # vups_utils.tratando_microdados(df)
 
@@ -1119,9 +1110,12 @@ def plot_calendar_heatmap(cidade="AFONSO CLAUDIO", tipo="NOVOS CASOS", mes_anali
             title_x=0.5,
         )
 
-    # fig1.update_layout({
-    # 'plot_bgcolor': 'rgba(0,0,0,0)',
-    # 'paper_bgcolor': 'rgba(0,0,0,0)'})
+    fig1.update_layout({
+        'plot_bgcolor': 'rgb(248, 248, 255)',
+        'paper_bgcolor': 'rgb(248, 248, 255)',
+        # 'plot_bgcolor': 'rgba(0,0,0,0)',
+        # 'paper_bgcolor': 'rgba(0,0,0,0)'
+    })
 
     return fig1
 
@@ -1131,11 +1125,8 @@ def plot_tributos_ipca(cidade="AFONSO CLAUDIO"):
     # ==========================================
     # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
 
-    # juntando informacoes em 1 dataset
-    # ==========================================
-
     if os.path.isfile(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet')) == False:
-        transferencias = vups.datasets.transferencias()
+        transferencias = datasets.Datasets.transferencias()
         vups_utils.tratando_transferencias_estaduais(transferencias)
     transferencias = pd.read_parquet(os.path.join(const.DATADIR, 'transf_estadual_tratado.parquet'))
 
@@ -1154,14 +1145,7 @@ def plot_tributos_ipca(cidade="AFONSO CLAUDIO"):
         elif transferencias.loc[i, "CodMunicipio"] == 2112803:
             transferencias.loc[i, "CodMunicipio"] = 3205101
 
-    # Transformando colunas pertinentes em numbers
-    # ====================================================================
     calumns_to_num = ["IcmsTotal", "Ipi", "Ipva", "FundoReducaoDesigualdades"]
-    for x in calumns_to_num:
-        transferencias[x] = [
-            round(float(transferencias[x].iloc[i].replace(",", ".")), 2)
-            for i in range(len(transferencias))
-        ]
 
     # Criando coluna de totais
     # ====================================================================
@@ -1273,16 +1257,17 @@ def plot_tributos_ipca(cidade="AFONSO CLAUDIO"):
     return fig
 
 def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA", "GUARAPARI", "LINHARES", "PIUMA"]):
-    # import pandas as pd
-    # import datetime
 
     # Obtendo os dados
     # ==========================================
     # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
-    transferencias = vups.datasets.transferencias()
+    transferencias = datasets.Datasets.transferencias()
+
+    COLUMNS = ["UF", "COD. UF", "COD. MUNIC", "NOME DO MUNICÍPIO", "POPULAÇÃO ESTIMADA"]
+    populacao = datasets.Datasets.populacao(columns=COLUMNS)
 
     # Mudando os codigos municipais errados das tres cidades com homonimos
-    # ====================================================================
+    # ========================================================================
     # * Boa Esperança (MG - 3107109) -> (ES - 3201001)
     # * Presidente Keneddy (TO - 1718402) -> (ES - 3204302)
     # * Viana (MA - 2112803) -> (ES - 3205101)
@@ -1296,37 +1281,23 @@ def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA",
         elif transferencias.loc[i, "CodMunicipio"] == 2112803:
             transferencias.loc[i, "CodMunicipio"] = 3205101
 
-    # Transformando colunas pertinentes em numbers
-    # ====================================================================
     calumns_to_num = ["IcmsTotal", "Ipi", "Ipva", "FundoReducaoDesigualdades"]
-    for x in calumns_to_num:
-        transferencias[x] = [
-            round(float(transferencias[x].iloc[i].replace(",", ".")), 2)
-            for i in range(len(transferencias))
-        ]
 
     # Criando coluna de totais
-    # ====================================================================
-    transferencias["TotalRepassado"] = (
-        transferencias[calumns_to_num[0]]
-        + transferencias[calumns_to_num[1]]
-        + transferencias[calumns_to_num[2]]
-        + transferencias[calumns_to_num[3]]
-    )
+    # ========================================================================
+    transferencias["TotalRepassado"] = (transferencias[calumns_to_num[0]] + transferencias[calumns_to_num[1]] + transferencias[calumns_to_num[2]] + transferencias[calumns_to_num[3]])
 
     # Criando coluna com datatype
-    # ====================================================================
+    # ========================================================================
     transferencias["Data"] = [
         datetime.datetime(
             transferencias["Ano"].iloc[i], transferencias["Mes"].iloc[i], 28
-        )
+            )
         for i in range(len(transferencias))
     ]
 
-    # ##############################################################################################################################################################################
-    COLUMNS = ["UF", "COD. UF", "COD. MUNIC", "NOME DO MUNICÍPIO", "POPULAÇÃO ESTIMADA"]
-    
-    populacao = vups.datasets.populacao(columns=COLUMNS)
+    # ########################################################################
+
     populacao_es = populacao[populacao["UF"] == "ES"]
 
     # ATENCAO ARRUMAR CODIGO PARA AS 3 CIDADES CITADAS
@@ -1358,9 +1329,7 @@ def plot_comp_tributos_cidades(list_cidades=["ARACRUZ", "ANCHIETA", "CARIACICA",
 
     codigos = []
     for i in list_cidades:
-        cod = transferencias[transferencias["NomeMunicipio"] == i]["CodMunicipio"].iloc[
-            0
-        ]
+        cod = transferencias[transferencias["NomeMunicipio"] == i]["CodMunicipio"].iloc[0]
         codigos.append(cod)
 
     boolean_series = populacao_es["COD.GERAL"].isin(codigos)
@@ -1407,7 +1376,9 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
     # Obtendo os dados
     # ==========================================
     # fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
-    transferencias = vups.datasets.transferencias()
+    transferencias = datasets.Datasets.transferencias()
+    COLUMNS = ["UF", "COD. UF", "COD. MUNIC", "NOME DO MUNICÍPIO", "POPULAÇÃO ESTIMADA"]
+    populacao = datasets.Datasets.populacao(columns=COLUMNS)
 
     # Mudando os codigos municipais errados das tres cidades com homonimos
     # ====================================================================
@@ -1427,11 +1398,6 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
     # Transformando colunas pertinentes em numbers
     # ====================================================================
     calumns_to_num = ["IcmsTotal", "Ipi", "Ipva", "FundoReducaoDesigualdades"]
-    for x in calumns_to_num:
-        transferencias[x] = [
-            round(float(transferencias[x].iloc[i].replace(",", ".")), 2)
-            for i in range(len(transferencias))
-        ]
 
     # Criando coluna de totais
     # ====================================================================
@@ -1451,9 +1417,8 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
         for i in range(len(transferencias))
     ]
 
-    # ##############################################################################################################################################################################
-    COLUMNS = ["UF", "COD. UF", "COD. MUNIC", "NOME DO MUNICÍPIO", "POPULAÇÃO ESTIMADA"]
-    populacao = vups.datasets.populacao(columns=COLUMNS)
+    # ########################################################################
+
     populacao_es = populacao[populacao["UF"] == "ES"]
 
     # ATENCAO ARRUMAR CODIGO PARA AS 3 CIDADES CITADAS
@@ -1533,8 +1498,8 @@ def plot_comp_tributos_cidades_norm(list_cidades=["ARACRUZ", "ANCHIETA", "CARIAC
     return fig
 
 def plot_n_pessoas_por_sintomas():
-    df = vups.datasets.microdados_bairros()
-    df2 = vups.datasets.microdados()
+    df = datasets.Datasets.microdados_bairros()
+    df2 = datasets.Datasets.microdados()
     # 2
     df3 = df2[['Classificacao', 'Febre', 'DificuldadeRespiratoria', 'Tosse', 'Coriza', 'DorGarganta', 'Diarreia', 'Cefaleia',
         'ComorbidadePulmao', 'ComorbidadeCardio', 'ComorbidadeRenal', 'ComorbidadeDiabetes', 'ComorbidadeTabagismo',
@@ -1628,18 +1593,17 @@ def plot_n_pessoas_por_sintomas():
             font=dict(
                 family='Arial', 
                 size=12, 
-                color='rgb(50, 171, 96)'), 
+                color='rgb(50, 171, 96)'),
             showarrow=False))
 
     fig.update_layout(annotations=annotations)
 
     return fig
 
-def fn_resumo_microdados():
-    md = vups.datasets.microdados()
+def fn_resumo_microdados(md = datasets.Datasets.microdados()):
     df_classificacao = pd.DataFrame(md.Classificacao.value_counts()).T
-    df_periodo = pd.DataFrame(vups_utils.minMax(md['DataNotificacao'])).T
-    
+    df_periodo = pd.DataFrame(vups_utils.minMax(md['DataNotificacao'] )).T
+
     resumo_microdados = {
         'n_obs': md.shape[0],
         'n_var': md.shape[1],
@@ -1653,8 +1617,7 @@ def fn_resumo_microdados():
 
     return(resumo_microdados)
 
-def fn_resumo():
-    resumo = fn_resumo_microdados()
+def fn_resumo(resumo = fn_resumo_microdados()):
     texto1 = "Número de observações: {}".format(resumo.get('n_obs'))
     texto2 = "\nNúmero de variáveis: {}".format(resumo.get('n_var'))
     texto3 = "\nConfirmados: {}".format(resumo.get('n_confirmados'))
@@ -1664,9 +1627,4 @@ def fn_resumo():
     texto7 = "\nOs dados coletados compreendem um período de {:%d/%m/%Y} à {:%d/%m/%Y}.".format(resumo.get('periodo_inicio'), resumo.get('periodo_fim'))
     texto = texto1 + texto2 + texto3 + texto4 + texto5 + texto6 + texto7
     return(texto)
-
-try:
-    resumo = fn_resumo_microdados()
-except:
-    pass
 

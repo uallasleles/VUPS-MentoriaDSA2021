@@ -1,7 +1,17 @@
 # -*- encoding: utf-8 -*-
 """
-VUPS - Programa de Mentoria DSA 2021
+******************************************************************************
+**                                                                          **
+**               Programa de Mentoria Entre Alunos DSA (2021)               **
+** ------------------------------------------------------------------------ **
+**               REALIZADOR: Data Science Academy                           **
+**                   MENTOR: Prof.º Jocelino Antônio Demuner                **
+**                    Turma: 2 (Codinome: Clã VUPS)                         **
+**                  Período: 07/06/2021 - 30/09/2021                        **
+**                                                                          **
+******************************************************************************
 """
+print(__doc__)
 
 from flask_migrate import Migrate
 from os import environ

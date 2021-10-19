@@ -230,18 +230,18 @@ def utmToLatLng(zone, easting, northing, northernHemisphere=False):
 def tratando_transferencias_estaduais():
    import pandas as pd
 
-   #fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
-   ##transf_2018 = pd.read_csv('../dados/originais/transfestadomunicipios-2018.csv', sep=';')
-   ##transf_2019 = pd.read_csv('../dados/originais/transfestadomunicipios-2019.csv', sep=';')
-   ##transf_2020 = pd.read_csv('../dados/originais/transfestadomunicipios-2020.csv', sep=';')
-   ##transf_2021 = pd.read_csv('../dados/originais/transfestadomunicipios-2021.csv', sep=';')
+   ## fonte: https://dados.es.gov.br/dataset/portal-da-transparencia-transferencias-para-municipios
+   # transf_2018 = pd.read_csv('../dados/originais/transfestadomunicipios-2018.csv', sep=';')
+   # transf_2019 = pd.read_csv('../dados/originais/transfestadomunicipios-2019.csv', sep=';')
+   # transf_2020 = pd.read_csv('../dados/originais/transfestadomunicipios-2020.csv', sep=';')
+   # transf_2021 = pd.read_csv('../dados/originais/transfestadomunicipios-2021.csv', sep=';')
 
    # Juntando informacoes em 1 dataset
-   ##transferencias = pd.concat([transf_2018, transf_2019, transf_2020, transf_2021], ignore_index=True)
+   ## transferencias = pd.concat([transf_2018, transf_2019, transf_2020, transf_2021], ignore_index=True)
 
    #>>>>>>>>>>>>>>IMPORTAR AQUI DF POR FUNCAO<<<<<<<<<<<<<<<<<<
 
-   #transferencias =                      uallas -> ver se algum tratamento que esta sendo feito aqui, ja esta sendo feito pela sua funcao
+   #transferencias = uallas -> ver se algum tratamento que esta sendo feito aqui, ja esta sendo feito pela sua funcao
 
    #############################################################
 
@@ -323,24 +323,24 @@ def tratando_dados_vacina():
    import pandas as pd
    import numpy as np
 
-   #o arquivo de vacinas é composto por 11 arquivos que precisam ser concatenadods em um arquivo parquet
-   df = pd.read_parquet("path/vacinas_original.parquet") # uallas -> ver path do arquivo
+   # o arquivo de vacinas é composto por 11 arquivos que precisam ser concatenadods em um arquivo parquet
+   df = pd.read_parquet("path/vacinas_original.parquet") 
 
-   #----- AJUSTANDO COLUNAS -----
-   #valores str vieram cheios de espacos em branco
+   # ----- AJUSTANDO COLUNAS -----
+   # valores str vieram cheios de espacos em branco
    df['EstabelecimentoUF'] = df['EstabelecimentoUF'].str.strip()
 
-   #transformando em datatype
+   # transformando em datatype
    df['DataAplicacao'] = df['DataAplicacao'].astype('datetime64[ns]')
 
-   #criando coluna de ano e mes
+   # criando coluna de ano e mes
    df['Ano'] = [i.year for i in df['DataAplicacao']]
    df['Mes'] = [i.month for i in df['DataAplicacao']]
 
-   #----- AGRUPANDO VACINAS POR TIPO E POR CIDADE -----
+   # ----- AGRUPANDO VACINAS POR TIPO E POR CIDADE -----
    df_tipo_cidade = df[df['EstabelecimentoUF']=='ES'].groupby(['EstabelecimentoMunicipio', 'Ano', 'Mes', 'Vacina'])['Dose'].count().reset_index()
 
-   #ajustando nome das vacinas
+   # ajustando nome das vacinas
    vacinas = ['Covishield', 'Coronavac', 'Pfizer', 'AstraZeneca', 'Janssen']
    for idx, i in enumerate(df_tipo_cidade['Vacina']):
        for j in vacinas:
@@ -348,36 +348,35 @@ def tratando_dados_vacina():
                df_tipo_cidade.loc[idx, 'Vacina'] = j
                pass
 
-   #Alguma cidade ficou com a AstraZeneca duplicada. Vamos rodar groupby() mais uma vez para arrumar
+   # Alguma cidade ficou com a AstraZeneca duplicada. Vamos rodar groupby() mais uma vez para arrumar
    df_tipo_cidade = df_tipo_cidade.groupby(['EstabelecimentoMunicipio', 'Ano', 'Mes', 'Vacina'])['Dose'].sum().reset_index()
 
-   #salvando df para usar em outro notebook
-   df_tipo_cidade.to_parquet("path/vacinas_tratado.parquet") # uallas -> ver path
-
+   # salvando df para usar em outro notebook
+   df_tipo_cidade.to_parquet("path/vacinas_tratado.parquet")
 
 def tratando_dados_ranking_pre_pca():
    import pandas as pd
    import numpy as np
 
-   vacinas = pd.read_parquet("path/vacinas_tratado.parquet") # uallas -> verificar paths dos arquivos
+   vacinas = pd.read_parquet("path/vacinas_tratado.parquet") 
    populacao = pd.read_parquet("path/populacao_es_tratado.parquet")
    repasses = pd.read_parquet("path/treated_data/transf_estadual_tratado.parquet")
    casos = pd.read_parquet("path/MICRODADOS_tratado.parquet")
 
    # ----- VACINAS -----
-   #valores str vieram cheios de espacos em branco
+   # valores str vieram cheios de espacos em branco
    vacinas['EstabelecimentoMunicipio'] = vacinas['EstabelecimentoMunicipio'].str.strip()
 
-   #criando codigo municipal para o df de vacinas
+   # criando codigo municipal para o df de vacinas
    dict_cod_municipio = {}
    for i in repasses['NomeMunicipio'].unique():
        dict_cod_municipio[i] = repasses[repasses['NomeMunicipio'] == i]['CodMunicipio'].iloc[0]
 
-   #criando df
+   # criando df
    df_codMunicipal = pd.DataFrame.from_dict({'cidades': list(dict_cod_municipio.keys()), 'cod': list(dict_cod_municipio.values())})
    df_codMunicipal['cidades']=vacinas['EstabelecimentoMunicipio'].unique()
 
-   #merge
+   # merge
    vacinas_cod = pd.merge(
        vacinas,
        df_codMunicipal[['cidades', 'cod']],
@@ -385,16 +384,16 @@ def tratando_dados_ranking_pre_pca():
        left_on  = ['EstabelecimentoMunicipio'],
        right_on = ['cidades'])
 
-   #dropando coluna de cidades (duplicado)
+   # dropando coluna de cidades (duplicado)
    vacinas_cod.drop('cidades', axis='columns', inplace=True)
 
-   #decidimos nao urilizar o tipo de vacina como uma variavel, por esse motivo utilizaremos o total de vacinas
+   # decidimos nao urilizar o tipo de vacina como uma variavel, por esse motivo utilizaremos o total de vacinas
    vacinas_pca = vacinas_cod.groupby(['EstabelecimentoMunicipio', 'cod', 'Ano', 'Mes'])['Dose'].sum().reset_index()
 
    # ----- CASOS COVID -----
-   #agrupando info
+   # agrupando info
    casos_temp =  casos.groupby(['Municipio', 'year', 'month'])['count_new', 'count_obito', 'recup'].sum().reset_index()
-   #merge
+   # merge
    casos_pca = pd.merge(
        casos_temp,
        df_codMunicipal[['cidades', 'cod']],
@@ -470,10 +469,10 @@ def tratando_ranking_geoplot():
    import math
 
    # arquivos oriundos dos scripts R
-   ranking_janeiro_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_janeiro_21.parquet') # uallas -> ver path do arquivo
-   ranking_fevereiro_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_fevereiro_21.parquet') # uallas -> ver path do arquivo
-   ranking_marco_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_marco_21.parquet') # uallas -> ver path do arquivo
-   ranking_abril_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_abril_21.parquet') # uallas -> ver path do arquivo
+   ranking_janeiro_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_janeiro_21.parquet') 
+   ranking_fevereiro_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_fevereiro_21.parquet')
+   ranking_marco_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_marco_21.parquet')
+   ranking_abril_21 = pd.read_parquet('../../app/home/data/treated_data/ranking_analise_abril_21.parquet') 
 
    ranking_janeiro_21['Mes_desc'] = 'Jan/2021'
    ranking_fevereiro_21['Mes_desc'] = 'Fev/2021'
@@ -481,11 +480,11 @@ def tratando_ranking_geoplot():
    ranking_abril_21['Mes_desc'] = 'Abr/2021'
 
    ranking_total = pd.concat([ranking_janeiro_21, ranking_fevereiro_21, ranking_marco_21, ranking_abril_21])
-   ranking_total.to_parquet('path/ranking_total.parquet') # uallas -> ver caminho do arquivo
+   ranking_total.to_parquet('path/ranking_total.parquet') 
 
 
 def tratando_GEOjason():
-   f = open('path/Limite_Municipal_2018.json',) # uallas -> ver caminho do arquivo
+   f = open('path/Limite_Municipal_2018.json',) 
    geofile = json.load(f)
 
    for i in range(len(geofile['features'])):
@@ -495,4 +494,4 @@ def tratando_GEOjason():
         lon = geofile['features'][i]['geometry']['coordinates'][0][j][1]
         geofile['features'][i]['geometry']['coordinates'][0][j] = utmToLatLng(zone, lat, lon)
 
-   geofile.to_parquet('path/mapa.parquet') # uallas -> ver caminho do arquivo
+   geofile.to_parquet('path/mapa.parquet') 
