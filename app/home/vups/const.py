@@ -3,6 +3,7 @@
 * MÓDULO: const
 """
 
+
 # Imports
 import os
 import json
@@ -46,6 +47,7 @@ def read_dtype_map(DS_NAME):
         pass
 
     return(DTYPE_DICT)
+
 
 # ############################################################################
 # REGISTROS DAS FONTES DE DADOS UTILIZADAS
