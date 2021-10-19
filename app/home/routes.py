@@ -23,7 +23,6 @@ from plotly import utils
 def index():
     return render_template("index.html", segment="index")
 
-
 # Dashboard
 # ============================================================================
 @blueprint.route("/dashboard")
@@ -40,17 +39,18 @@ def dashboard():
         kpi_suspeitos=get_kpi_suspeitos(),
         kpi_obitos=get_kpi_obitos(),
         # taxs=get_plot_year_taxs(),
-        tributos_cidades=get_plot_comp_tributos_cidades(),
-        tributos_cidades_norm=get_plot_comp_tributos_cidades_norm(),
+        # tributos_cidades=get_plot_comp_tributos_cidades(),
+        # tributos_cidades_norm=get_plot_comp_tributos_cidades_norm(),
         color_palette = get_plot_bar_color_palette(),
         pessoas_sintomas = get_plot_n_pessoas_por_sintomas(),
         small_bar_percentage_progress=get_plot_small_bar_percentage_progress(),
         small_bar_spend_hours=get_plot_small_bar_spend_hours(),
-        progress_actual_planned = get_plot_line_progress_actual_planned(),
-        
-        resumo = get_resumo()
+        progress_actual_planned = get_plot_line_progress_actual_planned()
     )
 
+@blueprint.route("/tables")
+def tables():
+    return render_template('tables.html')
 
 # GRAPH UPDATE: Heatmap
 # ============================================================================
@@ -68,42 +68,42 @@ def query():
 
 # GRAPH UPDATE: Tributos
 # ============================================================================
-@blueprint.route("/tributos")
-def tributos():
-    multiselect = request.args.getlist("cidades[]")  # OBTEM REQUISIÇÃO
-    string_list = [
-        each_string.upper() for each_string in multiselect
-    ]  # TRATAMENTO - CAIXA ALTA
-    string_list = [
-        vups_utils.remove_acento(each_string) for each_string in string_list
-    ]  # TRATAMENTO - REMOVE ACENTOS
-    tributos = get_plot_comp_tributos_cidades(
-        lista=string_list
-    )  # PROCESSAMENTO - GERA GRÁFICO (JSON)
-    return tributos
+# @blueprint.route("/tributos")
+# def tributos():
+#     multiselect = request.args.getlist("cidades[]")  # OBTEM REQUISIÇÃO
+#     string_list = [
+#         each_string.upper() for each_string in multiselect
+#     ]  # TRATAMENTO - CAIXA ALTA
+#     string_list = [
+#         vups_utils.remove_acento(each_string) for each_string in string_list
+#     ]  # TRATAMENTO - REMOVE ACENTOS
+#     tributos = get_plot_comp_tributos_cidades(
+#         lista=string_list
+#     )  # PROCESSAMENTO - GERA GRÁFICO (JSON)
+#     return tributos
+
+
+# # GRAPH UPDATE: Tributos Normalizados
+# # ============================================================================
+# @blueprint.route("/tributos_norm")
+# def tributos_norm():
+#     multiselect = request.args.getlist("cidades[]")
+#     string_list = [each_string.upper() for each_string in multiselect]
+#     string_list = [vups_utils.remove_acento(each_string) for each_string in string_list]
+#     tributos_norm = get_plot_comp_tributos_cidades_norm(lista=string_list)
+#     return tributos_norm
 
 
 # GRAPH UPDATE: Tributos Normalizados
 # ============================================================================
-@blueprint.route("/tributos_norm")
-def tributos_norm():
-    multiselect = request.args.getlist("cidades[]")
-    string_list = [each_string.upper() for each_string in multiselect]
-    string_list = [vups_utils.remove_acento(each_string) for each_string in string_list]
-    tributos_norm = get_plot_comp_tributos_cidades_norm(lista=string_list)
-    return tributos_norm
-
-
-# GRAPH UPDATE: Tributos Normalizados
-# ============================================================================
-@blueprint.route("/tributos_ipca")
-def tributos_ipca():
-    municipio = request.args.get("cidade", default=None, type=None)
-    municipio = vups_utils.remove_acento(
-        municipio.upper()
-    )  # TRATAMENTO - CAIXA ALTA E REMOVE ACENTOS
-    tributos_ipca = get_plot_tributos_ipca(municipio=municipio)
-    return tributos_ipca
+# @blueprint.route("/tributos_ipca")
+# def tributos_ipca():
+#     municipio = request.args.get("cidade", default=None, type=None)
+#     municipio = vups_utils.remove_acento(
+#         municipio.upper()
+#     )  # TRATAMENTO - CAIXA ALTA E REMOVE ACENTOS
+#     tributos_ipca = get_plot_tributos_ipca(municipio=municipio)
+#     return tributos_ipca
 
 
 # Templates
@@ -182,8 +182,8 @@ def get_plot_calendar_heatmap(municipio):
     return graphJSON
 
 
-def get_plot_tributos_ipca(municipio):
-    return json.dumps(obj=graphs.plot_tributos_ipca(cidade=municipio), cls=utils.PlotlyJSONEncoder)
+# def get_plot_tributos_ipca(municipio):
+#     return json.dumps(obj=graphs.plot_tributos_ipca(cidade=municipio), cls=utils.PlotlyJSONEncoder)
 
 
 # ####################################################################
