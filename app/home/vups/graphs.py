@@ -1602,7 +1602,7 @@ def plot_n_pessoas_por_sintomas():
 
 def fn_resumo_microdados(md = datasets.Datasets.microdados()):
     df_classificacao = pd.DataFrame(md.Classificacao.value_counts()).T
-    df_periodo = pd.DataFrame(vups_utils.minMax(md['DataNotificacao'] )).T
+    # df_periodo = pd.DataFrame(vups_utils.minMax(md['DataNotificacao'] )).T
 
     resumo_microdados = {
         'n_obs': md.shape[0],
@@ -1611,8 +1611,8 @@ def fn_resumo_microdados(md = datasets.Datasets.microdados()):
         'n_descartados': df_classificacao.Descartados[0],
         'n_supeitos': df_classificacao.Suspeito[0],
         'n_obitos': md.DataObito.count(),
-        'periodo_inicio': df_periodo['min'][0],
-        'periodo_fim': df_periodo['max'][0]
+        # 'periodo_inicio': df_periodo['min'][0],
+        # 'periodo_fim': df_periodo['max'][0]
     }
 
     return(resumo_microdados)
@@ -1624,7 +1624,7 @@ def fn_resumo(resumo = fn_resumo_microdados()):
     texto4 = "\nDescartados: {}".format(resumo.get('n_descartados'))
     texto5 = "\nSuspeitos: {}".format(resumo.get('n_supeitos'))
     texto6 = "\nÓbitos: {}".format(resumo.get('n_obitos'))
-    texto7 = "\nOs dados coletados compreendem um período de {:%d/%m/%Y} à {:%d/%m/%Y}.".format(resumo.get('periodo_inicio'), resumo.get('periodo_fim'))
-    texto = texto1 + texto2 + texto3 + texto4 + texto5 + texto6 + texto7
+    # texto7 = "\nOs dados coletados compreendem um período de {:%d/%m/%Y} à {:%d/%m/%Y}.".format(resumo.get('periodo_inicio'), resumo.get('periodo_fim'))
+    texto = texto1 + texto2 + texto3 + texto4 + texto5 + texto6# + texto7
     return(texto)
 
