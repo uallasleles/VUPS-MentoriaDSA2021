@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Tables {% endblock %}
+{% block title %} Microdados - Bairros {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -24,8 +24,8 @@
                         </svg>
                     </a>
                 </li>
-                <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Bootstrap tables</li>
+                <li class="breadcrumb-item"><a href="#">Datasets</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Microdados - Bairros</li>
             </ol>
         </nav>
         <!-- Linha - Page Title -->
@@ -33,7 +33,7 @@
 
             <!-- TITLE -->
             <div class="mb-3 mb-lg-0">
-                <h1 class="h4">Bootstrap tables</h1>
+                <h1 class="h4">Microdados - Bairros</h1>
             </div>
 
             <!-- BUTTON -->
@@ -76,28 +76,11 @@
         </div>
     </div>
 
-    <!-- TEXTAREA - RETORNOS / ACOMPANHAMENTOS -->
-    <div> 
-        <textarea id="msg" class="col-12" rows="5">TESTE:</textarea>
-    </div>
-
     <!-- CARD - TABLE -->
     <div class="card border-0 shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <!-- <table id="table" class="table table-secondary table-bordered table-striped table-nowrap table-compact mb-0 rounded"> -->
-                <table id="table" class="table table-secondary table-bordered">
-                    <!-- <thead>
-                        <tr>
-                            <th>id</th>
-                            <th>name</th>
-                            <th>position</th>
-                            <th>salary</th>
-                            <th>start_date</th>
-                            <th>office</th>
-                            <th>extn</th>
-                        </tr>
-                    </thead> -->
+                <table id="table" class="table table-secondary table-bordered table-striped table-nowrap table-compact mb-0 rounded">
                 </table>
             </div>
         </div>
@@ -112,20 +95,11 @@
     var urlstr = "/api/data";
     var count = 0;
     const tableId = "table";
-
-    // TEXTAREA PARA RETORNOS / ACOMPANHAMENTOS
-    function addMsg(s){
-        count++;
-        $("#msg").append('\n[#'+count+'] '+s);
-        $("#msg").append('\n==============================================================================');
-    };
     
     // OBTEM OS DADOS
     function getData(sourceName) {
         return $.ajax({
             url: urlstr,
-            // type: 'POST',
-            // method: 'POST',
             data: {
                 sourceName: sourceName
             }
@@ -138,17 +112,6 @@
         var tableHead = document.createElement("thead");    // CRIA UM NÓ TABLE HEAD
         var tableRow = document.createElement("tr");        // CRIA UM NÓ TABLE ROW
 
-        // myTable.innerHTML = '';
-        // tableHead.innerHTML = '';
-        // tableRow.innerHTML = '';
-        
-        while (tableRow.firstChild){    // Removendo todos os nós filhos da linha
-            tableRow.removeChild(tableRow.firstChild);};
-        while (tableHead.firstChild){   // Removendo todos os nós filhos do cabeçalho
-            tableHead.removeChild(tableHead.firstChild);};
-        while (myTable.firstChild) {    // Removendo todos os nós filhos da tabela
-            var h = myTable.removeChild(myTable.firstChild);};
-
         // ADICIONA TABLE HEADING COM O NOME DA COLUNA PARA A TABLE ROW
         for (var i = 0; i < columnNames.length; i++) {
             var headerCell = document.createElement("th");
@@ -157,13 +120,12 @@
         };
 
         tableHead.appendChild(tableRow);
-        addMsg("tableHead: "+tableHead);
 
         return tableHead;
     };
 
     // CONFIGURA OPÇÕES PARA INICIALIZAÇÃO DA INSTÂNCIA DATATABLE
-    function setDataTableDefinitions(columns, columnDefs) {
+    function setDataTableDefinitions(columns) {
 
         var dataTableSetup = {
             // dom: "Bfrtip",
@@ -172,52 +134,40 @@
             // serverSide: true,
             dataSrc: 'data',
             responsive: true,
-            // sort: true,
-            // lengthMenu: [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+            sort: true,
             searching: true,
-            // columnDefs: columnDefs,
             columns: columns,
-
-            // columns: [
-            //     {data: "id"},
-            //     {data: "name"},
-            //     {data: "position"},
-            //     {data: "salary"},
-            //     {data: "start_date"},
-            //     {data: "office"},
-            //     {data: "extn"}
-            // ],
-
-            // paging: false,
-            // info: false,
             scrollX: true,
-            scrollY: 200,
+            scrollY: 350,
             language: {
                 processing: "Processando a solicitação ...",
                 zeroRecords: "Não há registros para exibir",
-            },
-            destroy: true
+            }
+            // destroy: true
         };
         return dataTableSetup;
     };
 
     // OBTEM OPÇÃO SELECIONADA EM DROPDOWN ITEM
     $(".dropdown-item").on('click', function() {
-
-        // NOME DO DATASET
+        // OBTEM OPÇÃO SELECIONADA EM DROPDOWN ITEM
         var sourceName = $(this).text().trim();
-        addMsg("sourceName: "+sourceName);
+        tgt = "/"+sourceName+".html";
+        window.location.href = tgt;
+    });
+
+    function dataset(){
+
+        var sourceName = 'microdados_bairros';
 
         // CHAMA A O MÉTODO PARA OBTER OS DADOS
         getData(sourceName).done( function(json) {
 
             // PEGA OS NOMES DAS COLUNAS
             var headerNames = Object.keys(json.data[0]);
-            addMsg("headerNames: "+headerNames);
 
             // CHAMA MÉTODO PARA CRIAR CABEÇALHO HTML
             var headerHTML = createHeader(headerNames);
-            addMsg("headerHTML: "+headerHTML);
     
             // ADICIONA O HEADER AO ELEMENTO TABLE
             $(tableId).append(headerHTML);
@@ -227,25 +177,19 @@
             for ( var i = 0; i < headerNames.length; i++ ){
                 columns.push({data: headerNames[i]});    
             };
-            // for (const [key, value] of Object.entries(columns)){
-            //     addMsg("\nDict: " + key[0] + "\nKey: " + Object.values(value) + "\nValue: " + value);
-            // };
 
-            // myDataTable.destroy();
             // CRIA UMA INSTÂNCIA DATATABLES
             var myDataTable = $(tableId).DataTable(
                 setDataTableDefinitions(columns));
 
             // ADICIONA OS REGISTROS A INSTÂNCIA DATATABLE E RENDERIZA
             myDataTable.rows.add(json.data).draw();
-            
-            // myDataTable.ajax.reload(json.data);
                 
         });
-    });
+    };
         
     $(document).ready( function() {
-        // get_table(urlstr);
+        dataset();
     });
 
 </script>

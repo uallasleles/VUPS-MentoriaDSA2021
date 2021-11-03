@@ -299,35 +299,40 @@ def importar():
 
 @blueprint.route("/api/data")
 def data():
-    # dsname = request.args.get('data', type=str)
-    # if dsname is None:
-    dsname = 'microdados'
-    # print(dsname)
-    df = getattr(datasets.Datasets, dsname)()
-    dados = df[0:10]
+    dsname = request.args.get('sourceName', type=str)
+    draw = request.args.get('draw', type=int) #request.form['draw']
+    row = request.args.get('start', type=int)
+    rowperpage = request.args.get('length')
+    
+    dados = dataExample
+    columnDefs = []
+    
+    if dsname is not None:
+        try:
+            df = getattr(datasets.Datasets, dsname)()
+            dados = [row for row in df.to_dict(orient='records')]
+            dados = dados[0:100]
+            # columnDefs = [
+            #     {
+            #         'targets': [dados.columns.get_loc(v)],
+            #         'name': v
+            #     } for v in dados.columns
+            # ]
+            # print(dados.info())
+        except:
+            pass
+    
+    response = {
+        "data": dados,
+        "recordsTotal": len(dados),
+        "recordsFiltered": len(dados),
+        "draw": draw, 
+        # "columnDefs": columnDefs,
+    }
 
-    draw = 1
-    data = [row for row in dados.to_dict(orient='records')]
-    columnDefs = [{'targets': k, 'title': v}
-                  for k, v in enumerate(dados.columns.to_list())]
-    recordsTotal = len(data)
-    recordsFiltered = len(data)
+    return response
 
-    # print(data)
-
-    # response = {
-    #     "draw": draw,
-    #     "recordsTotal": recordsTotal,
-    #     "recordsFiltered": recordsFiltered,
-    #     "columnDefs": columnDefs,
-    #     "records": data
-    # }
-    print(dataExample)
-    return dataExample
-
-
-dataExample = {
-    "data": [
+dataExample = [
         {
             "id": "1",
             "name": "Tiger Nixon",
@@ -842,4 +847,3 @@ dataExample = {
             "extn": "4226"
         }
     ]
-}
