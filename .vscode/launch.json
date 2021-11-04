@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "args": [
+        "task"
+      ],
+      "name": "Gulp task",
+      "program": "${workspaceFolder}/node_modules/gulp/bin/gulp.js",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "pwa-node"
+    },
+    {
+      "name": "Python: Flask",
+      "type": "python",
+      "request": "launch",
+      "module": "flask",
+      "env": { "FLASK_APP": "run.py", "FLASK_ENV": "development" },
+      "args": ["run", "--no-debugger"],
+      "jinja": true
+    }
+  ]
+}

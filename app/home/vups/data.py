@@ -120,6 +120,7 @@ def dtype_transform(df, mapa):
     for c in date_cols:
         try:
             df[c] = pd.to_datetime(df[c], infer_datetime_format=True, errors='coerce')
+            df[c] = df[c].dt.strftime('%d/%m/%Y')
         except:
             print("ERRO DE CONVERSÃO - COLUNA:{}".format(df[c].column.name))
             pass

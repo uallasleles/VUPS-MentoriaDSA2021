@@ -6,6 +6,7 @@
 """
 
 # IMPORTAÇÕES ****************************************************************
+import json
 from typing import Iterable
 from tqdm.gui import tqdm_gui
 from app.home.vups import const, data, utils
@@ -199,7 +200,7 @@ def get_data(
     return dataset
 
 
-class Datasets():
+class Datasets:
     """CLASSE QUE INTERMEDIA A PASSAGEM DE PARÂMETROS DOS DATASETS REGISTRADOS
     OS METADADOS E CONFIGURAÇÕES DE TODOS OS DATASETS SÃO ARMAZENADOS EM ARQUIVOS JSON
     OS ARQUIVOS JSON SÃO LIDOS PELO MÓDULO [vups.const]
@@ -207,10 +208,17 @@ class Datasets():
     ENTÃO, REPASSA ESSES PARÂMETROS PARA O MÉTODO get_data()
     """
 
+    # def __init__(self, name=None, usecols=None, nrows=None):
+    #     self.name       = name
+    #     self.usecols    = usecols
+    #     self.nrows      = nrows
+
+    # def to_json(self):
+    #     pass
+
     def microdados(columns=None, nrows=None, dtype=None):
         """MÉTODO QUE BUSCA OS PARÂMETROS DO DATASET [microdados]"""
 
-        # SHOW DE BOLA ESSA PASSAGEM DINÂMICA DE NAMESPACES! ^^
         name = sys._getframe(  ).f_code.co_name.upper()
         filepath_or_buffer = data.which_file_exists(name)
         mapa = getattr(const, name).get("MAP")
