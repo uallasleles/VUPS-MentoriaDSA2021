@@ -99,8 +99,10 @@
 <!-- <script src="{{ url_for('static', filename='assets/js/ajaxjQuery.js') }}"></script> -->
 
 <script>
-    $(document).ready( function() {
-        getData("transferencias");
+    // o mesmo que:
+    // window.addEventListener("load", function(){});
+    window.addEventListener("load", () => {
+        getData("tipo_arrecadacao");
     });
 </script>
 {% endblock javascripts %}
