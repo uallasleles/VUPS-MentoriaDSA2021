@@ -63,15 +63,11 @@
     {% include "includes/sidebar.html" %}
                 
     <main class="content">
-
         {% include "includes/navigation.html" %}
-
         {% block content %}{% endblock content %}
-
-        {% include "includes/footer.html" %}
-    
     </main>
-
+    {% include "includes/footer.html" %}
+    
     {% include "includes/scripts.html" %}
     {% include "includes/scripts-vups.html" %}
 
