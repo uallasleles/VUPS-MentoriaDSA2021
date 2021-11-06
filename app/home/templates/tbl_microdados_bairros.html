@@ -99,8 +99,10 @@
 <!-- <script src="{{ url_for('static', filename='assets/js/ajaxjQuery.js') }}"></script> -->
 
 <script>
-    $(document).ready( function() {
+    // o mesmo que:
+    // $(document).ready( function() {};
+    window.onload = function() {
         getData("microdados_bairros");
-    });
+    };
 </script>
 {% endblock javascripts %}

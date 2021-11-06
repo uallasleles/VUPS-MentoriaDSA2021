@@ -99,7 +99,9 @@
 <!-- <script src="{{ url_for('static', filename='assets/js/ajaxjQuery.js') }}"></script> -->
 
 <script>
-    $(document).ready( function() {
+    // o mesmo que:
+    // window.onload = function() {};
+    window.addEventListener("load", function(){
         getData("tipo_arrecadacao");
     });
 </script>
