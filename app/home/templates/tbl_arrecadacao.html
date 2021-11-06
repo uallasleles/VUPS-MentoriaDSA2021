@@ -33,7 +33,7 @@
 
             <!-- TITLE -->
             <div class="mb-3 mb-lg-0">
-                <h1 class="h4">Datatable</h1>
+                <h1 class="h4">Arrecadacao</h1>
             </div>
 
             <!-- BUTTON -->
@@ -95,4 +95,12 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script src="{{ url_for('static', filename='assets/js/controls.js') }}"></script>
+<script src="{{ url_for('static', filename='assets/js/ajaxJSpuro.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='assets/js/ajaxjQuery.js') }}"></script> -->
+
+<script>
+    $(document).ready( function() {
+        getData("arrecadacao");
+    });
+</script>
 {% endblock javascripts %}
