@@ -45,7 +45,8 @@ function trataResposta(resp){
         
                 var columns = []; // VARIÁVEL PARA DEFINIÇÃO DE COLUNAS DATATABLES
                 // PREENCHE A DEFINIÇÃO DE COLUNAS QUE SERÁ ENTREGUE À INSTÂNCIA DATATABLES
-                for ( var i = 0; i < headerNames.length; i++ ){
+                var headersLength = headerNames.length;
+                for ( var i = 0; i < headersLength; i++ ){
                     columns.push({data: headerNames[i]});    
                 };
         
@@ -74,10 +75,6 @@ function createHeader(columnNames) {
     var myTable = document.getElementById(tableId);     // CRIA UMA INSTÂNCIA DO ELEMENTO TABLE        
     var tableHead = document.createElement("thead");    // CRIA UM NÓ TABLE HEAD
     var tableRow = document.createElement("tr");        // CRIA UM NÓ TABLE ROW
-
-    // myTable.innerHTML = '';
-    // tableHead.innerHTML = '';
-    // tableRow.innerHTML = '';
     
     while (tableRow.firstChild){    // Removendo todos os nós filhos da linha
         tableRow.removeChild(tableRow.firstChild);};
@@ -87,13 +84,14 @@ function createHeader(columnNames) {
         var h = myTable.removeChild(myTable.firstChild);};
 
     // ADICIONA TABLE HEADING COM O NOME DA COLUNA PARA A TABLE ROW
-    for (var i = 0; i < columnNames.length; i++) {
+    var columnsLength = columnNames.length;
+    for (var i = 0; i < columnsLength; i++) {
         var headerCell = document.createElement("th");
         headerCell.innerHTML = columnNames[i];
         tableRow.appendChild(headerCell);
     };
-
     tableHead.appendChild(tableRow);
+    
     return tableHead;
 };
 

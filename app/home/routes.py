@@ -310,8 +310,7 @@ def data():
     if dsname is not None:
         try:
             df = getattr(datasets.Datasets, dsname)()
-            dados = [row for row in df.to_dict(orient='records')]
-            dados = dados[0:100]
+            dados = [row for row in df[0:100].to_dict(orient='records')]
             # columnDefs = [
             #     {
             #         'targets': [dados.columns.get_loc(v)],

@@ -13,7 +13,6 @@ var fileinclude = require('gulp-file-include');
 var rename = require("gulp-rename");
 
 // Define paths
-
 const paths = {
     dist: {
         base: './dist/',
@@ -56,7 +55,10 @@ const paths = {
 
 // Compile SCSS
 gulp.task('scss', function() {
-    return gulp.src([paths.src.scss + '/custom/**/*.scss', paths.src.scss + '/volt/**/*.scss', paths.src.scss + '/volt.scss'])
+    return gulp.src([
+        paths.src.scss + '/custom/**/*.scss', 
+        paths.src.scss + '/volt/**/*.scss', 
+        paths.src.scss + '/volt.scss'])
         .pipe(wait(500))
         .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
@@ -64,7 +66,7 @@ gulp.task('scss', function() {
             overrideBrowserslist: ['> 1%']
         }))
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(paths.src.css))
+        .pipe(gulp.dest(paths.dist.css))
         .pipe(browserSync.stream());
 });
 
@@ -78,7 +80,7 @@ gulp.task('minify:css', function() {
             // Updates the object in-place
             path.extname = ".min.css";
         }))
-        .pipe(gulp.dest(paths.src.css))
+        .pipe(gulp.dest(paths.dist.css))
 });
 
 // Default
