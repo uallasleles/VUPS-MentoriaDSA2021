@@ -1,16 +1,17 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Tabelas {% endblock %}
+{% block title %} Gráficos {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %} {% endblock stylesheets %}
 
 {% block content %}
-<!-- Página - TABELAS -->
+<!-- Página - Charts -->
 <div>
 
     <!-- Container - Page Header -->
     <div class="py-4">
+        
         <!-- Linha - Bread Crumb -->
         <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -28,81 +29,80 @@
                 <li class="breadcrumb-item active" aria-current="page">Datasets</li>
             </ol>
         </nav>
+
         <!-- Linha - Page Title -->
         <div class="d-flex justify-content-between w-100 flex-wrap">
 
             <!-- TITLE -->
             <div class="mb-3 mb-lg-0">
-                <h1 class="h4">Microdados Bairros</h1>
+                <h1 class="h4">Gráficos</h1>
             </div>
 
             <!-- BUTTON -->
             <div class="dropdown">
+
                 <!-- MENU BUTTON -->
                 <button class="btn btn-gray-800 align-items-center me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <svg class="icon icon-xs me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
-                    DATASETS
+                    Charts
                 </button>
 
                 <!-- MENU LIST -->
                 <div class="dropdown-menu dashboard-dropdown dropdown-menu-start mt-2 py-1">
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>                            
-                        microdados
+                        Chart 1
                     </a>
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>                            
-                        microdados_bairros
+                        Chart 2
                     </a>
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>                            
-                        arrecadacao
+                        Chart 3
                     </a>
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>                            
-                        tipo_arrecadacao
+                        Chart 4
                     </a>
                     <!-- <div role="separator" class="dropdown-divider my-1"></div> -->
                     <a class="dropdown-item d-flex align-items-center" href="#">
                         <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"></path></svg>                            
-                        transferencias
+                        Chart 5
                     </a>
                 </div>
 
             </div>
 
         </div>
-    </div>
-
-    <!-- CARD - TABLE -->
-    <div class="card border-0 shadow mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-
-                <!-- TABLE -->
-                <table id="table" class="table table-secondary table-bordered table-striped table-nowrap table-compact mb-0 rounded">
-                </table>
-            
-            </div>
+        <div>
+            <canvas id="myChart"></canvas>
         </div>
     </div>
-
+    
 </div>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script src="{{ url_for('static', filename='assets/js/controls.js') }}"></script>
-<!-- <script src="{{ url_for('static', filename='assets/js/ajaxJSpuro.js') }}"></script> -->
-<script src="{{ url_for('static', filename='assets/js/ajaxjQuery.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='assets/js/chartModels.js') }}"></script>
 
 <script>
-    // o mesmo que:
-    // $(document).ready( function() {};
-    window.onload = function() {
-        getData("microdados_bairros");
-    };
+    // const Chart = require('chart.js');
+
+    var label = "Meu Dataset";
+    const labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
+    const values = [35, 10, 5, 2, 20, 30, 45];
+
+    const config = barChartJS(label, labels, values);
+
+    const ctx = document.getElementById("myChart").getContext("2d");
+    const barChart = new Chart(ctx, config);
+
 </script>
 {% endblock javascripts %}
